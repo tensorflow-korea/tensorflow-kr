@@ -38,7 +38,10 @@ Calling `tf.Variable()` adds several ops to the graph:
 The value returned by `tf.Variable()` value is an instance of the Python class
 `tf.Variable`.
 
-### Device placement
+### 디바이스 지정
+
+변수가 생성될 때, 특정 디바이스를 사용하도록 지정할 수 있습니다. [`with tf.device(...):`](../../api_docs/python/framework.md#device) 블럭을 사용하면 됩니다:
+
 
 A variable can be pinned to a particular device when it is created, using a
 [`with tf.device(...):`](../../api_docs/python/framework.md#device) block:

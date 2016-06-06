@@ -10,16 +10,9 @@
 
 ## 생성
 
-변수([Variable](../../api_docs/python/state_ops.md))를 생성하는 경우, `Tensor`
-When you create a [Variable](../../api_docs/python/state_ops.md) you pass a
-`Tensor` as its initial value to the `Variable()` constructor.  TensorFlow
-provides a collection of ops that produce tensors often used for initialization
-from [constants or random values](../../api_docs/python/constant_op.md).
+변수([Variable](../../api_docs/python/state_ops.md))를 생성하는 경우, 초기값으로서 `Tensor`값을 `Variable()` 생성자에 전달하게 됩니다. 텐서플로우가 제공하는 여러가지 연산자들인 [constants or random values](../../api_docs/python/constant_op.md)을 이용하여 초기화에 사용되는 텐서들을 만드는 경우가 많습니다.
 
-Note that all these ops require you to specify the shape of the tensors.  That
-shape automatically becomes the shape of the variable.  Variables generally
-have a fixed shape, but TensorFlow provides advanced mechanisms to reshape
-variables.
+이 연산자들을 사용할 때에는, 텐서의 형태를 지정해 주어야 합니다. 그렇게 지정된 텐서의 형태가 자동적으로 해당 변수의 형태가 됩니다. 변수들은 일반적으로 고정된 형태를 갖습니다만, 텐서플로우에서는 변수의 형태를 변경할 수 있는 고급 기능도 제공됩니다.
 
 ```python
 # Create two variables.

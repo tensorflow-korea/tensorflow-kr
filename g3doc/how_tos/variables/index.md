@@ -25,9 +25,9 @@ biases = tf.Variable(tf.zeros([200]), name="biases")
 
 * 변수 값을 저장하는 `variable` 연산자.
 * 변수를 초기값으로 세팅하는 초기화 연산자인 `tf.assign`.
-* 초기값을 위한 연산자들. 예제에 설명된 `biases` 변수를 위한 `zeros` 연산자같은 것도 그래프에 추가됨. 
+* 초기값을 위한 연산자들. 예제에 설명된 `biases` 변수를 위한 `zeros` 연산자 같은 것도 그래프에 추가됨. 
 
-`tf.Variable()` 가 리턴하는 값은 파이썬 클래스 `tf.Variable`의 인스턴스.
+`tf.Variable()` 가 리턴하는 값은 파이썬 클래스 `tf.Variable`의 인스턴스입니다.
 
 ### 디바이스 지정
 

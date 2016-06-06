@@ -21,16 +21,13 @@ weights = tf.Variable(tf.random_normal([784, 200], stddev=0.35),
 biases = tf.Variable(tf.zeros([200]), name="biases")
 ```
 
-Calling `tf.Variable()` adds several ops to the graph:
+`tf.Variable()`를 호출하면 다음 몇가지의 연산자가 그래프에 추가됩니다:
 
-*  A `variable` op that holds the variable value.
-*  An initializer op that sets the variable to its initial value.  This is
-   actually a `tf.assign` op.
-*  The ops for the initial value, such as the `zeros` op for the `biases`
-   variable in the example are also added to the graph.
+* 변수 값을 저장하는 `variable` 연산자.
+* 변수를 초기값으로 세팅하는 초기화 연산자인 `tf.assign`.
+* 초기값을 위한 연산자들. 예제에 설명된 `biases` 변수를 위한 `zeros` 연산자같은 것도 그래프에 추가됨. 
 
-The value returned by `tf.Variable()` value is an instance of the Python class
-`tf.Variable`.
+`tf.Variable()` 가 리턴하는 값은 파이썬 클래스 `tf.Variable`의 인스턴스.
 
 ### 디바이스 지정
 

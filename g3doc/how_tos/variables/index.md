@@ -1,12 +1,6 @@
 # 변수: 생성, 초기화, 저장, 복구
 
-모델을 학습시키는 경우에, 파라미터를 저장하고 업데이트 하기 위하여 변수들([variables](../../api_docs/python/state_ops.md))를 사용합니다. 변수들(variables)는 텐서들을 저장하는 메모리상의 버퍼들입니다. 
-
-When you train a model, you use [variables](../../api_docs/python/state_ops.md)
-to hold and update parameters.  Variables are in-memory buffers containing
-tensors.  They must be explicitly initialized and can be saved to disk during
-and after training. You can later restore saved values to exercise or analyse
-the model.
+모델을 학습시키는 경우에, 파라미터를 저장하고 업데이트 하기 위하여 변수들([variables](../../api_docs/python/state_ops.md))를 사용합니다. 변수들은 텐서들을 저장하는 메모리상의 버퍼들입니다. 명확하게 초기화 되어야 하며, 학습이 진행되는 동안과 끝난 후에 디스크에 저장될 수 있습니다. 나중에 모델을 사용하거나 분석하기 위하여 저장된 값들을 복구할 수 있습니다.
 
 This document references the following TensorFlow classes.  Follow the links to
 their reference manual for a complete description of their API:

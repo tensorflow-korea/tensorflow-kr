@@ -160,8 +160,8 @@ library, and in particular, the `print_tensors_in_checkpoint_file` function.
 
 ### 변수 저장
 
-Create a `Saver` with `tf.train.Saver()` to manage all variables in
-the model.
+모델안의 모든 변수를 관리하기 위하여, `tf.train.Saver()`를 사용해 `Saver`를 만드십시요.
+
 
 ```python
 # Create some variables.

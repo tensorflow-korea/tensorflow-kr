@@ -187,8 +187,8 @@ with tf.Session() as sess:
 
 ### 변수 복구
 
-The same `Saver` object is used to restore variables.  Note that when you
-restore variables from a file you do not have to initialize them beforehand.
+변수를 복구하는 데에 위의 `Saver` 객체가 사용됩니다. 화일로부터 변수들을 복구하는 경우에는, 그 변수들을 미리 초기화 할 필요가 없습니다.
+
 
 ```python
 # Create some variables.

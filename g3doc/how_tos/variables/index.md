@@ -1,5 +1,7 @@
 # 변수: 생성, 초기화, 저장, 복구
 
+모델을 학습시키는 경우에, 파라미터를 저장하고 업데이트 하기 위하여 [variables](../../api_docs/python/state_ops.md)를 사용합니다. 변수들(variables)는 텐서들을 저장하는 메모리상의 버퍼들입니다. 
+
 When you train a model, you use [variables](../../api_docs/python/state_ops.md)
 to hold and update parameters.  Variables are in-memory buffers containing
 tensors.  They must be explicitly initialized and can be saved to disk during

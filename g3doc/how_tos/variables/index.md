@@ -10,6 +10,7 @@
 
 ## 생성
 
+변수([Variable](../../api_docs/python/state_ops.md))를 생성하는 경우, `Tensor`
 When you create a [Variable](../../api_docs/python/state_ops.md) you pass a
 `Tensor` as its initial value to the `Variable()` constructor.  TensorFlow
 provides a collection of ops that produce tensors often used for initialization

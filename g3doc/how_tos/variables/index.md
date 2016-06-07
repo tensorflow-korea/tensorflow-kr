@@ -47,12 +47,7 @@ with tf.device("/job:ps/task:7"):
   v = tf.Variable(...)
 ```
 
-**N.B.** Operations that mutate a variable, such as
-[`v.assign()`](../../api_docs/python/state.md#Variable.assign) and the parameter
-update operations in a
-[`tf.train.Optimizer`](../../api_docs/python/train.md#Optimizer) *must* run on
-the same device as the variable. Incompatible device placement directives will
-be ignored when creating these operations.
+**주의** [`v.assign()`](../../api_docs/python/state.md#Variable.assign) 처럼 변수를 변경(mutate)하는 오퍼레이션과, [`tf.train.Optimizer`](../../api_docs/python/train.md#Optimizer) 의 파라미터 업데이트 오퍼레이션들은, *반드시* 변수들과 같은 디바이스상에서 실행되어야 합니다. 위의 오퍼레이션들을 생성할 때, 잘못된 디바이스 지시자(directive)는 무시됩니다.  
 
 Device placement is particularly important when running in a replicated
 setting. See

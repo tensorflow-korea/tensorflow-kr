@@ -49,7 +49,7 @@ with tf.device("/job:ps/task:7"):
 
 **주의** [`v.assign()`](../../api_docs/python/state.md#Variable.assign) 처럼 변수를 변경(mutate)하는 오퍼레이션과, [`tf.train.Optimizer`](../../api_docs/python/train.md#Optimizer) 의 파라미터 업데이트 오퍼레이션들은, *반드시* 변수들과 같은 디바이스상에서 실행되어야 합니다. 위의 오퍼레이션들을 생성할 때, 잘못된 디바이스 지시자(directive)는 무시됩니다.  
 
-디바이스를 정확히 지정하는 것은 복제된 세팅에서 실행하는 경우에 특히 중요합니다. 복제된 세팅에서 디바이스 설정을 심플하게 해주는 함수들에 대해서는 [`tf.train.는replica_device_setter()`](../../api_docs/python/train.md#replica_device_setter)를 참조하십시요.
+디바이스를 정확히 지정하는 것은 복제된 세팅에서 실행하는 경우에 특히 중요합니다. 복제된 세팅에서 디바이스 설정을 심플하게 해주는 함수들에 대해서는 [`tf.train.replica_device_setter()`](../../api_docs/python/train.md#replica_device_setter)를 참조하십시요.
 
 ## 초기화
 

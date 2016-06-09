@@ -57,10 +57,7 @@ with tf.device("/job:ps/task:7"):
 
 또는 체크포인트 화일로부터 변수의 값을 복구하는 방법을 사용할 수도 있습니다. 아래를 참조하십시요.
 
-
-Use `tf.initialize_all_variables()` to add an op to run variable initializers.
-Only run that op after you have fully constructed your model and launched it in
-a session.
+`tf.initialize_all_variables()` 를 사용하여 변수들의 초기화를 실행하는 오퍼레이션을 추가합니다. 모델을 완전하게 구축하고서 세션에서 띄운(launch) 후에 그 오퍼레이션을 실행시키십시요.
 
 ```python
 # Create two variables.

@@ -53,6 +53,8 @@ with tf.device("/job:ps/task:7"):
 
 ## 초기화
 
+변수의 초기화는 모델상의 어떤 오퍼레이션보다도 분명하게 먼저 실행되어야 합니다. 가장 쉬운 방법은 모든 변수 초기화 동작을 실행하는 오퍼레이션을 
+
 Variable initializers must be run explicitly before other ops in your model can
 be run.  The easiest way to do that is to add an op that runs all the variable
 initializers, and run that op before using the model.

@@ -53,14 +53,10 @@ with tf.device("/job:ps/task:7"):
 
 ## 초기화
 
-변수의 초기화는 모델상의 어떤 오퍼레이션보다도 분명하게 먼저 실행되어야 합니다. 가장 쉬운 방법은 모든 변수 초기화 동작을 실행하는 오퍼레이션을 
+변수의 초기화는 모델상의 어떤 오퍼레이션보다도 분명하게 먼저 실행되어야 합니다. 가장 쉬운 방법은 모든 변수의 초기화 동작을 모아서 실행하는 오퍼레이션을 만들어서, 모델을 사용하기 전에 그 오퍼레이션을 실행하는 것입니다.
 
-Variable initializers must be run explicitly before other ops in your model can
-be run.  The easiest way to do that is to add an op that runs all the variable
-initializers, and run that op before using the model.
+또는 체크포인트 화일로부터 변수의 값을 복구하는 방법을 사용할 수도 있습니다. 아래를 참조하십시요.
 
-You can alternatively restore variable values from a checkpoint file, see
-below.
 
 Use `tf.initialize_all_variables()` to add an op to run variable initializers.
 Only run that op after you have fully constructed your model and launched it in

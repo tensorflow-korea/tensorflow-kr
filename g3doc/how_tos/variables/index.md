@@ -79,7 +79,7 @@ with tf.Session() as sess:
 
 ### 다른 변수값을 참조하여 초기화 하기
 
-다른 변수의 값을 이용하여 어떤 변수를 초기화 해야하는 경우가 있습니다. `tf.initialize_all_variables()` 를 통해서 추가된 op는 모든 변수들을 한꺼번에 병렬적으로 초기화 하므로, 이 기능을 이용하는 경우에는 주의해야 합니다.
+다른 변수의 값을 이용하여 어떤 변수를 초기화 해야 하는 경우가 있습니다. `tf.initialize_all_variables()` 를 통해서 추가된 op는 모든 변수들을 한꺼번에 병렬적으로 초기화 하므로, 이 기능을 이용하는 경우에는 주의해야 합니다.
 
 다른 변수의 값을 이용하여 새로운 변수를 초기화 하는 경우, 그 다른 변수의 `initialized_value()` 프로퍼티를 사용합니다. 그 초기화된 값을 그대로 새로운 변수의 초기값으로 사용하거나, 초기값을 계산하는 데에 필요한 텐서로 사용할 수 있습니다.
 
@@ -95,11 +95,7 @@ w_twice = tf.Variable(weights.initialized_value() * 2.0, name="w_twice")
 
 ### 커스텀 초기화
 
-The convenience function `tf.initialize_all_variables()` adds an op to
-initialize *all variables* in the model.  You can also pass it an explicit list
-of variables to initialize.  See the
-[Variables Documentation](../../api_docs/python/state_ops.md) for more options,
-including checking if variables are initialized.
+컨비니언스 함수인 `tf.initialize_all_variables()` 는 모델상의 *모든 변수*를 초기화 하는 op를 추가합니다. 초기화가 필요한 변수들만을 리스트로 넘기는 방법도 가능합니다. 변수들이 초기화 되어있는지를 체크하는 방법을 포함한 자세한 옵션들에 대해서는 [변수](../../api_docs/python/state_ops.md) 문서를 참조하십시요. 
 
 ## 저장과 복구
 

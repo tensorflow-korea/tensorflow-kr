@@ -79,15 +79,9 @@ with tf.Session() as sess:
 
 ### 다른 변수값을 참조하여 초기화 하기
 
-You sometimes need to initialize a variable from the initial value of another
-variable.  As the op added by `tf.initialize_all_variables()` initializes all
-variables in parallel you have to be careful when this is needed.
+다른 변수의 값을 이용하여 어떤 변수를 초기화 해야하는 경우가 있습니다. `tf.initialize_all_variables()` 를 통해서 추가된 op는 모든 변수들을 한꺼번에 병렬적으로 초기화 하므로, 이 기능을 이용하는 경우에는 주의해야 합니다.
 
-To initialize a new variable from the value of another variable use the other
-variable's `initialized_value()` property.  You can use the initialized value
-directly as the initial value for the new variable, or you can use it as any
-other tensor to compute a value for the new variable.
-
+다른 변수의 값을 이용하여 새로운 변수를 초기화 하는 경우, 그 다른 변수의 `initialized_value()` 프로퍼티를 사용합니다. 그 초기화된 값을 그대로 새로운 변수의 초기값으로 사용하거나, 초기값을 계산하는 데에 필요한 텐서로 사용할 수 있습니다.
 
 ```python
 # Create a variable with a random value.

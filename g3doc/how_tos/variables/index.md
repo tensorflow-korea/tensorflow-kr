@@ -1,6 +1,6 @@
 # 변수: 생성, 초기화, 저장, 복구
 
-모델을 학습시키는 경우에, 파라미터를 저장하고 업데이트 하기 위하여 변수들([variables](../../api_docs/python/state_ops.md))를 사용합니다. 변수들은 텐서들을 저장하는 메모리상의 버퍼들입니다. 명확하게 초기화 되어야 하며, 학습이 진행되는 동안이나 끝난 후에 디스크에 저장될 수 있습니다. 나중에 모델을 사용하거나 분석하기 위하여 저장된 값들을 복구할 수 있습니다.
+모델을 학습시키는 경우에, 파라미터를 저장하고 업데이트 하기 위하여 변수들([variables](../../api_docs/python/state_ops.md))를 사용합니다. 변수들은 텐서들을 저장하는 메모리상의 버퍼들입니다. 명확하게 초기화되어야 하며, 학습이 진행되는 동안이나 끝난 후에 디스크에 저장될 수 있습니다. 나중에 모델을 사용하거나 분석하기 위하여 저장된 값들을 복구할 수 있습니다.
 
 이 문서는 다음의 텐서플로우 클래스들을 이용하여 설명을 진행합니다. API에 대한 완전한 설명을 담고 있는 레퍼런스 매뉴얼을 보려면 링크를 참조하십시요.
 
@@ -79,9 +79,9 @@ with tf.Session() as sess:
 
 ### 다른 변수값을 참조하여 초기화 하기
 
-다른 변수의 값을 이용하여 어떤 변수를 초기화 해야 하는 경우가 있습니다. `tf.initialize_all_variables()` 를 통해서 추가된 op는 모든 변수들을 한꺼번에 병렬적으로 초기화 하므로, 이 기능을 이용하는 경우에는 주의해야 합니다.
+다른 변수의 값을 이용하여 어떤 변수를 초기화해야 하는 경우가 있습니다. `tf.initialize_all_variables()` 를 통해서 추가된 op는 모든 변수들을 한꺼번에 병렬적으로 초기화 하므로, 이 기능을 이용하는 경우에는 주의해야 합니다.
 
-다른 변수의 값을 이용하여 새로운 변수를 초기화 하는 경우, 그 다른 변수의 `initialized_value()` 프로퍼티를 사용합니다. 그 초기화된 값을 그대로 새로운 변수의 초기값으로 사용하거나, 초기값을 계산하는 데에 필요한 텐서로 사용할 수 있습니다.
+다른 변수의 값을 이용하여 새로운 변수를 초기화하는 경우, 그 다른 변수의 `initialized_value()` 프로퍼티를 사용합니다. 그 초기화된 값을 그대로 새로운 변수의 초기값으로 사용하거나, 초기값을 계산하는 데에 필요한 텐서로 사용할 수 있습니다.
 
 ```python
 # Create a variable with a random value.
@@ -95,17 +95,13 @@ w_twice = tf.Variable(weights.initialized_value() * 2.0, name="w_twice")
 
 ### 커스텀 초기화
 
-컨비니언스 함수인 `tf.initialize_all_variables()` 는 모델상의 *모든 변수*를 초기화 하는 op를 추가합니다. 초기화가 필요한 변수들만을 리스트로 넘기는 방법도 가능합니다. 변수들이 초기화 되어있는지를 체크하는 방법을 포함한 자세한 옵션들에 대해서는 [변수](../../api_docs/python/state_ops.md) 문서를 참조하십시요. 
+컨비니언스 함수인 `tf.initialize_all_variables()` 는 모델상의 *모든 변수*를 초기화 하는 op를 추가합니다. 초기화가 필요한 변수들만을 리스트로 넘기는 것도 가능합니다. 변수들이 초기화 되어있는지를 체크하는 방법을 포함한 자세한 옵션들에 대해서는 [변수](../../api_docs/python/state_ops.md) 문서를 참조하십시요. 
 
 ## 저장과 복구
 
-The easiest way to save and restore a model is to use a `tf.train.Saver` object.
-The constructor adds `save` and `restore` ops to the graph for all, or a
-specified list, of the variables in the graph.  The saver object provides
-methods to run these ops, specifying paths for the checkpoint files to write to
-or read from.
+모델을 저장하고 복구하는 가장 쉬운 방법은 `tf.train.Saver` 객체를 사용하는 것입니다. `save` 와 `restore` op 들이 그래프에 추가되어, 모든 변수들 또는 리스트로 정리된 특정 변수들을 저장하고 복구할 수 있게 됩니다. 체크포인트 화일들을 읽고 쓸 경로를 지정하여 이 op 들을 실행시키는 메쏘드는 saver 객체가 제공합니다.
 
-### 체크 포인트 화일 Checkpoint Files
+### 체크포인트 화일
 
 Variables are saved in binary files that, roughly, contain a map from variable
 names to tensor values.

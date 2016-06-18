@@ -367,6 +367,6 @@ and sequence-to-sequence models.
 
 화일 | 내용
 --- | ---
-`models/image/cifar10.py` | 이미지내의 대상을 인식하는 모델.
+`models/image/cifar10.py` | 이미지상의 대상 인식용 모델.
 `models/rnn/rnn_cell.py` | RNN(recurrent neural networks) 의 셀 함수들.
 `models/rnn/seq2seq.py` | sequence-to-sequence 모델들을 구축하는 데에 필요한 함수들.

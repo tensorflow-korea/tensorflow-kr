@@ -163,6 +163,8 @@ with tf.Session() as sess:
 
 `tf.train.Saver()` 에 아무 인자도 넘겨주지 않으면, saver 는 그래프에 있는 모든 변수들을 처리 대상으로 가집니다. 각각의 변수들은 생성된 시점에 넘겨받은 이름으로 저장됩니다.
 
+체크포인트 화일에 저장될 변수들에 구체적인 이름을 붙이는 것이 유용할 때가 있습니다. 예를 들어, `"weights"` 라는 이름의 변수를 가지는 모델을 학습시켜서, `"params"` 라는 이름을 가진 새 변수의 값으로 복구하는 경우가 있습니다.
+
 
 It is sometimes useful to explicitly specify names for variables in the
 checkpoint files.  For example, you may have trained a model with a variable
@@ -175,7 +177,7 @@ and you now want to train a new model with 6 layers, restoring the parameters
 from the 5 layers of the previously trained model into the first 5 layers of
 the new model.
 
-`tf.train.Saver()` 생성자에 파이썬 딕셔너리를 전달함으로서, 어떤 변수들을 어떤 이름으로 저장할 것인지 간편하게 정할 수 있습니다: 저장시에 사용할 이름들을 key 로 하고, 저장될 변수들을 값으로 하는 딕셔너리를 전달합니다.
+`tf.train.Saver()` 생성자에 파이썬 딕셔너리를 전달함으로서, 어떤 변수들을 어떤 이름으로 저장할 것인지 간편하게 정할 수 있습니다: 저장시에 사용할 이름들을 key 로 하고, 저장될 변수들을 값으로 하는 딕셔너리를 전달하면 됩니다.
 
 주:
 

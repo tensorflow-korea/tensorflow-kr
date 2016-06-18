@@ -179,12 +179,14 @@ You can easily specify the names and variables to save by passing to the
 `tf.train.Saver()` constructor a Python dictionary: keys are the
 names to use, values are the variables to manage.
 
-Notes:
+주:
 
 *  You can create as many saver objects as you want if you need to save and
    restore different subsets of the model variables.  The same variable can be
    listed in multiple saver objects, its value is only changed when the saver
    `restore()` method is run.
+
+*  세션을 시작할 때 모델 변수들의 일부만을 복구하는 경우에는, 나머지 변수들의 초기화 op 를 반드시 실행해야 합니다. 자세한 내용은 [`tf.initialize_variables()`](../../api_docs/python/state_ops.md#initialize_variables) 를 보십시요.
 
 *  If you only restore a subset of the model variables at the start
    of a session, you have to run an initialize op for the other variables.  See

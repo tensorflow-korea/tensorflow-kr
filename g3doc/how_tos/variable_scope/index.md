@@ -361,7 +361,7 @@ we do not alter the current name scope for ops.
 
 ## 사용 예
 
-변수 범위를 사용하는 화일들을 몇 개 소개합니다. 특히, RNN(recurrent neural networks) 과 sequence-to-sequence 모델들에 매우 많이 사용됩니다.
+변수 범위를 사용하는 화일들을 몇 개 소개합니다. RNN(recurrent neural networks) 과 sequence-to-sequence 모델들에 특히 많이 사용됩니다.
 
 화일 | 내용
 --- | ---

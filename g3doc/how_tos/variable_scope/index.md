@@ -4,11 +4,7 @@
 
 ## 문제
 
-Imagine you create a simple model for image filters, similar to our
-[Convolutional Neural Networks Tutorial](../../tutorials/deep_cnn/index.md)
-model but with only 2 convolutions (for simplicity of this example). If you use
-just `tf.Variable`, as explained in [Variables HowTo](../../how_tos/variables/index.md),
-your model might look like this.
+(간단한 예로서) 기존의 [Convolutional Neural Networks Tutorial](../../tutorials/deep_cnn/index.md) 모델과 비슷하지만 컨볼루션 레이어를 2개만 가지는 심플한 이미지 필터링 모델을 만든다고 가정합니다. [Variables HowTo](../../how_tos/variables/index.md) 에 설명되어 있는 것처럼 `tf.Variable` 만을 사용한다면, 다음과 비슷한 모델이 될 것입니다.
 
 ```python
 def my_image_filter(input_images):

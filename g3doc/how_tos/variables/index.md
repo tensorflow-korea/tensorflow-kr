@@ -163,13 +163,9 @@ with tf.Session() as sess:
 
 `tf.train.Saver()` 에 아무 인자도 넘겨주지 않으면, saver 는 그래프에 있는 모든 변수들을 처리 대상으로 가집니다. 각각의 변수들은 생성된 시점에 넘겨받은 이름으로 저장됩니다.
 
-체크포인트 화일에 저장될 변수들에 구체적인 이름을 붙이는 것이 유용할 때가 있습니다. 예를 들어, 학습된 모델이 `"weights"` 라는 이름의 변수를 가지고 있는데, 그 변수의 값을 `"params"` 라는 이름의 새 변수의 값으로 복구하는 경우가 있습니다.
+체크포인트 화일에 저장될 변수들에 구체적인 이름을 붙이는 것이 유용할 때가 있습니다. 예를 들어, 학습된 모델이 `"weights"` 라는 이름의 변수를 가지고 있는데, 그 변수의 값을 복구하여 `"params"` 라는 이름의 새 변수의 값으로 넣는 경우가 있습니다.
 
-
-It is sometimes useful to explicitly specify names for variables in the
-checkpoint files.  For example, you may have trained a model with a variable
-named `"weights"` whose value you want to restore in a new variable named
-`"params"`.
+또한, 모델에 사용되는 변수들의 부분집합만을 저장하고 복구하는 것이 유용한 경우가 있습니다. 예컨대, 5개의 레이어를 가지는 뉴럴넷을 학습시켰는데, 6개의 레이어를 가지는 새 모델을 학습시킨다고 합시다. 이 경우, 첫 5개 레이어의 파라미터느 이미 학습된 모델의 파라미터들을 복구하여 사용할 수 있습니다.
 
 It is also sometimes useful to only save or restore a subset of the variables
 used by a model.  For example, you may have trained a neural net with 5 layers,

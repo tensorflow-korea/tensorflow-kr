@@ -361,9 +361,7 @@ we do not alter the current name scope for ops.
 
 ## 사용 예
 
-Here are pointers to a few files that make use of variable scope.
-In particular, it is heavily used for recurrent neural networks
-and sequence-to-sequence models.
+변수 범위를 사용하는 몇 가지 화일들을 소개합니다. 특히, RNN(recurrent neural networks) 과 sequence-to-sequence 모델들에 매우 많이 사용됩니다.
 
 화일 | 내용
 --- | ---

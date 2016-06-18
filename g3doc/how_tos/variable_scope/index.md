@@ -27,11 +27,6 @@ def my_image_filter(input_images):
 `conv1_biases`, `conv2_weights`, `conv2_biases`
 
 문제는 이 모델을 재사용하고자 할 때 생깁니다. 예를 들어, 이 필터링 모델을 `image1` 과 `image2` 라는 2개의 다른 이미지에 적용하는 경우입니다. 두 이미지 모두를 같은 파라미터를 가지는 같은 모델로 처리하고자 하는 것입니다. `my_image_filter()`를 두번 호출하면 되지만, 이렇게 하면 변수를 두 세트를 만들게 됩니다.
-The problem arises when you want to reuse this model. Assume you want to
-apply your image filter to 2 different images, `image1` and `image2`.
-You want both images processed by the same filter with the same parameters.
-You can call `my_image_filter()` twice, but this will create two sets
-of variables:
 
 ```python
 # First call creates one set of variables.
@@ -40,6 +35,7 @@ result1 = my_image_filter(image1)
 result2 = my_image_filter(image2)
 ```
 
+변수를 공유하는 일반적인 방법은 
 A common way to share variables is to create them in a separate piece of code
 and pass them to functions that use them.   For example by using a dictionary:
 

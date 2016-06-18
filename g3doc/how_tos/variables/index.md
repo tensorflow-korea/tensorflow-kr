@@ -181,10 +181,7 @@ names to use, values are the variables to manage.
 
 주:
 
-*  You can create as many saver objects as you want if you need to save and
-   restore different subsets of the model variables.  The same variable can be
-   listed in multiple saver objects, its value is only changed when the saver
-   `restore()` method is run.
+*  모델 변수들의 여러가지 부분집합들을 저장하고 복구할 필요가 있는 경우, 원하는 만큼의 saver 객체를 생성할 수 있습니다. 같은 변수를 복수의 saver 객체들에 포함해도 되며, 이 경우에 그 변수의 값은 saver의 `restore()` 메소드가 실행될 때에만 변경됩니다.
 
 *  세션을 시작할 때 모델 변수들의 일부만을 복구하는 경우에는, 나머지 변수들의 초기화 op 를 반드시 실행해야 합니다. 자세한 내용은 [`tf.initialize_variables()`](../../api_docs/python/state_ops.md#initialize_variables) 를 보십시요.
 

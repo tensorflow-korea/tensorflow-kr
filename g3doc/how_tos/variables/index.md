@@ -165,13 +165,7 @@ with tf.Session() as sess:
 
 체크포인트 화일에 저장될 변수들에 구체적인 이름을 붙이는 것이 유용할 때가 있습니다. 예를 들어, 학습된 모델이 `"weights"` 라는 이름의 변수를 가지고 있는데, 그 변수의 값을 복구하여 `"params"` 라는 이름의 새 변수의 값으로 넣는 경우가 있습니다.
 
-또한, 모델에 사용되는 변수들의 부분집합만을 저장하고 복구하는 것이 유용한 경우가 있습니다. 예컨대, 5개의 레이어를 가지는 뉴럴넷을 학습시켰는데, 6개의 레이어를 가지는 새 모델을 학습시키고 싶다고 합시다. 이 경우, 첫 5개 레이어의 파라미터느 이미 학습된 모델의 파라미터들을 복구하여 사용할 수 있습니다.
-
-It is also sometimes useful to only save or restore a subset of the variables
-used by a model.  For example, you may have trained a neural net with 5 layers,
-and you now want to train a new model with 6 layers, restoring the parameters
-from the 5 layers of the previously trained model into the first 5 layers of
-the new model.
+또한, 모델에 사용되는 변수들의 부분집합만을 저장하고 복구하는 것이 유용한 경우가 있습니다. 예컨대, 5개의 레이어를 가지는 뉴럴넷을 학습시켰는데, 6개의 레이어를 가지는 새 모델을 학습시키고 싶다고 합시다. 이 경우, 첫 5개 레이어의 파라미터는 이미 학습된 모델의 파라미터들을 복구하여 사용할 수 있다는 것입니다.
 
 `tf.train.Saver()` 생성자에 파이썬 딕셔너리를 전달함으로서, 어떤 변수들을 어떤 이름으로 저장할 것인지 간편하게 정할 수 있습니다: 저장시에 사용할 이름들을 key 로 하고, 저장될 변수들을 값으로 하는 딕셔너리를 전달하면 됩니다.
 

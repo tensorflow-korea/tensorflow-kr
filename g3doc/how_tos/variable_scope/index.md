@@ -7,7 +7,7 @@ variables and you might want to initialize all of them in one place.
 This tutorial shows how this can be done using `tf.variable_scope()` and
 the `tf.get_variable()`.
 
-## The Problem
+## 문제
 
 Imagine you create a simple model for image filters, similar to our
 [Convolutional Neural Networks Tutorial](../../tutorials/deep_cnn/index.md)
@@ -88,7 +88,7 @@ For a lighter solution, not involving classes, TensorFlow provides
 a *Variable Scope* mechanism that allows to easily share named variables
 while constructing a graph.
 
-## Variable Scope Example
+## 변수 범위 예
 
 Variable Scope mechanism in TensorFlow consists of 2 main functions:
 
@@ -162,9 +162,9 @@ with tf.variable_scope("image_filters") as scope:
 
 This is a good way to share variables, lightweight and safe.
 
-## How Does Variable Scope Work?
+## How Does Variable Scope Work? 변수 범위가 어떤 기능을 갖는가?
 
-### Understanding `tf.get_variable()`
+### `tf.get_variable()` 이해하기
 
 To understand variable scope it is necessary to first
 fully understand how `tf.get_variable()` works.
@@ -210,7 +210,7 @@ with tf.variable_scope("foo", reuse=True):
 assert v1 == v
 ```
 
-### Basics of `tf.variable_scope()`
+### `tf.variable_scope()` 의 기초
 
 Knowing how `tf.get_variable()` works makes it easy to understand variable
 scope. The primary function of variable scope is to carry a name that will
@@ -329,7 +329,7 @@ with tf.variable_scope("foo", initializer=tf.constant_initializer(0.4)):
         assert v.eval() == 0.2  # Changed default initializer.
 ```
 
-### Names of ops in `tf.variable_scope()`
+### `tf.variable_scope()` 의 op 명칭들
 
 We discussed how `tf.variable_scope` governs the names of variables.
 But how does it influence the names of other ops in the scope?
@@ -359,13 +359,13 @@ When opening a variable scope using a captured object instead of a string,
 we do not alter the current name scope for ops.
 
 
-## Examples of Use
+## 사용 예
 
 Here are pointers to a few files that make use of variable scope.
 In particular, it is heavily used for recurrent neural networks
 and sequence-to-sequence models.
 
-File | What's in it?
+화일 | 화일 내용
 --- | ---
 `models/image/cifar10.py` | Model for detecting objects in images.
 `models/rnn/rnn_cell.py` | Cell functions for recurrent neural networks.

@@ -188,11 +188,6 @@ names to use, values are the variables to manage.
 
 *  세션을 시작할 때 모델 변수들의 일부만을 복구하는 경우에는, 나머지 변수들의 초기화 op 를 반드시 실행해야 합니다. 자세한 내용은 [`tf.initialize_variables()`](../../api_docs/python/state_ops.md#initialize_variables) 를 보십시요.
 
-*  If you only restore a subset of the model variables at the start
-   of a session, you have to run an initialize op for the other variables.  See
-   [`tf.initialize_variables()`](../../api_docs/python/state_ops.md#initialize_variables)
-   for more information.
-
 ```python
 # Create some variables.
 v1 = tf.Variable(..., name="v1")

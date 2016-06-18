@@ -1,4 +1,4 @@
-# Sharing Variables
+# 변수 공유
 
 You can create, initialize, save and load single variables
 in the way described in the [Variables HowTo](../../how_tos/variables/index.md).

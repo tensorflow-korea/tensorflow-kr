@@ -175,9 +175,7 @@ and you now want to train a new model with 6 layers, restoring the parameters
 from the 5 layers of the previously trained model into the first 5 layers of
 the new model.
 
-You can easily specify the names and variables to save by passing to the
-`tf.train.Saver()` constructor a Python dictionary: keys are the
-names to use, values are the variables to manage.
+`tf.train.Saver()` 생성자에 파이썬 딕셔너리를 전달함으로서, 어떤 변수들을 어떤 이름으로 저장할 것인지 간편하게 정할 수 있습니다: 저장시에 사용할 이름들을 key 로 하고, 저장될 변수들을 값으로 하는 딕셔너리를 전달합니다.
 
 주:
 

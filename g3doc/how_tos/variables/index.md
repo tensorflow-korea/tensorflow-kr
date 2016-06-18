@@ -109,10 +109,6 @@ w_twice = tf.Variable(weights.initialized_value() * 2.0, name="w_twice")
 
 [`inspect_checkpoint`](https://www.tensorflow.org/code/tensorflow/python/tools/inspect_checkpoint.py) 라이브러리, 좀 더 자세하게는 `print_tensors_in_checkpoint_file` 함수를 사용하여, 체크포인트에 어떤 변수들이 들어있는지를 알아볼 수 있습니다.
 
-To understand what variables are in a checkpoint, you can use the
-[`inspect_checkpoint`](https://www.tensorflow.org/code/tensorflow/python/tools/inspect_checkpoint.py)
-library, and in particular, the `print_tensors_in_checkpoint_file` function.
-
 ### 변수 저장
 
 모델안의 모든 변수를 관리하기 위하여, `tf.train.Saver()`를 사용해 `Saver`를 만드십시요.

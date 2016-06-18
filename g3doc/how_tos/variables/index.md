@@ -105,12 +105,9 @@ w_twice = tf.Variable(weights.initialized_value() * 2.0, name="w_twice")
 
 변수들은 바이너리 화일에 저장되는데, 대략적으로 변수명과 텐서 값을 매핑하는 구조로 되어 있습니다.
 
-`Saver` 객체를 생성할 때, 체크포인트 화일에 들어갈 변수의 이름들을 지정하는 것도 가능합니다. 특별히 지정하지 않는 경우에는, 각 변수들의 [`Variable.name`](../../api_docs/python/state_ops.md#Variable.name) 프로퍼티 값들이 사용됩니다.
+`Saver` 객체를 생성할 때, 체크포인트 화일에 들어갈 변수들의 이름을 지정하는 것도 가능합니다. 특별히 지정하지 않는 경우에는, 각 변수들의 [`Variable.name`](../../api_docs/python/state_ops.md#Variable.name) 프로퍼티 값들이 사용됩니다.
 
-When you create a `Saver` object, you can optionally choose names for the
-variables in the checkpoint files.  By default, it uses the value of the
-[`Variable.name`](../../api_docs/python/state_ops.md#Variable.name) property for
-each variable.
+[`inspect_checkpoint`](https://www.tensorflow.org/code/tensorflow/python/tools/inspect_checkpoint.py) 라이브러리, 좀 더 자세하게는 `print_tensors_in_checkpoint_file` 함수를 사용하여, 체크포인트에 어떤 변수들이 들어있는지를 알아볼 수 있습니다.
 
 To understand what variables are in a checkpoint, you can use the
 [`inspect_checkpoint`](https://www.tensorflow.org/code/tensorflow/python/tools/inspect_checkpoint.py)

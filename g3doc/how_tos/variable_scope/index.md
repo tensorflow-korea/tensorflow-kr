@@ -1,11 +1,6 @@
 # 변수 공유
 
-You can create, initialize, save and load single variables
-in the way described in the [Variables HowTo](../../how_tos/variables/index.md).
-But when building complex models you often need to share large sets of
-variables and you might want to initialize all of them in one place.
-This tutorial shows how this can be done using `tf.variable_scope()` and
-the `tf.get_variable()`.
+[Variables HowTo](../../how_tos/variables/index.md) 에 적혀있는 설명을 따라, 개별 변수들을 생성하고, 초기화하며, 저장 및 읽어들이기를 할 수 있습니다. 하지만 복잡도가 높은 모델을 구축하는 경우에는, 종종 많은 수의 변수들을 공유하거나 변수들 전체를 한번에 초기화 할 필요가 생깁니다. 이 튜토리얼에서 `tf.variable_scope()` 와 `tf.get_variable()` 를 이용하여 어떻게 그런 작업들을 하는지 알 수 있습니다.
 
 ## 문제
 

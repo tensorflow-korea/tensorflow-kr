@@ -23,7 +23,7 @@ def my_image_filter(input_images):
     return tf.nn.relu(conv2 + conv2_biases)
 ```
 
-짐작 가능하듯이, 모델들은 금방 이보다 훨씬 복잡해집니다. 이 모델에조차도 벌써 4개의 변수가 있습니다: `conv1_weights`,
+짐작 가능하듯이, 모델들은 쉽게 이보다 훨씬 복잡해집니다. 이 모델조차도 벌써 변수가 4개입니다: `conv1_weights`,
 `conv1_biases`, `conv2_weights`, `conv2_biases`
 
 The problem arises when you want to reuse this model. Assume you want to

@@ -161,9 +161,8 @@ with tf.Session() as sess:
 
 ### 저장 및 복구할 변수들의 선택
 
-If you do not pass any argument to `tf.train.Saver()` the saver handles all
-variables in the graph.  Each one of them is saved under the name that was
-passed when the variable was created.
+`tf.train.Saver()` 에 아무 인자도 넘겨주지 않으면, saver 는 그래프에 있는 모든 변수들을 처리 대상으로 가집니다. 각각의 변수들은 생성된 시점에 넘겨받은 이름으로 저장됩니다.
+
 
 It is sometimes useful to explicitly specify names for variables in the
 checkpoint files.  For example, you may have trained a model with a variable

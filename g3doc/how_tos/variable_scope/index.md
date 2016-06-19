@@ -59,13 +59,10 @@ result1 = my_image_filter(image1, variables_dict)
 result2 = my_image_filter(image2, variables_dict)
 ```
 
-While convenient, creating variables like above,
-outside of the code, breaks encapsulation:
+간편하기는 하지만, 위의 예처럼 변수를 코드 바깥에서 만들어서 사용하면, 캡슐화(encapsulation)를 못하게 됩니다:
 
-*  The code that builds the graph must document the names, types,
-   and shapes of variables to create.
-*  When the code changes, the callers may have to create more, or less,
-   or different variables.
+*  생성될 변수들의 형태, 타입, 명칭들은 반드시 그래프를 구축하는 코드안에 명기되어야 한다.
+*  코드가 변경되는 경우, 호출자는 변수들을 더 많거나 적게 생성하거나, 또는 다른 변수들을 생성해야 하는 경우가 있다.
 
 One way to address the problem is to use classes to create a model,
 where the classes take care of managing the variables they need.

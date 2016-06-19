@@ -75,11 +75,7 @@ result2 = my_image_filter(image2, variables_dict)
 * `tf.variable_scope(<scope_name>)`:
   `tf.get_variable()` 에 넘겨주는 이름들의 이름공간(namespace)을 관리합니다.
 
-The function `tf.get_variable()` is used to get or create a variable instead
-of a direct call to `tf.Variable`. It uses an *initializer* instead of passing
-the value directly, as in `tf.Variable`. An initializer is a function that
-takes the shape and provides a tensor with that shape. Here are some
-initializers available in TensorFlow:
+`tf.Variable` 를 직접 호출하지 않고, `tf.get_variable()` 함수를 사용하여 변수를 생성하거나 얻습니다(get). `tf.Variable` 처럼 값을 직접 넘겨주는 것이 아니라 *initializer* 를 사용합니다. initializer 는 형태를 입력으로 받아서 그 형태를 가진 텐서를 돌려주는 함수입니다. 텐서플로우에서 사용가능한 initializer 의 예들은 다음과 같습니다:
 
 * `tf.constant_initializer(value)` initializes everything to the provided value,
 * `tf.random_uniform_initializer(a, b)` initializes uniformly from [a, b],

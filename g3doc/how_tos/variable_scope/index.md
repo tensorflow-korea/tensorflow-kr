@@ -71,9 +71,9 @@ result2 = my_image_filter(image2, variables_dict)
 텐서플로우의 변수 범위 메커니즘은 2개의 메인 함수로 이루어집니다:
 
 * `tf.get_variable(<name>, <shape>, <initializer>)`:
-  Creates or returns a variable with a given name.
+  주어진 이름을 가진 변수를 만들거나 리턴합니다.
 * `tf.variable_scope(<scope_name>)`:
-  Manages namespaces for names passed to `tf.get_variable()`.
+  `tf.get_variable()` 에 넘겨주는 명칭들의 네임스페이스를 관리합니다.
 
 The function `tf.get_variable()` is used to get or create a variable instead
 of a direct call to `tf.Variable`. It uses an *initializer* instead of passing

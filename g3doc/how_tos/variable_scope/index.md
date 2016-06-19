@@ -82,6 +82,7 @@ result2 = my_image_filter(image2, variables_dict)
 * `tf.random_normal_initializer(mean, stddev)` 주어진 평균과 표준편차를 갖는 정규분포(normal
   distribution)로 초기화.
 
+위에서 설명한 문제를 `tf.get_variable()` 함수가 어떻게 해결하는지 알아보기 위하여, 
 To see how `tf.get_variable()` solves the problem discussed
 before, let's refactor the code that created one convolution into
 a separate function, named `conv_relu`:

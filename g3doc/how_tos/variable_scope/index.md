@@ -64,15 +64,11 @@ result2 = my_image_filter(image2, variables_dict)
 *  생성될 변수들의 형태, 타입, 명칭들은 반드시 그래프를 구축하는 코드안에 명기되어야 한다.
 *  코드가 변경되는 경우, 호출자는 변수들을 더 많거나 적게 생성하거나, 또는 다른 변수들을 생성해야 하는 경우가 있다.
 
-One way to address the problem is to use classes to create a model,
-where the classes take care of managing the variables they need.
-For a lighter solution, not involving classes, TensorFlow provides
-a *Variable Scope* mechanism that allows to easily share named variables
-while constructing a graph.
+이 문제에 대한 하나의 해결책은 클래스를 이용하여 모델을 생성하는 것입니다. 이 경우, 클래스가 변수들을 관리합니다. 클래스를 사용하지 않는 라이트한(간결한) 해결책으로써, 텐서플로우에서는 *변수 범위* 라는 메커니즘이 제공됩니다. 이것을 사용하면 그래프를 만들면서 (이름을 가진) 변수들을 쉽게 공유할 수 있습니다.
 
 ## 변수 범위 예
 
-Variable Scope mechanism in TensorFlow consists of 2 main functions:
+텐서플로우의 변수 범위 메커니즘은 2개의 메인 함수로 이루어집니다:
 
 * `tf.get_variable(<name>, <shape>, <initializer>)`:
   Creates or returns a variable with a given name.

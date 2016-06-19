@@ -73,7 +73,7 @@ result2 = my_image_filter(image2, variables_dict)
 * `tf.get_variable(<name>, <shape>, <initializer>)`:
   주어진 이름을 가진 변수를 만들거나 리턴합니다.
 * `tf.variable_scope(<scope_name>)`:
-  `tf.get_variable()` 에 넘겨주는 이름들의 이름공간(namespace)를 관리합니다.
+  `tf.get_variable()` 에 넘겨주는 이름들의 이름공간(namespace)을 관리합니다.
 
 The function `tf.get_variable()` is used to get or create a variable instead
 of a direct call to `tf.Variable`. It uses an *initializer* instead of passing

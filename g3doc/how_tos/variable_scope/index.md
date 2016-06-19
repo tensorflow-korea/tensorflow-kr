@@ -77,10 +77,10 @@ result2 = my_image_filter(image2, variables_dict)
 
 `tf.Variable` 를 직접 호출하지 않고, `tf.get_variable()` 함수를 사용하여 변수를 생성하거나 얻습니다(get). `tf.Variable` 처럼 값을 직접 넘겨주는 것이 아니라 *initializer* 를 사용합니다. initializer 는 형태를 입력으로 받아서 그 형태를 가진 텐서를 돌려주는 함수입니다. 텐서플로우에서 사용가능한 initializer 의 예들은 다음과 같습니다:
 
-* `tf.constant_initializer(value)` initializes everything to the provided value,
-* `tf.random_uniform_initializer(a, b)` initializes uniformly from [a, b],
-* `tf.random_normal_initializer(mean, stddev)` initializes from the normal
-  distribution with the given mean and standard deviation.
+* `tf.constant_initializer(value)` (어떤 변수라도) 주어진 값으로 초기화,
+* `tf.random_uniform_initializer(a, b)` [a, b] 범위의 연속균등분포(uniform distribution)로 초기화,
+* `tf.random_normal_initializer(mean, stddev)` 주어진 평균과 표준편차를 갖는 정규분포(normal
+  distribution)로 초기화.
 
 To see how `tf.get_variable()` solves the problem discussed
 before, let's refactor the code that created one convolution into

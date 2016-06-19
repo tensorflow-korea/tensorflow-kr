@@ -35,9 +35,7 @@ result1 = my_image_filter(image1)
 result2 = my_image_filter(image2)
 ```
 
-변수를 공유하는 일반적인 방법은 
-A common way to share variables is to create them in a separate piece of code
-and pass them to functions that use them.   For example by using a dictionary:
+변수를 공유하는 일반적인 방법은, 변수들을 따로 먼저 생성하여 그것들을 사용하게 될 함수들에 넘겨주는 것입니다. 예컨대 딕셔너리를 사용하여 다음과 같이 합니다:
 
 ```python
 variables_dict = {

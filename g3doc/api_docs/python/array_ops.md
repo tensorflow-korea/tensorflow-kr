@@ -1,203 +1,196 @@
 <!-- This file is machine generated: DO NOT EDIT! -->
 
-# Tensor Transformations
+# 텐서 변환
 
-Note: Functions taking `Tensor` arguments can also take anything accepted by
-[`tf.convert_to_tensor`](framework.md#convert_to_tensor).
+참고: `Tensor`를 인수로 받는 함수들은, [`tf.convert_to_tensor`](framework.md#convert_to_tensor)의 인수가 될 수 있는 것들 또한 인수로 받을 수 있습니다.
 
-[TOC]
+<!--[TOC]는 gitbook에서 보이지 않아 주석 처리합니다.-->
 
-## Casting
+## 형변환 (Casting)
 
-TensorFlow provides several operations that you can use to cast tensor data
-types in your graph.
+TensorFlow는 그래프에 사용되는 텐서 자료형들을 형변환(cast)할 수 있는 몇 가지 함수를 제공합니다.
 
 - - -
 
 ### `tf.string_to_number(string_tensor, out_type=None, name=None)` {#string_to_number}
 
 Converts each string in the input Tensor to the specified numeric type.
+입력 텐서의 각 문자열(string)을 지정된 자료형의 값으로 변환합니다.
 
-(Note that int32 overflow results in an error while float overflow
-results in a rounded value.)
+(참고로, int32 오버플로우는 에러를 내며, float 오버플로우는 반올림한 결과를 냅니다.)
 
-##### Args:
+##### 인자:
 
+*  <b>`string_tensor`</b>: `string`형 `Tensor`.
+*  <b>`out_type`</b>: `tf.DType` 오브젝트. `tf.float32` 또는 `tf.int32`이어야 하며, 기본값은 `tf.float32`입니다. 이 자료형으로 `string_tensor`의 문자열이 변환됩니다. (선택사항)
+*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
 
-*  <b>`string_tensor`</b>: A `Tensor` of type `string`.
-*  <b>`out_type`</b>: An optional `tf.DType` from: `tf.float32, tf.int32`. Defaults to `tf.float32`.
-    The numeric type to interpret each string in string_tensor as.
-*  <b>`name`</b>: A name for the operation (optional).
+##### 반환값:
 
-##### Returns:
-
-  A `Tensor` of type `out_type`.
-  A Tensor of the same shape as the input `string_tensor`.
+  `out_type`형의 `Tensor`.
+  출력 텐서는 입력 텐서 `string_tensor`와 같은 구조(shape)를 가집니다.
 
 
 - - -
 
 ### `tf.to_double(x, name='ToDouble')` {#to_double}
 
-Casts a tensor to type `float64`.
+텐서를 `float64`형으로 변환합니다.
 
-##### Args:
-
-
-*  <b>`x`</b>: A `Tensor` or `SparseTensor`.
-*  <b>`name`</b>: A name for the operation (optional).
-
-##### Returns:
-
-  A `Tensor` or `SparseTensor` with same shape as `x` with type `float64`.
-
-##### Raises:
+##### 인자:
 
 
-*  <b>`TypeError`</b>: If `x` cannot be cast to the `float64`.
+*  <b>`x`</b>: `Tensor` 또는 `SparseTensor`.
+*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+
+##### 반환값:
+
+  `x`와 구조(shape)가 같은 `float64`형의 `Tensor` 또는 `SparseTensor`.
+
+##### 예외:
+
+
+*  <b>`TypeError`</b>: `x`가 `float64`형으로 변환될 수 없는 경우.
 
 
 - - -
 
 ### `tf.to_float(x, name='ToFloat')` {#to_float}
 
-Casts a tensor to type `float32`.
+텐서를 `float32`형으로 변환합니다.
 
-##### Args:
-
-
-*  <b>`x`</b>: A `Tensor` or `SparseTensor`.
-*  <b>`name`</b>: A name for the operation (optional).
-
-##### Returns:
-
-  A `Tensor` or `SparseTensor` with same shape as `x` with type `float32`.
-
-##### Raises:
+##### 인자:
 
 
-*  <b>`TypeError`</b>: If `x` cannot be cast to the `float32`.
+*  <b>`x`</b>: `Tensor` 또는 `SparseTensor`.
+*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+
+##### 반환값:
+
+  `x`와 구조(shape)가 같은 `float32`형의 `Tensor` 또는 `SparseTensor`.
+
+##### 예외:
+
+
+*  <b>`TypeError`</b>: `x`가 `float32`형으로 변환될 수 없는 경우.
 
 
 - - -
 
 ### `tf.to_bfloat16(x, name='ToBFloat16')` {#to_bfloat16}
 
-Casts a tensor to type `bfloat16`.
+텐서를 `bfloat16`형으로 변환합니다.
 
-##### Args:
-
-
-*  <b>`x`</b>: A `Tensor` or `SparseTensor`.
-*  <b>`name`</b>: A name for the operation (optional).
-
-##### Returns:
-
-  A `Tensor` or `SparseTensor` with same shape as `x` with type `bfloat16`.
-
-##### Raises:
+##### 인자:
 
 
-*  <b>`TypeError`</b>: If `x` cannot be cast to the `bfloat16`.
+*  <b>`x`</b>: `Tensor` 또는 `SparseTensor`.
+*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+
+##### 반환값:
+
+  `x`와 구조(shape)가 같은 `bfloat16`형의 `Tensor` 또는 `SparseTensor`.
+
+##### 예외:
+
+
+*  <b>`TypeError`</b>: `x`가 `bfloat16`형으로 변환될 수 없는 경우.
 
 
 - - -
 
 ### `tf.to_int32(x, name='ToInt32')` {#to_int32}
 
-Casts a tensor to type `int32`.
+텐서를 `int32`형으로 변환합니다.
 
-##### Args:
-
-
-*  <b>`x`</b>: A `Tensor` or `SparseTensor`.
-*  <b>`name`</b>: A name for the operation (optional).
-
-##### Returns:
-
-  A `Tensor` or `SparseTensor` with same shape as `x` with type `int32`.
-
-##### Raises:
+##### 인자:
 
 
-*  <b>`TypeError`</b>: If `x` cannot be cast to the `int32`.
+*  <b>`x`</b>: `Tensor` 또는 `SparseTensor`.
+*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+
+##### 반환값:
+
+  `x`와 구조(shape)가 같은 `int32`형의 `Tensor` 또는 `SparseTensor`.
+
+##### 예외:
+
+
+*  <b>`TypeError`</b>: `x`가 `int32`형으로 변환될 수 없는 경우.
 
 
 - - -
 
 ### `tf.to_int64(x, name='ToInt64')` {#to_int64}
 
-Casts a tensor to type `int64`.
+텐서를 `int64`형으로 변환합니다.
 
-##### Args:
-
-
-*  <b>`x`</b>: A `Tensor` or `SparseTensor`.
-*  <b>`name`</b>: A name for the operation (optional).
-
-##### Returns:
-
-  A `Tensor` or `SparseTensor` with same shape as `x` with type `int64`.
-
-##### Raises:
+##### 인자:
 
 
-*  <b>`TypeError`</b>: If `x` cannot be cast to the `int64`.
+*  <b>`x`</b>: `Tensor` 또는 `SparseTensor`.
+*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+
+##### 반환값:
+
+  `x`와 구조(shape)가 같은 `int64`형의 `Tensor` 또는 `SparseTensor`.
+
+##### 예외:
+
+
+*  <b>`TypeError`</b>: `x`가 `int64`형으로 변환될 수 없는 경우.
 
 
 - - -
 
 ### `tf.cast(x, dtype, name=None)` {#cast}
 
-Casts a tensor to a new type.
+텐서를 새로운 자료형으로 변환합니다.
 
-The operation casts `x` (in case of `Tensor`) or `x.values`
-(in case of `SparseTensor`) to `dtype`.
+`x`(`Tensor`의 경우) 또는 `x.values`(`SparseTensor`의 경우)를 `dtype`형으로 변환합니다.
 
-For example:
+예시:
 
 ```python
-# tensor `a` is [1.8, 2.2], dtype=tf.float
+# 텐서 `a`는 [1.8, 2.2], 자료형은 tf.float
 tf.cast(a, tf.int32) ==> [1, 2]  # dtype=tf.int32
 ```
 
-##### Args:
+##### 인자:
 
 
-*  <b>`x`</b>: A `Tensor` or `SparseTensor`.
-*  <b>`dtype`</b>: The destination type.
-*  <b>`name`</b>: A name for the operation (optional).
+*  <b>`x`</b>: `Tensor` 또는 `SparseTensor`.
+*  <b>`dtype`</b>: 변환될 자료형.
+*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
 
-##### Returns:
+##### 반환값:
 
-  A `Tensor` or `SparseTensor` with same shape as `x`.
+  `x`와 구조(shape)가 같은 `int64`형의 `Tensor` 또는 `SparseTensor`.
 
-##### Raises:
+##### 예외:
 
 
-*  <b>`TypeError`</b>: If `x` cannot be cast to the `dtype`.
+*  <b>`TypeError`</b>: `x`가 `dtype`형으로 변환될 수 없는 경우.
 
 
 - - -
 
 ### `tf.saturate_cast(value, dtype, name=None)` {#saturate_cast}
 
-Performs a safe saturating cast of `value` to `dtype`.
+`value`를 `dtype` 형으로 안전하게 포화 형변환(saturating cast)합니다.
 
-This function casts the input to `dtype` without applying any scaling.  If
-there is a danger that values would over or underflow in the cast, this op
-applies the appropriate clamping before the cast.
+이 함수는 입력을 `dtype`으로 스케일링(scaling) 없이 변환합니다. 형변환 시 오버플로우나 언더플로우가 발생할 수 있는 값들에 대해, 이 함수는 해당 값들을 허용되는 값 범위로 넣은 뒤 형변환을 진행합니다.
 
-##### Args:
+##### 인자:
 
 
-*  <b>`value`</b>: A `Tensor`.
-*  <b>`dtype`</b>: The desired output `DType`.
-*  <b>`name`</b>: A name for the operation (optional).
+*  <b>`value`</b>: `Tensor`.
+*  <b>`dtype`</b>: `DType` 오브젝트. 변환될 자료형.
+*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
 
-##### Returns:
+##### 반환값:
 
-  `value` safely cast to `dtype`.
+  `dtype`형으로 안전하게 변환된 `value`.
 
 
 

@@ -44,7 +44,7 @@ tf.zeros([3, 4], int32) ==> [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 예시:
 
 ```python
-# 'tensor' is [[1, 2, 3], [4, 5, 6]]
+# 'tensor' = [[1, 2, 3], [4, 5, 6]]
 tf.zeros_like(tensor) ==> [[0, 0, 0], [0, 0, 0]]
 ```
 
@@ -97,7 +97,7 @@ tf.ones([2, 3], int32) ==> [[1, 1, 1], [1, 1, 1]]
 예시:
 
 ```python
-# 'tensor' is [[1, 2, 3], [4, 5, 6]]
+# 'tensor' = [[1, 2, 3], [4, 5, 6]]
 tf.zeros_like(tensor) ==> [[1, 1, 1], [1, 1, 1]]
 ```
 
@@ -125,7 +125,7 @@ tf.zeros_like(tensor) ==> [[1, 1, 1], [1, 1, 1]]
 예시:
 
 ```prettyprint
-# Output tensor has shape [2, 3].
+# 반환값 텐서는 [2, 3]의 shape을 갖습니다.
 fill([2, 3], 9) ==> [[9, 9, 9]
                      [9, 9, 9]]
 ```
@@ -159,10 +159,10 @@ fill([2, 3], 9) ==> [[9, 9, 9]
  예시:
 
  ```python
- # Constant 1-D Tensor populated with value list.
+ # 1-D 텐서 상수는 값 리스트로 채워집니다.
  tensor = tf.constant([1, 2, 3, 4, 5, 6, 7]) => [1 2 3 4 5 6 7]
 
- # Constant 2-D tensor populated with scalar value -1.
+ # 2-D 텐서 상수는 스칼라 값 -1로 채워집니다.
  tensor = tf.constant(-1.0, shape=[2, 3]) => [[-1. -1. -1.]
                                               [-1. -1. -1.]]
  ```
@@ -228,12 +228,12 @@ tf.linspace(10.0, 12.0, 3, name="linspace") => [ 10.0  11.0  12.0]
 예시:
 
 ```
-# 'start' is 3
-# 'limit' is 18
-# 'delta' is 3
+# 'start'는 3
+# 'limit'는 18
+# 'delta'는 3
 tf.range(start, limit, delta) ==> [3, 6, 9, 12, 15]
 
-# 'limit' is 5
+# 'limit'는 5
 tf.range(limit) ==> [0, 1, 2, 3, 4]
 ```
 
@@ -260,20 +260,19 @@ TensorFlow는 서로 다른 분포를 가진 난수 텐서들을 생성하는 �
 ### 예시:
 
 ```python
-# Create a tensor of shape [2, 3] consisting of random normal values, with mean
-# -1 and standard deviation 4.
+# 평균이 -1이고 표준편차가 4인 정규 난수값들로 이루어진 [2, 3]의 shape을 가진 텐서를 생성합니다.
 norm = tf.random_normal([2, 3], mean=-1, stddev=4)
 
-# Shuffle the first dimension of a tensor
+# 텐서의 첫번째 차원을 섞습니다.
 c = tf.constant([[1, 2], [3, 4], [5, 6]])
 shuff = tf.random_shuffle(c)
 
-# Each time we run these ops, different results are generated
+# 연산을 실행할 때마다 다른 값이 생성됩니다.
 sess = tf.Session()
 print(sess.run(norm))
 print(sess.run(norm))
 
-# Set an op-level seed to generate repeatable sequences across sessions.
+# 세션간 반복 가능한 시퀀스를 생성하기 위해 연산 수준의 시드를 설정합니다.
 norm = tf.random_normal([2, 3], seed=1234)
 sess = tf.Session()
 print(sess.run(norm))
@@ -286,8 +285,8 @@ print(sess.run(norm))
 또 다른 난수값을 사용하는 일반적인 사례는 변수들의 초기화입니다. 이 또한 [Variables How To](../../how_tos/variables/index.md)에서 볼 수 있습니다.
 
 ```python
-# Use random uniform values in [0, 1) as the initializer for a variable of shape
-# [2, 3]. The default type is float32.
+# [2, 3]의 shape을 갖는 변수의 초기화를 위해 [0, 1)구간의 균등 난수값을 사용합니다. 
+# 타입의 기본값은 float32입니다. 
 var = tf.Variable(tf.random_uniform([2, 3]), name="var")
 init = tf.initialize_all_variables()
 
@@ -469,17 +468,17 @@ b = tf.random_normal([1])
 
 print("Session 1")
 with tf.Session() as sess1:
-  print(sess1.run(a))  # generates 'A1'
-  print(sess1.run(a))  # generates 'A2'
-  print(sess1.run(b))  # generates 'B1'
-  print(sess1.run(b))  # generates 'B2'
+  print(sess1.run(a))  # 'A1' 을 생성합니다.
+  print(sess1.run(a))  # 'A2' 을 생성합니다.
+  print(sess1.run(b))  # 'B1' 을 생성합니다.
+  print(sess1.run(b))  # 'B2' 을 생성합니다.
 
 print("Session 2")
 with tf.Session() as sess2:
-  print(sess2.run(a))  # generates 'A3'
-  print(sess2.run(a))  # generates 'A4'
-  print(sess2.run(b))  # generates 'B3'
-  print(sess2.run(b))  # generates 'B4'
+  print(sess2.run(a))  # 'A3' 을 생성합니다.
+  print(sess2.run(a))  # 'A4' 을 생성합니다.
+  print(sess2.run(b))  # 'B3' 을 생성합니다.
+  print(sess2.run(b))  # 'B4' 을 생성합니다.
 ```
 
 세션간에 하나의 연산이 똑같이 반복가능한 시퀀스를 생성할 수 있도록, 연산 시드를 설정합니다.
@@ -488,21 +487,21 @@ with tf.Session() as sess2:
 a = tf.random_uniform([1], seed=1)
 b = tf.random_normal([1])
 
-# Repeatedly running this block with the same graph will generate the same
-# sequence of values for 'a', but different sequences of values for 'b'.
+# 같은 그래프를 가진 이 블록을 반복적으로 실행하면 'a'는 똑같은 시퀀스를 생성할 것입니다. 
+# 그러나 'b'의 시퀀스는 다릅니다.
 print("Session 1")
 with tf.Session() as sess1:
-  print(sess1.run(a))  # generates 'A1'
-  print(sess1.run(a))  # generates 'A2'
-  print(sess1.run(b))  # generates 'B1'
-  print(sess1.run(b))  # generates 'B2'
+  print(sess1.run(a))  # 'A1' 을 생성합니다.
+  print(sess1.run(a))  # 'A2' 을 생성합니다.
+  print(sess1.run(b))  # 'B1' 을 생성합니다.
+  print(sess1.run(b))  # 'B2' 을 생성합니다.
 
 print("Session 2")
 with tf.Session() as sess2:
-  print(sess2.run(a))  # generates 'A1'
-  print(sess2.run(a))  # generates 'A2'
-  print(sess2.run(b))  # generates 'B3'
-  print(sess2.run(b))  # generates 'B4'
+  print(sess2.run(a))  # 'A1' 을 생성합니다.
+  print(sess2.run(a))  # 'A2' 을 생성합니다.
+  print(sess2.run(b))  # 'B3' 을 생성합니다.
+  print(sess2.run(b))  # 'B4' 을 생성합니다.
 ```
 
 모든 연산에 의해 생성된 난수 시퀀스들이 세션간 반복이 가능하게 하기위해서, 그래프 수준의 시드를 설정합니다.
@@ -512,21 +511,20 @@ tf.set_random_seed(1234)
 a = tf.random_uniform([1])
 b = tf.random_normal([1])
 
-# Repeatedly running this block with the same graph will generate different
-# sequences of 'a' and 'b'.
+# 같은 그래프를 가진 이 블록을 반복적으로 실행하면 'a'와 'b'의 다른 시퀀스들을 생성할 것입니다.
 print("Session 1")
 with tf.Session() as sess1:
-  print(sess1.run(a))  # generates 'A1'
-  print(sess1.run(a))  # generates 'A2'
-  print(sess1.run(b))  # generates 'B1'
-  print(sess1.run(b))  # generates 'B2'
+  print(sess1.run(a))  # 'A1' 을 생성합니다.
+  print(sess1.run(a))  # 'A2' 을 생성합니다.
+  print(sess1.run(b))  # 'B1' 을 생성합니다.
+  print(sess1.run(b))  # 'B2' 을 생성합니다.
 
 print("Session 2")
 with tf.Session() as sess2:
-  print(sess2.run(a))  # generates 'A1'
-  print(sess2.run(a))  # generates 'A2'
-  print(sess2.run(b))  # generates 'B1'
-  print(sess2.run(b))  # generates 'B2'
+  print(sess2.run(a))  # 'A1' 을 생성합니다.
+  print(sess2.run(a))  # 'A2' 을 생성합니다.
+  print(sess2.run(b))  # 'B1' 을 생성합니다.
+  print(sess2.run(b))  # 'B2' 을 생성합니다.
 ```
 
 ##### 인자:

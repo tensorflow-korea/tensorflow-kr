@@ -2,7 +2,7 @@
 
 # 텐서 변환
 
-참고: `Tensor`를 인수로 받는 함수들은, [`tf.convert_to_tensor`](framework.md#convert_to_tensor)의 인수가 될 수 있는 것들 또한 인수로 받을 수 있습니다.
+참고: `Tensor`를 인자로 받는 함수들은, [`tf.convert_to_tensor`](framework.md#convert_to_tensor)의 인자가 될 수 있는 것들 또한 인자로 받을 수 있습니다.
 
 <!--[TOC]는 gitbook에서 보이지 않아 주석 처리합니다.-->
 
@@ -23,7 +23,7 @@ Converts each string in the input Tensor to the specified numeric type.
 
 *  <b>`string_tensor`</b>: `string`형 `Tensor`.
 *  <b>`out_type`</b>: `tf.DType` 오브젝트. `tf.float32` 또는 `tf.int32`이어야 하며, 기본값은 `tf.float32`입니다. 이 자료형으로 `string_tensor`의 문자열이 변환됩니다. (선택사항)
-*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
 ##### 반환값:
 
@@ -41,7 +41,7 @@ Converts each string in the input Tensor to the specified numeric type.
 
 
 *  <b>`x`</b>: `Tensor` 또는 `SparseTensor`.
-*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
 ##### 반환값:
 
@@ -63,7 +63,7 @@ Converts each string in the input Tensor to the specified numeric type.
 
 
 *  <b>`x`</b>: `Tensor` 또는 `SparseTensor`.
-*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
 ##### 반환값:
 
@@ -85,7 +85,7 @@ Converts each string in the input Tensor to the specified numeric type.
 
 
 *  <b>`x`</b>: `Tensor` 또는 `SparseTensor`.
-*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
 ##### 반환값:
 
@@ -107,7 +107,7 @@ Converts each string in the input Tensor to the specified numeric type.
 
 
 *  <b>`x`</b>: `Tensor` 또는 `SparseTensor`.
-*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
 ##### 반환값:
 
@@ -129,7 +129,7 @@ Converts each string in the input Tensor to the specified numeric type.
 
 
 *  <b>`x`</b>: `Tensor` 또는 `SparseTensor`.
-*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
 ##### 반환값:
 
@@ -161,7 +161,7 @@ tf.cast(a, tf.int32) ==> [1, 2]  # dtype=tf.int32
 
 *  <b>`x`</b>: `Tensor` 또는 `SparseTensor`.
 *  <b>`dtype`</b>: 변환될 자료형.
-*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
 ##### 반환값:
 
@@ -186,7 +186,7 @@ tf.cast(a, tf.int32) ==> [1, 2]  # dtype=tf.int32
 
 *  <b>`value`</b>: `Tensor`.
 *  <b>`dtype`</b>: `DType` 오브젝트. 변환될 자료형.
-*  <b>`name`</b>: 오퍼레이션의 명칭 (선택사항).
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
 ##### 반환값:
 
@@ -194,146 +194,137 @@ tf.cast(a, tf.int32) ==> [1, 2]  # dtype=tf.int32
 
 
 
-## Shapes and Shaping
+## 구조(Shape) 및 구조 변형(Shaping)
 
-TensorFlow provides several operations that you can use to determine the shape
-of a tensor and change the shape of a tensor.
+TensorFlow는 텐서의 구조(shape)를 확인하거나 구조를 변형하는 데 사용할 수 있는 몇 가지 함수를 제공합니다.
 
 - - -
 
 ### `tf.shape(input, name=None)` {#shape}
 
-Returns the shape of a tensor.
+텐서의 구조(shape)를 반환합니다.
 
-This operation returns a 1-D integer tensor representing the shape of `input`.
+이 함수는 `input` 텐서의 구조(shape)를 1-D 정수형 텐서로 반환합니다.
 
-For example:
+예시:
 
 ```prettyprint
-# 't' is [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
+# 't'는 [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
 shape(t) ==> [2, 2, 3]
 ```
 
-##### Args:
+##### 인자:
 
 
-*  <b>`input`</b>: A `Tensor`.
-*  <b>`name`</b>: A name for the operation (optional).
+*  <b>`input`</b>: `Tensor`.
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
-##### Returns:
+##### 반환값:
 
-  A `Tensor` of type `int32`.
+  `int32`형 `Tensor`.
 
 
 - - -
 
 ### `tf.size(input, name=None)` {#size}
 
-Returns the size of a tensor.
+텐서의 크기(size)를 반환합니다.
 
-This operation returns an integer representing the number of elements in
-`input`.
+이 함수는 `input` 텐서의 원소의 수를 정수로 반환합니다.
 
-For example:
+예시:
 
 ```prettyprint
-# 't' is [[[1, 1,, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]]
+# 't'는 [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]]
 size(t) ==> 12
 ```
 
-##### Args:
+##### 인자:
 
 
-*  <b>`input`</b>: A `Tensor`.
-*  <b>`name`</b>: A name for the operation (optional).
+*  <b>`input`</b>: `Tensor`.
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
-##### Returns:
+##### 반환값:
 
-  A `Tensor` of type `int32`.
+  `int32`형 `Tensor`.
 
 
 - - -
 
 ### `tf.rank(input, name=None)` {#rank}
 
-Returns the rank of a tensor.
+텐서의 랭크(rank)를 반환합니다.
 
-This operation returns an integer representing the rank of `input`.
+이 함수는 `input` 텐서의 랭크를 정수로 반환합니다.
 
-For example:
+예시:
 
-```python
+```prettyprint
 # 't' is [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
 # shape of tensor 't' is [2, 2, 3]
 rank(t) ==> 3
 ```
 
-**Note**: The rank of a tensor is not the same as the rank of a matrix. The
-rank of a tensor is the number of indices required to uniquely select each
-element of the tensor. Rank is also known as "order", "degree", or "ndims."
+**참고**: 텐서의 랭크는 행렬의 랭크와는 다른 개념입니다. 텐서의 랭크는 텐서의 각 원소를 선택하기 위해 필요한 인덱스의 수입니다. 랭크는 order, degree, ndims 등으로 부르기도 합니다.
 
-##### Args:
+##### 인자:
 
 
-*  <b>`input`</b>: A `Tensor` or `SparseTensor`.
-*  <b>`name`</b>: A name for the operation (optional).
+*  <b>`input`</b>: `Tensor` 또는 `SparseTensor`.
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
-##### Returns:
+##### 반환값:
 
-  A `Tensor` of type `int32`.
+  `int32`형 `Tensor`.
 
 
 - - -
 
 ### `tf.reshape(tensor, shape, name=None)` {#reshape}
 
-Reshapes a tensor.
+텐서의 구조를 변형합니다.
 
-Given `tensor`, this operation returns a tensor that has the same values
-as `tensor` with shape `shape`.
+`tensor`가 주어졌을 때, 이 함수는 해당 텐서와 같은 원소들을 가지며 구조가 `shape`인 텐서를 반환합니다.
 
-If one component of `shape` is the special value -1, the size of that dimension
-is computed so that the total size remains constant.  In particular, a `shape`
-of `[-1]` flattens into 1-D.  At most one component of `shape` can be -1.
+만약 `shape`의 한 원소가 -1이라면, 전체 크기가 일정하게 유지되도록 해당 차원의 길이가 자동으로 계산됩니다. 특별히, `shape`가 `[-1]`이라면, 텐서는 1-D로 펴지게 됩니다. `shape`에서 최대 한 개의 원소만 -1이 될 수 있습니다.
 
-If `shape` is 1-D or higher, then the operation returns a tensor with shape
-`shape` filled with the values of `tensor`. In this case, the number of elements
-implied by `shape` must be the same as the number of elements in `tensor`.
+만약 `shape`가 1-D이거나 그 이상이라면, 오퍼레이션은 `tensor`의 원소로 `shape`의 구조가 채워진 텐서를 반환합니다. 이 경우, `shape`에 의해 지정된 원소의 전체 수는 `tensor`의 원소의 전체 수와 동일해야 합니다.
 
-For example:
+예시:
 
 ```prettyprint
-# tensor 't' is [1, 2, 3, 4, 5, 6, 7, 8, 9]
-# tensor 't' has shape [9]
+# tensor 't'는 [1, 2, 3, 4, 5, 6, 7, 8, 9]
+# tensor 't'의 구조(shape)는 [9]
 reshape(t, [3, 3]) ==> [[1, 2, 3],
                         [4, 5, 6],
                         [7, 8, 9]]
 
-# tensor 't' is [[[1, 1], [2, 2]],
-#                [[3, 3], [4, 4]]]
-# tensor 't' has shape [2, 2, 2]
+# tensor 't'는 [[[1, 1], [2, 2]],
+#               [[3, 3], [4, 4]]]
+# tensor 't'의 구조(shape)는 [2, 2, 2]
 reshape(t, [2, 4]) ==> [[1, 1, 2, 2],
                         [3, 3, 4, 4]]
 
-# tensor 't' is [[[1, 1, 1],
-#                 [2, 2, 2]],
-#                [[3, 3, 3],
-#                 [4, 4, 4]],
-#                [[5, 5, 5],
-#                 [6, 6, 6]]]
-# tensor 't' has shape [3, 2, 3]
-# pass '[-1]' to flatten 't'
+# tensor 't'는 [[[1, 1, 1],
+#                [2, 2, 2]],
+#               [[3, 3, 3],
+#                [4, 4, 4]],
+#               [[5, 5, 5],
+#                [6, 6, 6]]]
+# tensor 't'의 구조(shape)는 [3, 2, 3]
+# shape를 '[-1]'로 하여 't'를 1-D로 펴기
 reshape(t, [-1]) ==> [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6]
 
-# -1 can also be used to infer the shape
+# 구조를 암시(infer)하기 위한 -1의 사용
 
-# -1 is inferred to be 9:
+# -1은 9를 의미:
 reshape(t, [2, -1]) ==> [[1, 1, 1, 2, 2, 2, 3, 3, 3],
                          [4, 4, 4, 5, 5, 5, 6, 6, 6]]
-# -1 is inferred to be 2:
+# -1은 2를 의미:
 reshape(t, [-1, 9]) ==> [[1, 1, 1, 2, 2, 2, 3, 3, 3],
                          [4, 4, 4, 5, 5, 5, 6, 6, 6]]
-# -1 is inferred to be 3:
+# -1은 3을 의미:
 reshape(t, [ 2, -1, 3]) ==> [[[1, 1, 1],
                               [2, 2, 2],
                               [3, 3, 3]],
@@ -341,115 +332,99 @@ reshape(t, [ 2, -1, 3]) ==> [[[1, 1, 1],
                               [5, 5, 5],
                               [6, 6, 6]]]
 
-# tensor 't' is [7]
-# shape `[]` reshapes to a scalar
+# tensor 't'는 [7]
+# shape를 `[]`로 하면 스칼라(scalar)로 구조 변환
 reshape(t, []) ==> 7
 ```
 
-##### Args:
+##### 인자:
 
 
-*  <b>`tensor`</b>: A `Tensor`.
-*  <b>`shape`</b>: A `Tensor` of type `int32`. Defines the shape of the output tensor.
-*  <b>`name`</b>: A name for the operation (optional).
+*  <b>`tensor`</b>: `Tensor`.
+*  <b>`shape`</b>: `int32`형 `Tensor`. 출력 텐서의 구조(shape) 지정.
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
-##### Returns:
+##### 반환값:
 
-  A `Tensor`. Has the same type as `tensor`.
+  `tensor`와 같은 자료형의 `Tensor`.
 
 
 - - -
 
 ### `tf.squeeze(input, squeeze_dims=None, name=None)` {#squeeze}
 
-Removes dimensions of size 1 from the shape of a tensor.
+텐서에서 크기 1인 차원을 제거합니다.
 
-Given a tensor `input`, this operation returns a tensor of the same type with
-all dimensions of size 1 removed. If you don't want to remove all size 1
-dimensions, you can remove specific size 1 dimensions by specifying
-`squeeze_dims`.
+`input` 텐서가 주어졌을 때, 이 함수는 그와 같은 자료형의 크기 1인 차원이 모두 제거된 텐서를 반환합니다. 만약 모든 크기 1인 차원을 제거하고 싶은 것이 아니라면, 제거하고 싶은 특정한 크기 1인 차원들을 `squeeze_dims`으로 지정할 수 있습니다.
 
-For example:
+예시:
 
 ```prettyprint
-# 't' is a tensor of shape [1, 2, 1, 3, 1, 1]
+# 't'는 구조(shape) [1, 2, 1, 3, 1, 1]의 텐서
 shape(squeeze(t)) ==> [2, 3]
 ```
 
-Or, to remove specific size 1 dimensions:
+제거할 크기 1인 차원들을 `squeeze_dims`으로 지정하기:
 
 ```prettyprint
-# 't' is a tensor of shape [1, 2, 1, 3, 1, 1]
+# 't'는 구조(shape) [1, 2, 1, 3, 1, 1]의 텐서
 shape(squeeze(t, [2, 4])) ==> [1, 2, 3, 1]
 ```
 
-##### Args:
+##### 인자:
 
 
-*  <b>`input`</b>: A `Tensor`. The `input` to squeeze.
-*  <b>`squeeze_dims`</b>: An optional list of `ints`. Defaults to `[]`.
-    If specified, only squeezes the dimensions listed. The dimension
-    index starts at 0. It is an error to squeeze a dimension that is not 1.
-*  <b>`name`</b>: A name for the operation (optional).
+*  <b>`input`</b>: `Tensor`.
+*  <b>`squeeze_dims`</b>: `int`의 리스트. 기본값은 `[]`. 지정된 경우, 리스트 안의 차원만 제거합니다. 크기가 1이 아닌 차원을 제거하는 것은 오류입니다. (선택사항)
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
-##### Returns:
+##### 반환값:
 
-  A `Tensor`. Has the same type as `input`.
-  Contains the same data as `input`, but has one or more dimensions of
-  size 1 removed.
+  `input`과 같은 자료형의 `Tensor`.
+  `input`과 같은 원소를 포함하지만, 하나 이상의 크기 1인 차원이 제거되어 있습니다.
 
 
 - - -
 
 ### `tf.expand_dims(input, dim, name=None)` {#expand_dims}
 
-Inserts a dimension of 1 into a tensor's shape.
+크기 1인 차원을 텐서의 구조(shape)에 삽입합니다.
 
-Given a tensor `input`, this operation inserts a dimension of 1 at the
-dimension index `dim` of `input`'s shape. The dimension index `dim` starts at
-zero; if you specify a negative number for `dim` it is counted backward from
-the end.
+`input` 텐서가 주어졌을 때, 이 함수는 크기가 1인 차원을 `input`의 구조에서 차원 인덱스 `dim`에 삽입합니다. 차원 인덱스 `dim`은 0부터 시작합니다. 만약 `dim`에 음수가 지정된다면, 끝에서부터 역으로 계산됩니다.
 
-This operation is useful if you want to add a batch dimension to a single
-element. For example, if you have a single image of shape `[height, width,
-channels]`, you can make it a batch of 1 image with `expand_dims(image, 0)`,
-which will make the shape `[1, height, width, channels]`.
+이 함수는 단일 원소에 배치 차원(batch dimension)을 추가할 때 유용합니다. 예로, 만약 구조 `[height, width, channels]`의 단일 이미지가 있는 경우, 이것에 `expand_dims(image, 0)`을 적용해 구조 `[1, height, width, channels]`인 하나의 이미지로 구성된 배치(batch)를 구성할 수 있습니다.
 
-Other examples:
+다른 예시들:
 
 ```prettyprint
-# 't' is a tensor of shape [2]
+# 't'는 구조(shape) [2]의 텐서
 shape(expand_dims(t, 0)) ==> [1, 2]
 shape(expand_dims(t, 1)) ==> [2, 1]
 shape(expand_dims(t, -1)) ==> [2, 1]
 
-# 't2' is a tensor of shape [2, 3, 5]
+# 't2'는 구조(shape) [2, 3, 5]의 텐서
 shape(expand_dims(t2, 0)) ==> [1, 2, 3, 5]
 shape(expand_dims(t2, 2)) ==> [2, 3, 1, 5]
 shape(expand_dims(t2, 3)) ==> [2, 3, 5, 1]
 ```
 
-This operation requires that:
+이 함수는 다음의 조건이 만족되어야 합니다.
 
 `-1-input.dims() <= dim <= input.dims()`
 
-This operation is related to `squeeze()`, which removes dimensions of
-size 1.
+이 함수는 크기 1인 차원을 제거하는 함수인 `squeeze()`와 연관되어 있습니다.
 
-##### Args:
+##### 인자:
 
 
-*  <b>`input`</b>: A `Tensor`.
-*  <b>`dim`</b>: A `Tensor` of type `int32`.
-    0-D (scalar). Specifies the dimension index at which to
-    expand the shape of `input`.
-*  <b>`name`</b>: A name for the operation (optional).
+*  <b>`input`</b>: `Tensor`.
+*  <b>`dim`</b>: `int32`형 `Tensor`. 0-D (스칼라). `input`의 구조에서 어떤 차원 인덱스에 삽입할 것인지 지정합니다.
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
-##### Returns:
+##### 반환값:
 
-  A `Tensor`. Has the same type as `input`.
-  Contains the same data as `input`, but its shape has an additional
-  dimension of size 1 added.
+  `input`과 같은 자료형의 `Tensor`.
+  `input`과 같은 원소를 포함하지만, 하나 이상의 크기 1인 차원이 추가되어 있습니다.
 
 
 

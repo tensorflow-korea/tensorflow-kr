@@ -878,7 +878,7 @@ tf.transpose(x, perm=[0, 2, 1]) ==> [[[1  4]
 	`patch`를 추출할 때 `patch_sizes_eff = patch_sizes + (patch_sizes - 1) * (rates - 1)`으로 놓고 공간적으로 `rates`의 인자로 부차추출(subsampling)하는 것과 동일합니다.
 *  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
-##### Returns:
+##### 반환값:
 
   `images`와 자료형이 같은 `Tensor`. 구조(shape)가 `[batch, out_rows, out_cols, ksize_rows *  ksize_cols * depth]`인 4-D 텐서입니다. 크기가   `ksize_rows x ksize_cols x depth`인 "depth" 차원에서 벡터화된 이미지 패치(patch)들을 포함합니다.
 
@@ -1429,90 +1429,85 @@ One-hot 텐서를 반환합니다.
 
 
 
-## Other Functions and Classes
+## 기타 함수 및 클래스
 - - -
 
 ### `tf.bitcast(input, type, name=None)` {#bitcast}
 
-Bitcasts a tensor from one type to another without copying data.
+텐서를 다른 자료형으로 데이터 복사 없이 비트캐스트(bitcast)합니다.
 
-Given a tensor `input`, this operation returns a tensor that has the same buffer
-data as `input` with datatype `type`.
+`input` 텐서가 주어질 때, 이 함수는 `input`과 같은 버퍼 데이터를 가진 자료형 `type`의 텐서를 반환합니다.
 
-If the input datatype `T` is larger than the output datatype `type` then the
-shape changes from [...] to [..., sizeof(`T`)/sizeof(`type`)].
+만약 입력의 자료형 `T`가 출력의 자료형 `type`에 비해 더 큰 경우, 구조(shape)가 [...]에서 [..., sizeof(`T`)/sizeof(`type`)]으로 변형됩니다.
 
-If `T` is smaller than `type`, the operator requires that the rightmost
-dimension be equal to sizeof(`type`)/sizeof(`T`). The shape then goes from
-[..., sizeof(`type`)/sizeof(`T`)] to [...].
-
-##### Args:
+만약 `T`가 `type`에 비해 더 작은 경우, 가장 오른쪽의 차원이 sizeof(`type`)/sizeof(`T`)와 같아야 합니다. 구조는 [..., sizeof(`type`)/sizeof(`T`)] to [...]으로 변형됩니다.
 
 
-*  <b>`input`</b>: A `Tensor`. Must be one of the following types: `float32`, `float64`, `int64`, `int32`, `uint8`, `uint16`, `int16`, `int8`, `complex64`, `complex128`, `qint8`, `quint8`, `qint32`, `half`.
-*  <b>`type`</b>: A `tf.DType` from: `tf.float32, tf.float64, tf.int64, tf.int32, tf.uint8, tf.uint16, tf.int16, tf.int8, tf.complex64, tf.complex128, tf.qint8, tf.quint8, tf.qint32, tf.half`.
-*  <b>`name`</b>: A name for the operation (optional).
+##### 인자:
 
-##### Returns:
 
-  A `Tensor` of type `type`.
+*  <b>`input`</b>: `Tensor`. 다음의 자료형이 가능합니다: `float32`, `float64`, `int64`, `int32`, `uint8`, `uint16`, `int16`, `int8`, `complex64`, `complex128`, `qint8`, `quint8`, `qint32`, `half`.
+*  <b>`type`</b>: `tf.DType`. 다음 중 하나가 가능합니다: `tf.float32, tf.float64, tf.int64, tf.int32, tf.uint8, tf.uint16, tf.int16, tf.int8, tf.complex64, tf.complex128, tf.qint8, tf.quint8, tf.qint32, tf.half`.
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
+
+##### 반환값:
+
+  `type` 자료형의 `Tensor`.
 
 
 - - -
 
 ### `tf.shape_n(input, name=None)` {#shape_n}
 
-Returns shape of tensors.
+텐서의 구조(shape)를 반환합니다.
 
-This operation returns N 1-D integer tensors representing shape of `input[i]s`.
+이 함수는 `input[i]`들의 구조를 나타내는 `N`개의 1-D 정수 텐서를 반환합니다.
 
-##### Args:
+##### 인자:
 
 
-*  <b>`input`</b>: A list of at least 1 `Tensor` objects of the same type.
-*  <b>`name`</b>: A name for the operation (optional).
+*  <b>`input`</b>: 같은 자료형의 1개 이상의 `Tensor`의 리스트.
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
-##### Returns:
+##### 반환값:
 
-  A list with the same number of `Tensor` objects as `input` of `Tensor` objects of type `int32`.
+  `input`의 텐서와 같은 개수의 `int32`형 `Tensor`의 리스트.
 
 
 - - -
 
 ### `tf.unique_with_counts(x, name=None)` {#unique_with_counts}
 
-Finds unique elements in a 1-D tensor.
+1-D 텐서에서 서로 다른 원소를 찾습니다.
 
-This operation returns a tensor `y` containing all of the unique elements of `x`
-sorted in the same order that they occur in `x`. This operation also returns a
-tensor `idx` the same size as `x` that contains the index of each value of `x`
-in the unique output `y`. Finally, it returns a third tensor `count` that
-contains the count of each element of `y` in `x`. In other words:
+이 함수는 텐서 `x`의 모든 서로 다른 원소를 `x`에서 나타나는 순서대로 나열한 텐서 `y`를 반환합니다. 이 함수는 크기가 `x`와 같고, `x`의 각 원소에 대해 `y`에서의 인덱서를 원소를 가지는 텐서 `idx`도 반환합니다. `y`의 각 원소가 `x`에서 몇 번 나타나는지에 대한 텐서 `count`도 반환합니다. 즉, 
 
 `y[idx[i]] = x[i] for i in [0, 1,...,rank(x) - 1]`
 
-For example:
+입니다.
+
+예시:
 
 ```python
-# tensor 'x' is [1, 1, 2, 4, 4, 4, 7, 8, 8]
+# tensor 'x'는 [1, 1, 2, 4, 4, 4, 7, 8, 8]
 y, idx, count = unique_with_counts(x)
 y ==> [1, 2, 4, 7, 8]
 idx ==> [0, 0, 1, 2, 2, 2, 3, 4, 4]
 count ==> [2, 1, 3, 1, 2]
 ```
 
-##### Args:
+##### 인자:
 
 
-*  <b>`x`</b>: A `Tensor`. 1-D.
-*  <b>`name`</b>: A name for the operation (optional).
+*  <b>`x`</b>: 1-D `Tensor`.
+*  <b>`name`</b>: 오퍼레이션의 명칭. (선택사항)
 
-##### Returns:
+##### 반환값:
 
-  A tuple of `Tensor` objects (y, idx, count).
+  `Tensor`의 튜플 (y, idx, count).
 
-*  <b>`y`</b>: A `Tensor`. Has the same type as `x`. 1-D.
-*  <b>`idx`</b>: A `Tensor` of type `int32`. 1-D.
-*  <b>`count`</b>: A `Tensor` of type `int32`. 1-D.
+*  <b>`y`</b>: `x`와 자료형이 같은 1-D `Tensor`.
+*  <b>`idx`</b>: `int32`형 1-D `Tensor`.
+*  <b>`count`</b>: `int32`형 1-D `Tensor`.
 
 

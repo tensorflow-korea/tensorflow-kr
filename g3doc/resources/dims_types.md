@@ -1,6 +1,7 @@
 # Tensor Ranks, Shapes, and Types
 
-TensorFlow programs use a tensor data structure to represent all data. You can
+텐서플로우 프로그램은 모든 데이터를 표현하는데 텐서 데이터 구조를 사용한다. (
+TensorFlow programs use a tensor data structure to represent all data.) You can
 think of a TensorFlow tensor as an n-dimensional array or list.
 A tensor has a static type and dynamic dimensions. Only tensors may be passed
 between nodes in the computation graph.

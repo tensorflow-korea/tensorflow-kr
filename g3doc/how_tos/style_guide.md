@@ -13,7 +13,7 @@
 
 * 모든 코드는 파이썬 2 및 3과 호환되어야 합니다.
 
-* 모든 파이썬 화일들에 다음 라인들이 들어 있어야 합니다:
+* 모든 파이썬 파일들에 다음 라인들이 들어 있어야 합니다:
 
 ```
 from __future__ import absolute_import
@@ -28,7 +28,7 @@ from __future__ import division
 
 텐서플로우는 Bazel 빌드 시스템을 사용하며, 그에 따라 다음의 조건들이 요구됩니다:
 
-* 모든 BUILD 화일은 다음의 헤더를 포함해야 합니다:
+* 모든 BUILD 파일은 다음의 헤더를 포함해야 합니다:
 
 ```
 # Description:
@@ -44,7 +44,7 @@ licenses(["notice"])  # Apache 2.0
 exports_files(["LICENSE"])
 ```
 
-* 모든 BUILD 화일의 마지막에는 다음 내용이 있어야 합니다:
+* 모든 BUILD 파일의 마지막에는 다음 내용이 있어야 합니다:
 
 ```
 filegroup(
@@ -60,7 +60,7 @@ filegroup(
 )
 ```
 
-* 새 BUILD 화일을 추가하는 경우, 다음의 내용을 `tensorflow/BUILD` 화일에 추가하여 `all_opensource_files` 타겟이 되도록 합니다.
+* 새 BUILD 파일을 추가하는 경우, 다음의 내용을 `tensorflow/BUILD` 파일에 추가하여 `all_opensource_files` 타겟이 되도록 합니다.
 
 ```
 "//third_party/tensorflow/<directory>:all_files",

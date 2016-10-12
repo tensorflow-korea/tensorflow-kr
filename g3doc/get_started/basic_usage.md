@@ -31,12 +31,12 @@ TensorFlow 프로그램들은 대개 graph를 조립하는 '구성 단계'와 se
 하나의 그래프에서 조립되어진다. 실행 phases 는 그래프에 있는 ops 를 실행시키기 위해서 `Session` 을
 사용하게 된다.
 
-예를 들어, 그래프는 construction phase 안에서 neural network 를 훈련시키고 나타내기 위해서
+예를 들어, 그래프는 construction phase 안에서 뉴럴 네트워크를 훈련시키고 나타내기 위해서
 만들어 진다. 그리고 실행 phase 안의 그래프는 훈련셋(ops)를 반복적으로 실행하게 된다.
 `TensorFlow` 는 C, C++, Pythons 프로그램에서 사용할수 있다. 현재 Python 라이버리를 사용하면
 그래프를 쉽게 조립할 있다. 또한 C, C++에는 제공하지 않는 많은 헬퍼 함수들을 제공하고 있다.
 
-`Sessions` 라이버리들은 3개의 언어를 위해서 환경 함수들을 가지고 있다.
+`Sessions` 라이브러리는 3개의 언어를 위해서 환경 함수들을 가지고 있다.
 
 ### Building the graph
 graph를 만드는 것은 `Constant`와 같이 어떠한 input도 필요하지 않는 단위의 동작(ops)으로 시작한다.
@@ -45,7 +45,7 @@ Python 라이브러리에서 단위 연산(ops) 생성자는 구성된 단위 �
 
 Python 라이브러리로 사용하는 TensorFlow는 단위 연산(ops) 생성자가 노드를 추가한
 *graph* 를 가지고 된다. *graph* 는 많은 어플리케이션용으로 충분하다.
-[Graph class](../api_docs/python/framework.md#Graph) documentation에서 어떻게 많은 graph를
+[Graph class](../api_docs/python/framework.md#Graph) 문서에서 어떻게 많은 graph를
 명시적으로 관리할 수 있는지 알 수 있다.
 
 ```python
@@ -101,8 +101,8 @@ print(result)
 sess.close()
 ```
 
-Sessions 은 자원을 해체하기 위해서 close()을 사용해야 한다. 또한 `Session`을 "with" 블럭 안에서
-사용할 수 있다. `with` 블럭이 끝날때 `Session`은 자동적으로 자원을 해체하고 close 된다.
+Sessions 은 자원을 해제하기 위해서 닫아야 한다. 또한 `Session`은 "with" 블럭과 함께
+사용할 수 있다. `Session`은 `with` 블럭의 끝에서 자동으로 닫히게 된다. 
 
 ```python
 with tf.Session() as sess:
@@ -137,8 +137,9 @@ GPU 와 TensorFlow 보다 많은 정보는 [Using GPUs](../how_tos/using_gpu/ind
 
 ### Launching the graph in a distributed session
 
-TensorFlow 클러스터 만들기, TensorFlow 는 클러스터 안의 여러 머신에서 동작 시킬수 있다.
-너의 클라이언트의 Session을 인스턴스화 시키고, 클러스터 안의 머신 네트워크에 보내면 된다.
+TensorFlow 클러스터를 만들려면, 클러스트 안의 각 머신에서 TensorFlow 서버를 동작시켜야 한다.
+세션을 클라이언트 안에서 인스턴스화 하려는 경우, 클러스트 안에 머신중 하나의 네트워크 경로를
+전달해야 한다:
 
 ```python
 with tf.Session("grpc://example.org:2222") as sess:
@@ -146,7 +147,7 @@ with tf.Session("grpc://example.org:2222") as sess:
   ...
 ```
 해당 머신은 현재 Session의 마스터가 된다. 마스터는 클러스터(workers) 안의 여러 머신들과 graph 를
-교차해서 분배하게 된다. 이런 분배는 머신의 사용 가능한 컴퓨팅 자원을 고려해서 이러어 진다.
+교차해서 분배하게 된다. 이런 분배는 머신의 사용 가능한 컴퓨팅 자원을 고려해서 이루어 진다.
 
 "with tf.device():" 문법을 이용해서 특정 머신에게 graph의 특정 연산을 지정해 줄 수 있다.
 
@@ -233,7 +234,7 @@ with tf.Session() as sess:
 # 3
 ```
 코드안에서 `assign()` 연산은 graph 의 한부분으로 `add()` 처럼 동작하게 된다.
-그리고 이런 연산은 `run()` 실행되지 전까지는 실제로 실행되어지는 아니다.
+그리고 이런 연산은 `run()`이 실행되기 전까지 실제로 실행되지 않는다.
 
 일반적으로 Variables 셋은 통계 모델의 파라메터를 나타낸다. 예를 들어, Variable 안의 tensor 에
 뉴럴 네트워크를 위한 무게를 저장 한다면, 트레이닝 하는 동안 graph 는 반복적으로 tensor를 업데이트
@@ -268,7 +269,7 @@ All the ops needed to produce the values of the requested tensors are run once
 위의 예제에서 살펴본 graph에 tensor들은 `Constants` 와 `Variables` 에 저장되어 있다.
 TensorFlow는 graph의 연산에게 직접 tensor의 값을 줄 수 있는 feed 메카니즘을 제공한다.
 
-Feed 값에 따라 연산의 출력값이 대체 된다. feed 데이터의 변수는 `run()` 제공된다. Feed 는 오직 `run()`
+Feed 값에 따라 연산의 출력값이 대체 된다. feed 데이터의 변수는 `run()`이 제공된다. Feed 는 오직 `run()`
 에서만 사용 되어 진다. 가장 일반적인 사용방법은 tf.placeholder() 을 사용해서 "feed" 작업을 지정해 주는것이다.
 
 ```python

@@ -122,12 +122,12 @@ bazel-bin/tensorflow/examples/label_image/label_image \
 그것들이 어떻게 생겼는지에 대한 그림 입니다. 처음으로 소개할 것은 입력과 출력이 
 부동 소수점으로 이루어진 원본 ReLU 연산입니다:
 
-![Relu Diagram](../../images/quantization0.png)
+![Relu Diagram](https://www.tensorflow.org/images/quantization0.png)
 
 그리고, 아래 그림은 동일하지만 변환된 subgraph입니다, 여전히 부동 소수점 입력과
 출력을 갖고 있지만 내부 변환을 통해 연산은 8bit로 진행되는 것을 알 수 있습니다.
 
-![Converted Diagram](../../images/quantization1.png)
+![Converted Diagram](https://www.tensorflow.org/images/quantization1.png)
 
 최대, 최소값 연산은 처음의 부동 소수점 tensor를 확인하고 역양자화(dequantize)연
 산을 위해 공급됩니다. 양자화 표현 방법에 관한 설명은 나중에 언급하도록 하겠습
@@ -138,7 +138,7 @@ bazel-bin/tensorflow/examples/label_image/label_image \
 소수점과 동일(여기서는 8bit quantize를 의미)하다면, 양자화와 역 양자화는 필요가
 없게 되고 서로 상쇄될 것입니다 아래와 같이요:
 
-![Stripping Diagram](../../images/quantization2.png)
+![Stripping Diagram](https://www.tensorflow.org/images/quantization2.png)
 
 모든 연산(graph in tensorflow)들이 양자화 된 거대한 모델에 적용된다면 tensor들의
 연산은 모두 부동 소수점으로의 변환 없이 8bit로 끝낼 수 있습니다.

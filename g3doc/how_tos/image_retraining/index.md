@@ -7,11 +7,10 @@
 은 그대로 두고 마지막층만 재훈련시키는  예제를 보여줄 것입니다.
 더 자세한 내용은 [Decaf에 대한 논문](http://arxiv.org/pdf/1310.1531v1.pdf)을 참조하기 바랍니다.
 
-Though it's not as good as a full training run, this is surprisingly effective
-for many applications, and can be run in as little as thirty minutes on a
-laptop, without requiring a GPU. This tutorial will show you how to run the
-example script on your own images, and will explain some of the options you have
-to help control the training process.
+충분히 훈련한 것 만큼 좋지 않더라도 이 방법은 많은 응용에서 놀라울 정도로 
+효과적이며 GPU가 없는 노트북에서 30분 정도면 실행됩니다. 본 튜토리얼에서
+는 여러분 자신의 이미지에 대해 예제 스크립트를 적용하는 방법을 보여주고 학
+습과정을 직접 다루는데 도움이 되는 여러 선택사항을 설명할 것입니다.
 
 [TOC]
 

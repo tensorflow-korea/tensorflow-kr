@@ -1,11 +1,11 @@
 # Translation Coverage                         
 (Automatically generated. DO NOT edit.)
-* [/](/) (62520/353772) [17%]
+* [/](/) (62528/353798) [17%]
   * [*/README.md*](/README.md) (1400/1768) [79%]
   * [/SUMMARY.md](/SUMMARY.md) (726/3551) [20%]
-  * [/g3doc](/g3doc) (60394/348453) [17%]
-    * [/g3doc/get_started](/g3doc/get_started) (15758/35655) [44%]
-      * [/g3doc/get_started/basic_usage.md](/g3doc/get_started/basic_usage.md) (3720/7892) [47%]
+  * [/g3doc](/g3doc) (60402/348479) [17%]
+    * [/g3doc/get_started](/g3doc/get_started) (15766/35681) [44%]
+      * [/g3doc/get_started/basic_usage.md](/g3doc/get_started/basic_usage.md) (3728/7918) [47%]
       * [/g3doc/get_started/index.md](/g3doc/get_started/index.md) (998/2212) [45%]
       * [/g3doc/get_started/os_setup.md](/g3doc/get_started/os_setup.md) (11040/25551) [43%]
     * [/g3doc/how_tos](/g3doc/how_tos) (14368/159563) [9%]

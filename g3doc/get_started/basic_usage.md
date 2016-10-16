@@ -19,7 +19,7 @@ OP는 몇 가지의 연산을 하기 되고, 제로 또는 하나 이상의 `Ten
 TensorFlow의 graph는 컴퓨터 연산의 *description* 설명이다. 어떤것을 연산하든, graph는
 반드시 `Session` 안에서 실행되어야 한다. `Session`은 graph 작은 단위 연산들을 CPUs 또는 GPUs
 불리우는 `Devices`에 배치시키고, 작은 단위 연산(ops)들이 작동할수 있는 기능을 제공한다.
-이런 기능은 단위 연산(ops)에 의해서 tensors 들이 만들어진다. 파이썬에서는 `ndarray` 오프젝트로
+이런 기능은 단위 연산(ops)에 의해서 tensors 들이 만들어진다. 파이썬에서는 [numpy](http://www.numpy.org) `ndarray` 오프젝트로
 C 와 C++ 에서는 `TensorFlow::Tensor` 오프젝트를 만들어내게 된다.
 
 ## The computation graph
@@ -33,7 +33,7 @@ TensorFlow 프로그램들은 대개 graph를 조립하는 '구성 단계'와 se
 
 예를 들어, 그래프는 construction phase 안에서 뉴럴 네트워크를 훈련시키고 나타내기 위해서
 만들어 진다. 그리고 실행 phase 안의 그래프는 훈련셋(ops)를 반복적으로 실행하게 된다.
-`TensorFlow` 는 C, C++, Pythons 프로그램에서 사용할수 있다. 현재 Python 라이버리를 사용하면
+`TensorFlow` 는 C, C++, Python 프로그램에서 사용할수 있다. 현재 Python 라이브러리를 사용하면
 그래프를 쉽게 조립할 있다. 또한 C, C++에는 제공하지 않는 많은 헬퍼 함수들을 제공하고 있다.
 
 `Sessions` 라이브러리는 3개의 언어를 위해서 환경 함수들을 가지고 있다.
@@ -44,7 +44,7 @@ Python 라이브러리에서 단위 연산(ops) 생성자는 구성된 단위 �
 객체를 반환한다. 그리고 이 객체들은 다른 단위 연산(ops) 생성자의 input으로 전달할 수 있다.
 
 Python 라이브러리로 사용하는 TensorFlow는 단위 연산(ops) 생성자가 노드를 추가한
-*graph* 를 가지고 된다. *graph* 는 많은 어플리케이션용으로 충분하다.
+*graph* 를 가지고 된다. *graph* 는 많은 애플리케이션용으로 충분하다.
 [Graph class](../api_docs/python/framework.md#Graph) 문서에서 어떻게 많은 graph를
 명시적으로 관리할 수 있는지 알 수 있다.
 
@@ -67,7 +67,7 @@ matrix2 = tf.constant([[2.],[2.]])
 product = tf.matmul(matrix1, matrix2)
 ```
 
-예시 graph는 3개의 노드(`constant()` ops 2개와 `matmul()` ops 한개)를 가지고 있다.
+예시 graph는 3개의 노드(두 개의 `constant()` ops 와 한 개의 `matmul()` op)를 가지고 있다.
 실제 매트릭스들을 곱하고 곱셈한 연산의 결과를 얻기 위해선, session에서 graph를 실행해야 한다.
 
 ### Launching the graph in a session

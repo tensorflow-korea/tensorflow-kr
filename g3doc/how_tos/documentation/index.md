@@ -1,9 +1,11 @@
 # Writing TensorFlow Documentation
+# 텐서플로우 문서 작성하기
 
 TensorFlow's documentation is maintained in
 [Markdown](https://daringfireball.net/projects/markdown/), and resides in the
 `g3doc/` directory. The *Introduction*, *Overview*, *Tutorials*, and *How-Tos*
 sections are manually edited.
+텐서플로우의 문서화는 [막다운](https://daringfireball.net/projects/markdown/)을 유지해서 `g3doc/` 디렉토리에 상주시키는 것입니다. *도입* 과 *개요*, *튜토리얼*, *사용 안내* 섹션은 직접 수정해야 합니다.
 
 Anything in the `g3doc/api_docs` directory is generated from comments in the
 code, and should not be edited directly. The script `tools/docs/gen_docs.sh`
@@ -12,8 +14,10 @@ Python API documentation only (i.e., documentation for Ops, whether defined in
 Python or C++). If `-a` is passed, it also rebuilds the documentation for the
 C++ API. It must be called from the `tools/docs` directory, and if called with
 `-a`, requires `doxygen` to be installed.
+`g3doc/api_docs` 디렉토리 내의 모든 문서들은 코드 내의 주석에서 비롯된 것이기 때문에 문서 원문을 바로 수정해서는 안 됩니다. `tools/docs/gen_docs.sh` 스크립트는 API 문서를 생성합니다. 만약 인수(arguement)없이 호출될 경우, 파이썬 API 문서로 재구성하게 됩니다. (예를 들어, 문서가 파이썬으로나 C++로 정의되었지만 Python API를 생성하게 됩니다.) 따라서, 인수 `-a`를 같이 넘겨 준다면 이 문서는 C++ API 문서로 재구성이 됩니다. 또한 이것은 `tools/docs` 디렉토리로부터 호출되어야 하고, 만약 인수 `-a`를 같이 넘겨주는 경우라면 `doxygen`이 설치되어 있어야 합니다.
 
 ## Python API Documentation
+## 파이썬 API 문서화
 
 Ops, classes, and utility functions are defined in Python modules, such as
 `image_ops.py`. The module docstring is inserted at the beginning of the
@@ -26,26 +30,34 @@ documentation), you have to add it to the list of libraries in
 Markdown is a string in `gen_cc_md.py`, from which `api_docs/cc/index.md` is
 created. The rest of the C++ documentation is generated from XML files generated
 by doxygen.
+`image_ops.py`처럼 Op와 클래스, 효용함수들은 파이썬 모듈 내에 정의되어 있습니다. 이 docstring 모듈은 파이썬 파일로부터 생성된 막다운 파일의 처음 부분에 삽입되어 있습니다. 따라서, `image_ops.md`는 `image_ops.py`의 docstring 모듈로 시작합니다. `python/framework/gen_docs_combined.py` 파일은 어떤 막다운 파일들이 생성되어 있는지에 대한 모든 _라이브러리_ 리스트를 포함하고 있습니다. 만약 API 문서에 독립된 섹션을 생성하기 위해 새로운 라이브러리를 추가하려면, `gen_docs_combined.py` 내의 라이브러리 리스트에 이 새 라이브러리를 추가해야 합니다. C++ API의 경우, 하나의 라이브러리 파일만 있습니다. 이것의 막다운은 `api_docs/cc/index.md`에 의해 만들어진 `gen_cc_md.py` 내의 한 줄로 기재되어 있습니다. 나머지 C++ 문서들은 독시즌(doxygen)에서 생성된 XML 파일들에 의해 생성됩니다.
 
 In the module docstring of a file registered as a library, you can insert
 generated docs for Ops, classes, and functions by calling them out with the
 syntax `@@<python-name>` (at the beginning of an otherwise empty line). The
 called-out op, function, or class does not have to be defined in the same file.
+하나의 라이브러리로 등록된 파일의 독스트링(docstring) 모듈에 op와 클래스, 함수들을 위해 생성한 문서들을 `@@<python-name>` 구문으로 호출해 추가할 수 있습니다. 호출된 op와 함수, 클래스 등은 동일한 파일에 정의되어 있을 필요는 없습니다.
 
 This allows you to control the order in which the Ops, classes, and functions
 are documented. Group them in a logical order, with interspersed high level
 documentation.
+이것은 문서화될 op와 클래스, 함수 등의 순서를 조정하는 것을 가능하게 합니다. 산재된 상위 레벨의 문서들에 따라 논리적인 순서로 그룹 짓는 것을 가능하게 합니다.
 
 Every public op, class or function must be called out with a `@@` entry in some
 library. If you don't, you will get `doc_gen_test` failures.
+모든 public op나 클래스, 함수는 툭정 라이브러리 내에서 `@@`로 시작해서 호출되어야 합니다. 그렇지 않을 경우, `doc_gen_test` 에러(failures)가 발생합니다.
 
 Docs for Ops are automatically extracted from Python wrappers or C++ Ops
 registrations, Python wrappers have priority.
+파이썬 랩퍼(Python wrappers)나 C++ Op 등록(C++ Ops registrations)을 통해 자동적으로 추출된 op 문서들의 경우, 파이썬 랩퍼가 우선 순위를 가지게 됩니다.
 
 * Python wrappers are in `python/ops/*.py`.
 * C++ Ops registrations are in `core/ops/*.cc`.
+* 파이썬 랩퍼는 `python/ops/*.py` 내에 있습니다.
+* C++ Op 등록은 `core/ops/*.cc` 내에 있습니다.
 
 Docs for Classes and Utility Functions are extracted from their docstrings.
+클래스와 효용 함수들에 대한 문서는 문서의 독스트링(docstrings)으로부터 추출됩니다.
 
 ## Op Documentation Style Guide
 
@@ -422,7 +434,3 @@ This generates the following "Args" section:
     decoded image.
   name: A name for the operation (optional).
 ```
-
-
-
-

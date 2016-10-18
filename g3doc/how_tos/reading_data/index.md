@@ -1,12 +1,17 @@
 # Reading data
+# 데이터 읽어들이기
 
 There are three main methods of getting data into a TensorFlow program:
-
 *   Feeding: Python code provides the data when running each step.
 *   Reading from files: an input pipeline reads the data from files
     at the beginning of a TensorFlow graph.
 *   Preloaded data: a constant or variable in the TensorFlow graph holds
     all the data (for small data sets).
+TensorFlow 프로그램으로 데이터를 가져오는 방법에는 세 가지 주요 방법이 있다:
+
+*   피딩(Feeding): 매 단계마다 파이썬 코드가 데이터를 제공한다.
+*   파일로부터 읽기(Reading from files): TensorFlow 그래프가 시작되는 부분에서 입력 파이프라인이 파일로부터 데이터를 읽어들인다.
+*   미리 로드 된 데이터(Preloaded data): 작은 데이터셋의 경우 TensorFlow 그래프 내의 상수 또는 변수가 모든 데이터를 쥐고 있다.
 
 [TOC]
 
@@ -37,6 +42,19 @@ An example using `placeholder` and feeding to train on MNIST data can be found
 in
 [`tensorflow/examples/tutorials/mnist/fully_connected_feed.py`](https://www.tensorflow.org/code/tensorflow/examples/tutorials/mnist/fully_connected_feed.py),
 and is described in the [MNIST tutorial](../../tutorials/mnist/tf/index.md).
+
+## 피딩(Feeding)
+
+TensorFlow's feed mechanism lets you inject data into any Tensor in a
+computation graph. A python computation can thus feed data directly into the
+graph.
+
+
+
+
+
+
+
 
 ## Reading from files
 

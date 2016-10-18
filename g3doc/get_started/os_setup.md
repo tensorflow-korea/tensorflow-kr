@@ -343,7 +343,7 @@ NVidia GPU를 위해서는 최신 NVidia 드라이버와 [nvidia-docker](https:/
 $ nvidia-docker run -it -p 8888:8888 gcr.io/tensorflow/tensorflow:latest-gpu
 ```
 
-더 자세한 것은 (텐서프로우 도커)[https://github.com/tensorflow/tensorflow/tree/master/tensorflow/tools/docker]
+더 자세한 것은 [텐서플로우 도커](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/tools/docker)
 문서를 참고하세요.
 
 도커 컨테이너 안에서 [설치 테스트](#test-the-tensorflow-installation)를 할 수 있습니다.
@@ -520,7 +520,7 @@ sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
 <a id='configure-tensorflows-canonical-view-of-cuda-libraries'></a>
 ##### 텐서플로우에서 Cuda 라이브러리 선택
 
-소스 디렉토리의 맨 위에서 `configure` 스크립트를 실행하고 텐서플로를 GPU 지원하도록 빌드할 지 물어볼 때 `Y`를 선택하세요. 만약 여러가지 버전의 Cuda와 cuDNN이 설치되어 있다면 디폴트 대신 구체적으로 어떤 버전을 사용할지 지정해야 합니다. 아래와 같은 질문들을 보게됩니다:
+소스 디렉토리의 맨 위에서 `configure` 스크립트를 실행하고 텐서플로우를 GPU 지원하도록 빌드할 지 물어볼 때 `Y`를 선택하세요. 만약 여러가지 버전의 Cuda와 cuDNN이 설치되어 있다면 디폴트 대신 구체적으로 어떤 버전을 사용할지 지정해야 합니다. 아래와 같은 질문들을 보게됩니다:
 
 ``` bash
 $ ./configure

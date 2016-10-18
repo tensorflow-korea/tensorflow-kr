@@ -32,7 +32,7 @@ cuDNN 6.5(v2), 7.0(v3), v5)도 사용할 수 있습니다. 자세한 내용은 [
 <a id="pip-installation"></a>
 ## Pip 설치
 
-[Pip](https://en.wikipedia.org/wiki/Pip_(package_manager)는 파이썬 패키지를 설치하고 관리하는 패키지 매니저 프로그램입니다.
+[Pip](https://en.wikipedia.org/wiki/Pip_(package_manager))는 파이썬 패키지를 설치하고 관리하는 패키지 매니저 프로그램입니다.
 
 설치되는 동안 추가되거나 업그레이드 될 파이썬 패키지 목록은 [setup.py 파일의 REQUIRED_PACKAGES 섹션](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/pip_package/setup.py)에 있습니다.
 

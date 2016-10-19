@@ -1,12 +1,5 @@
 # Reading data
-# 데이터 읽어들이기
 
-There are three main methods of getting data into a TensorFlow program:
-*   Feeding: Python code provides the data when running each step.
-*   Reading from files: an input pipeline reads the data from files
-    at the beginning of a TensorFlow graph.
-*   Preloaded data: a constant or variable in the TensorFlow graph holds
-    all the data (for small data sets).
 TensorFlow 프로그램으로 데이터를 가져오는 방법에는 세 가지 주요 방법이 있다:
 
 *   피딩(Feeding): 매 단계마다 파이썬 코드가 데이터를 제공한다.
@@ -15,14 +8,12 @@ TensorFlow 프로그램으로 데이터를 가져오는 방법에는 세 가지 
 
 [TOC]
 
-## Feeding 
+## 피딩(Feeding)
 
-TensorFlow's feed mechanism lets you inject data into any Tensor in a
-computation graph. A python computation can thus feed data directly into the
-graph.
+TensorFlow의 피딩 기작은 계산 그래프 내의 모든 텐서에 데이터를 삽입할 수 있도록 한다.
+따라서 파이썬으로도 그래프에 직접 데이터를 피딩할 수 있다.
 
-Supply feed data through the `feed_dict` argument to a run() or eval() call
-that initiates computation.
+계산을 개시하는 run()이나 eval()을 호출할 때, 피드 데이터를 제공하기 위해 `feed_dict` 전달인자를 사용하면 된다.
 
 ```python
 with tf.Session():
@@ -31,29 +22,13 @@ with tf.Session():
   print(classifier.eval(feed_dict={input: my_python_preprocessing_fn()}))
 ```
 
-While you can replace any Tensor with feed data, including variables and
-constants, the best practice is to use a
-[`placeholder` op](../../api_docs/python/io_ops.md#placeholder) node. A
-`placeholder` exists solely to serve as the target of feeds. It is not
-initialized and contains no data. A placeholder generates an error if
-it is executed without a feed, so you won't forget to feed it.
+변수와 상수를 포함하여 모든 텐서를 피드 데이터로 바꿀 수 있지만, 
+가장 좋은 방법은 [`placeholder` op](../../api_docs/python/io_ops.md#placeholder) 노드를 사용하는 것이다.
+`placeholder`는 오로지 피드를 받아들이기 위해 존재하는데, 초기화되지 않으며 데이터를 포함하지도 않는다.
+`placeholder`는 피드 없이 실행되는 경우 오류를 발생시켜 사용자가 피드하는 것을 잊지 않도록 한다.
 
-An example using `placeholder` and feeding to train on MNIST data can be found
-in
-[`tensorflow/examples/tutorials/mnist/fully_connected_feed.py`](https://www.tensorflow.org/code/tensorflow/examples/tutorials/mnist/fully_connected_feed.py),
+`placeholder`를 사용하는 예제와 MNIST 데이터 학습을 위한 피딩은 다음에서 찾아볼 수 있다: [`tensorflow/examples/tutorials/mnist/fully_connected_feed.py`](https://www.tensorflow.org/code/tensorflow/examples/tutorials/mnist/fully_connected_feed.py),
 and is described in the [MNIST tutorial](../../tutorials/mnist/tf/index.md).
-
-## 피딩(Feeding)
-
-TensorFlow's feed mechanism lets you inject data into any Tensor in a
-computation graph. A python computation can thus feed data directly into the
-graph.
-
-
-
-
-
-
 
 
 ## Reading from files

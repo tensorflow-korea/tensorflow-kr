@@ -14,7 +14,6 @@ TensorFlow는 그래프에 사용되는 텐서 자료형들을 형변환(cast)�
 
 ### `tf.string_to_number(string_tensor, out_type=None, name=None)` {#string_to_number}
 
-Converts each string in the input Tensor to the specified numeric type.
 입력 텐서의 각 문자열(string)을 지정된 자료형의 값으로 변환합니다.
 
 (참고로, int32 오버플로우는 에러를 내며, float 오버플로우는 반올림한 결과를 냅니다.)

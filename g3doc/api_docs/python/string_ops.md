@@ -2,7 +2,7 @@
 
 # 문자열
 
-주의 : `Tensor`를 인자로 받는 함수들은 [`tf.convert_to_tensor`]((framework.md#convert_to_tensor))를 통해 나온값들 또한 받을 수 있습니다.
+참고 : `Tensor`를 인자로 받는 함수들은 [`tf.convert_to_tensor`]((framework.md#convert_to_tensor))의 인자로 들어갈 수 있는 값들 또한 받을 수 있습니다.
 
 [TOC]
 
@@ -116,4 +116,3 @@ tf.reduce_join(a, []) ==> ["abcd"]
 ##### 반환값:
 
   `string`타입의 `Tensor`. 감소된 차원만큼 제거되거나 `keep_dims`에 따라 1로 설정된 입력과 같은 shape을 가집니다.
-

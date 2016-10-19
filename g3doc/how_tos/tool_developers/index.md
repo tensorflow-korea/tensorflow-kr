@@ -1,58 +1,32 @@
-# A Tool Developer's Guide to TensorFlow Model Files
+# 툴 개발자의 TensorFlow 모델 파일에 대한 가이드
 
-Most users shouldn't need to care about the internal details of how TensorFlow
-stores data on disk, but you might if you're a tool developer. For example, you
-may want to analyze models, or convert back and forth between TensorFlow and
-other formats. This guide tries to explain some of the details of how you can
-work with the main files that hold model data, to make it easier to develop
-those kind of tools.
+대부분의 사용자는 TensorFlow가 디스크에 데이터를 어떻게 저장하는지에 대한 내부적인 세부 사항들에 대해 신경쓸 필요가 없지만, 만약 당신이 툴 개발자라면 그럴 필요가 있습니다. 예를 들면, 당신은 모델을 분석하고 싶다거나 TensorFlow와 다른 포맷 사이에서 상호 변환을 하고싶을 수 있습니다. 이 가이드는 각종 툴들을 좀 더 쉽게 개발할 수 있도록 모델 데이터를 가진 메인 파일들을 어떻게 다룰 수 있는지에 대한 상세 내용들을 설명합니다.
 
-[TOC]
+<!--[TOC]-->
 
-## Protocol Buffers
+## 프로토콜 버퍼 (Protocol Buffers)
 
-All of TensorFlow's file formats are based on [Protocol Buffers]
-(https://developers.google.com/protocol-buffers/?hl=en), so to start
-it's worth getting familiar with how they work. The summary is that you define
-data structures in text files, and the protobuf tools generate classes in C,
-Python, and other languages that can load, save, and access the data in a
-friendly way. We often refer to Protocol Buffers as protobufs, and I'll use
-that convention in this guide.
+TensorFlow의 모든 파일 포맷은 [Protocol Buffers](https://developers.google.com/protocol-buffers/?hl=en)에 기반하므로, 그들이 작동하는 방법에 대해 알아가는 것이 좋습니다. 요약하면 텍스트 파일에 데이터 구조를 정의하면, 프로토콜 버퍼 툴이 C, Python, 그리고 익숙한 방법으로 데이터를 로드, 저장 그리고 접근할 수 있는 다른 언어로 클래스를 생성합니다. 우리는 종종 프로토콜 버퍼를 protobufs라 부르며, 이 가이드에서는 이 컨벤션을 사용할 것입니다.
 
 ## GraphDef
 
-The foundation of computation in TensorFlow is the `Graph` object. This holds a
-network of nodes, each representing one operation, connected to each other as
-inputs and outputs. After you've created a `Graph` object, you can save it out
-by calling `as_graph_def()`, which returns a `GraphDef` object.
+TensorFlow에서 계산의 기본은 `Graph` 객체입니다. 이는 각각이 연산을 나타내고, 입력과 출력으로써 서로 연결되어 있는 노드들의 네트워크를 가지고 있습니다. `Graph` 객체를 생성한 후엔 `GraphDef` 객체를 반환하는 `as_graph_def()`를 호출함으로써 이를 저장할 수 있습니다.
 
-The GraphDef class is an object created by the ProtoBuf library from the
-definition in
-[tensorflow/core/framework/graph.proto](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/framework/graph.proto). The protobuf tools parse
-this text file, and generate the code to load, store, and manipulate graph
-definitions. If you see a standalone TensorFlow file representing a model, it's
-likely to contain a serialized version of one of these `GraphDef` objects
-saved out by the protobuf code.
+GraphDef 클래스는 [tensorflow/core/framework/graph.proto](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/framework/graph.proto)에 정의된 프로토콜 버퍼 라이브러리에 의해 생성되는 객체입니다. 프로토콜 버퍼 툴은 이 텍스트 파일을 파싱하고 그래프 정의를 로딩, 저장 및 조작하는 코드를 생성합니다. 모델을 나타내는 단일 TensorFlow 파일이 있다면, 이는 프로토콜 버퍼 코드에 의해 저장된 `GraphDef` 객체들중 하나를 직렬화한 버전을 포함할 가능성이 높습니다.
 
-This generated code is used to save and load the GraphDef files from disk. A
-good example to look at as we dig into this is
-[graph_metrics.py](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/tools/graph_metrics.py). This Python script takes a saved graph
-definition, and analyzes the model to estimate performance and resource
-statistics. The code that actually loads the model looks like this:
+이 생성된 코드는 디스크로부터 GraphDef 파일들을 저장하고 로드하는데 쓰입니다. 이를 좀 더 깊게 살펴볼 수 있는 좋은 예시는 [graph_metrics.py](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/tools/graph_metrics.py)입니다. 이 파이썬 스크립트는 저장된 그래프 정의를 가지고 성능 및 리소스 통계를 추정하기 위해 모델을 분석합니다. 실제로 모델을 로드하는 코드는 다음과 같을 것입니다: 
 
 ```python
 graph_def = graph_pb2.GraphDef()
 ```
 
-This line creates an empty `GraphDef` object, the class that's been created
-from the textual definition in graph.proto. This is the object we're going to
-populate with the data from our file.
+이 라인은 graph.proto에 텍스트로 정의되며 생성된 `GraphDef` 클래스의 빈 객체를 생성합니다. 이는 우리가 가진 파일의 데이터를 채울 객체입니다. 
 
 ```python
 with open(FLAGS.graph, "rb") as f:
 ```
 
-Here we get a file handle for the path we've passed in to the script
+여기서 스크립트에 전달한 경로에 대한 파일 핸들을 얻습니다.
 
 ```python
   if FLAGS.input_binary:
@@ -61,130 +35,59 @@ Here we get a file handle for the path we've passed in to the script
     text_format.Merge(f.read(), graph_def)
 ```
 
-## Text or Binary?
+## 텍스트 또는 바이너리?
 
-There are actually two different formats that a ProtoBuf can be saved in.
-TextFormat is a human-readable form, which makes it nice for debugging and
-editing, but can get large when there's numerical data like weights stored in
-it. You can see a small example of that in
-[graph_run_run2.pbtxt](https://github.com/tensorflow/tensorflow/blob/ae3c8479f88da1cd5636b974f653f27755cb0034/tensorflow/tensorboard/components/tf-tensorboard/test/data/graph_run_run2.pbtxt).
+프로토콜 버퍼가 저장할 수 있는 포맷은 두 가지 있습니다. 텍스트 포맷 (Text Format)은 사람이 읽을 수 있는 형태이며, 디버깅과 편집이 편리하지만, 가중치와 같은 수치 데이터가 저장될 경우 커질 수 있습니다. 이에 대한 간단한 예제는 [graph_run_run2.pbtxt](https://github.com/tensorflow/tensorflow/blob/ae3c8479f88da1cd5636b974f653f27755cb0034/tensorflow/tensorboard/components/tf-tensorboard/test/data/graph_run_run2.pbtxt)에서 볼 수 있습니다.
 
-Binary format files are a lot smaller than their text equivalents, even though
-they're not as readable for us. In this script, we ask the user to supply a
-flag indicating whether the input file is binary or text, so we know the right
-function to call. You can find an example of a large binary file inside the
-[inception_dec_2015.zip
-archive](https://storage.googleapis.com/download.tensorflow.org/models/inception_dec_2015.zip), as `tensorflow_inception_graph.pb`.
+바이너리 포맷 (Binary Format) 파일은 비록 읽기는 어렵지만, 같은 내용의 텍스트 포맷보다 훨씬 작은 크기를 갖습니다. 우리는 적절한 함수를 호출할 수 있도록 사용자에게 입력 파일이 바이너리인지 텍스트인지 구분할 수 있는 플래그를 제공하도록 요청합니다. 큰 바이너리 파일에 대한 예제는 [inception_dec_2015.ziparchive](https://storage.googleapis.com/download.tensorflow.org/models/inception_dec_2015.zip)의 `tensorflow_inception_graph.pb`에서 볼 수 있습니다.
 
-The API itself can be a bit confusing - the binary call is actually
-`ParseFromString()`, whereas you use a utility function from the `text_format`
-module to load textual files.
+API 자체는 조금 혼란스러울 수 있습니다 - 텍스트 파일을 로드 할 때에는 `text_format` 모듈에 있는 유틸리티 함수를 사용하는 반면, 바이너리 호출은 실제로 `ParseFromString()`를 사용합니다.
 
-## Nodes
+## 노드 (Nodes)
 
-Once you've loaded a file into the `graph_def` variable, you can now access the
-data inside it. For most practical purposes, the important section is the list
-of nodes stored in the node member. Here's the code that loops through those:
+`graph_def` 변수로 파일을 로드했다면, 이제 파일 데이터에 접근할 수 있습니다. 대부분의 실용적인 목적을 위한, 중요한 부분은 노드의 리스트를 노드 멤버에 저장하는 것입니다. 여기에 노드를 순회하는 코드가 있습니다.  
 
 ```python
 for node in graph_def.node
 ```
-
-Each node is a `NodeDef` object, also defined in graph.proto. These are the
-fundamental building blocks of TensorFlow graphs, with each one defining a
-single operation along with its input connections. Here are the members of a
-`NodeDef`, and what they mean.
+각 노드는 `NodeDef` 객체이며, 이 또한 graph.proto에 정의되어 있습니다. 이들은 TensorFlow 그래프의 기본적인 빌딩 블록이고 각각은 입력 커넥션과 함께 하나의 연산을 정의합니다. 아래에 `NodeDef`의 멤버들이 있으며, 그들의 의미도 설명합니다.
 
 ### `name`
 
-Every node should have a unique identifier that's not used by any other nodes
-in the graph. If you don't specify one as you're building a graph using the
-Python API, one reflecting the name of operation, such as "MatMul",
-concatenated with a monotonically increasing number, such as "5", will be
-picked for you. an arbitrary one will be picked for you. The name is used when
-defining the connections between nodes, and when setting inputs and outputs for
-the whole graph when it's run.
+모든 노드는 그래프의 다른 어떤 노드들에 의해서도 사용되지 않는 유일한 식별자를 가져야 합니다. 만약 파이썬 API을 사용해 그래프를 생성하면서 "MatMul"과 같이 연산의 명칭과 "5"와 같이 단조 증가 숫자와 연결하는등의 식별자를 지정하지 않으면, 이는 대신 선택해줄 것입니다. 임의의 식별자를 대신 선택해줄 것입니다. 명칭은 노드끼리의 연결을 정의할 때와 그래프를 실행할 때 전체 그래프를 위한 입력과 출력을 설정할 때에 사용됩니다.
 
 ### `op`
 
-This defines what operation to run, for example `"Add"`, `"MatMul"`, or
-`"Conv2D"`. When a graph is run, this op name is looked up in a registry to
-find an implementation. The registry is populated by calls to the
-`REGISTER_OP()` macro, like those in
-[tensorflow/core/ops/nn_ops.cc](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/ops/nn_ops.cc).
+이는 실행될 연산을 정의하는데, 예를 들면 `Add`, `MatMul`, 또는 `"Conv2D"`가 있습니다. 그래프가 실행될 때, 이 연산 명칭은 구현을 찾기위해 레지스트리에서 조회됩니다. 레지스트리는 [tensorflow/core/ops/nn_ops.cc](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/ops/nn_ops.cc)에 있는것들처럼, `REGISTER_OP()` 매크로를 호출함으로써 채워집니다.
 
 ### `input`
 
-A list of strings, each one of which is the name of another node, optionally
-followed by a colon and an output port number. For example, a node with two
-inputs might have a list like `["some_node_name", "another_node_name"]`, which
-is equivalent to `["some_node_name:0", "another_node_name:0"]`, and defines the
-node's first input as the first output from the node with the name
-`"some_node_name"`, and a second input from the first output of
-`"another_node_name
+문자열의 리스트, 문자열들은 각각 다른 노드의 명칭이며, 선택적으로 콜론(colo, ':')과 출력 포트수가 따라붙습니다. 예를 들면, 두 개의 입력을 갖는 노드는 `["some_node_name", "another_node_name"]` (이는 `["some_node_name:0", "another_node_name:0"]`와 동일합니다.) 형태의 리스트를 가질 것이며, 노드의 첫번째 입력을 `"some_node_name"`의 명칭을 갖는 노드의 첫번째 출력으로, 그리고 `"another_node_name"`의 첫번째 출력으로 두번째 입력을 정의할 것입니다.
 
 ### `device`
 
-In most cases you can ignore this, since it defines where to run a node in a
-distributed environment, or when you want to force the operation onto CPU or
-GPU.
+이는 분산된 환경 또는 강제로 연산을 CPU나 GPU 위에 놓고 싶을 때 노드가 어디에서 실행될 것인지를 정의하기때문에, 대부분의 상황에선이를 무시할 수 있습니다.
 
 ### `attr`
 
-This is a key/value store holding all the attributes of a node. These are the
-permanent properties of nodes, things that don't change at runtime such as the
-size of filters for convolutions, or the values of constant ops. Because there
-can be so many different types of attribute values, from strings, to ints, to
-arrays of tensor values, there's a separate protobuf file defining the data
-structure that holds them, in
-[tensorflow/core/framework/attr_value.proto](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/framework/attr_value.proto).
+이는 노드의 모든 속성들을 가지고 있는 key/value 저장소입니다. 이들은 컨볼루션에 대한 필터 사이즈나 상수 연산의 값처럼 런타임때 변경할 수 없는 노드의 영속적인 프로퍼티입니다. 문자열부터, 정수, 텐서값의 배열까지 속성값의 타입들이 매우 많을 수 있기 때문에, [tensorflow/core/framework/attr_value.proto](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/framework/attr_value.proto)에 그것들을 가지고 있는 데이터 구조를 정의하는 별도의 프로토콜 버퍼 파일이 있습니다.
 
-Each attribute has a unique name string, and the expected attributes are listed
-when the operation is defined. If an attribute isn't present in a node, but it
-has a default listed in the operation definition, that default is used when the
-graph is created.
+각 속성은 유일한 명칭을 가지고 있으며, 예상되는 속성들은 연산이 정의될 때 리스팅됩니다. 만약 한 속성이 노드엔 존재하지 않지만 연산 정의에서 기본값을 가지고 있을 때, 그래프 생성시 그 기본값이 사용됩니다.
 
-You can access all of these members by calling `node.name`, `node.op`, etc. in
-Python. The list of nodes stored in the `GraphDef` is a full definition of the
-model architecture.
+파이썬에서 `node.name`, `node.op` 등을 호출함으로써 이 모든 멤버들에 접근할 수 있습니다. `GraphDef`에 저장된 노드의 리스트는 모델 아키텍처의 전체 정의입니다.
 
-## Freezing
+## 프리징 (Freezing)
 
-One confusing part about this is that the weights usually aren't stored inside
-the file format during training. Instead, they're held in separate checkpoint
-files, and there are `Variable` ops in the graph that load the latest values
-when they're initialized. It's often not very convenient to have separate files
-when you're deploying to production, so there's the
-[freeze_graph.py](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/tools/freeze_graph.py) script that takes a graph definition and a set
-of checkpoints and freezes them together into a single file.
+이에 대한 하나 혼란스러운 부분은 가중치는 보통 트레이닝중 파일 포맷에 저장되지 않는다는 것입니다. 대신에, 그들은 분리된 체크포인트 파일에서 유지되며, 그래프에는 가중치들이 초기화될 때 최신값을 로드하는 `Variable` 연산이 있습니다. 종종 프로덕션에 배포할 때 나뉘어진 파일들을 갖고 있다는건 매우 불편하기 때문에, 그래프 정의와 체크포인트셋을 받아 하나의 파일로 묶어주는 [freeze_graph.py](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/tools/freeze_graph.py) 스크립트가 있습니다.
 
-What this does is load the `GraphDef`, pull in the values for all the variables
-from the latest checkpoint file, and then replace each `Variable` op with a
-`Const` that has the numerical data for the weights stored in its attributes
-It then strips away all the extraneous nodes that aren't used for forward
-inference, and saves out the resulting `GraphDef` into an output file.
+프리징이 하는 일은 `GraphDef`을 로드하고, 최신 체크포인트 파일로부터 모든 변수들의 값을 받아온 후, 각 `Variable` 연산을 각 속성에 저장된 가중치들의 수치 데이터를 가진 `Const`로 교체합니다. 그 다음에 이는 정방향 추론에 쓰이지 않는 관계 없는 노드들은 모두 제거하고, 하나의 출력 파일에 결과 `GraphDef`를 저장합니다.
 
-## Weight Formats
+## 가중치 포맷 (Weight Formats)
 
-If you're dealing with TensorFlow models that represent neural networks, one of
-the most common problems is extracting and interpreting the weight values. A
-common way to store them, for example in graphs created by the freeze_graph
-script, is as `Const` ops containing the weights as `Tensors`. These are
-defined in
-[tensorflow/core/framework/tensor.proto](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/framework/tensor.proto), and contain information
-about the size and type of the data, as well as the values themselves. In
-Python, you get a `TensorProto` object from a `NodeDef` representing a `Const`
-op by calling something like `some_node_def.attr['value'].tensor`.
+만약 신경망에 대한 TensorFlow 모델을 다루고 있다면, 가장 일반적인 문제중 하나는 가중치값을 추출 및 해석하는 것입니다. 그들을 저장하는 일반적인 방법은, 예시로 freeze_graph 스크립트를 통해 생성된 그래프에서, 가중치 `Tensors`를 포함하고 있는 `Const` 연산으로 저장하는 것입니다. 이들은 [tensorflow/core/framework/tensor.proto](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/framework/tensor.proto)에 정의되어 있고, 값 뿐만 아니라 데이터의 사이즈와 타입에 대한 정보도 포함하고 있습니다. 파이썬에서 `some_node_def.attr['value'].tensor`와 같은 것을 호출함으로써 `Const` 연산을 나타내는 `NodeDef`로부터 `TensorProto` 객체를 얻을 수 있습니다.
 
-This will give you an object representing the weights data. The data itself
-will be stored in one of the lists with the suffix _val as indicated by the
-type of the object, for example `float_val` for 32-bit float data types.
+이는 가중치 데이터를 나타내는 객체를 줄 것입니다. 데이터 자체는 객체의 타입에 의해 가리켜지는 형태로 _val 접미어와 함께 리스트의 하나로 저장될 것입니다, 예로 32 비트 실수 데이터 타입은  `float_val`입니다.
 
-The ordering of convolution weight values is often tricky to deal with when
-converting between different frameworks. In TensorFlow, the filter weights for
-the `Conv2D` operation are stored on the second input, and are expected to be
-in the order `[filter_height, filter_width, input_depth, output_depth]`, where
-filter_count increasing by one means moving to an adjacent value in memory.
+서로 다른 프레임워크간 변환 작업시 컨볼루션 가중치 값의 순서는 종종 다루기가 까다롭습니다. TensorFlow에서, `Conv2D`연산을 위한 필터 가중치들은 두번째 입력에 저장되며, `[filter_height, filter_width, input_depth, output_depth]`의 순서가 될 것으로 예상됩니다. 여기서 1씩 증가하는 filter_count는 메모리에서 인접한 값으로 이동함을 의미합니다.
 
-Hopefully this rundown gives you a better idea of what's going on inside
-TensorFlow model files, and will help you if you ever need to manipulate them.
+이 개요가 TensorFlow 모델 파일에서 무슨 일들이 일어나고 있는지에 대한 더 나은 아이디어를 제공하길 바라며, 당신이 그들을 다루어야할 경우 도움이 될 것입니다.

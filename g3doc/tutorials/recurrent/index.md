@@ -164,7 +164,7 @@ https://github.com/tensorflow/tensorflow/blob/master/tensorflow/g3doc/get_starte
 `tensorflow/models/rnn/ptb:ptb_word_lm` 타겟을 빌드하세요).
 
 그 다음은:
-```
+```bash
 cd tensorflow/models/rnn/ptb
 python ptb_word_lm --data_path=/tmp/simple-examples/data/ --model small
 ```

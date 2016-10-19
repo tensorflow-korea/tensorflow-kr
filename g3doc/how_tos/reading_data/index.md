@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 데이터 읽어들이기
 =================
+=======
+# Reading data
+>>>>>>> a05f0f6... Translate feeding part
 
 TensorFlow 프로그램으로 데이터를 가져오는 방법에는 세 가지 주요 방법이 있다:
 
@@ -9,10 +13,17 @@ TensorFlow 프로그램으로 데이터를 가져오는 방법에는 세 가지 
 
 [TOC]
 
+<<<<<<< HEAD
 피딩(Feeding)
 -------------
 
 TensorFlow의 피딩 기작은 계산 그래프 내 어떠한 Tensor에도 데이터를 삽입할 수 있도록 한다. 따라서 파이썬으로도 그래프에 직접 데이터를 피딩할 수 있다.
+=======
+## 피딩(Feeding)
+
+TensorFlow의 피딩 기작은 계산 그래프 내의 모든 텐서에 데이터를 삽입할 수 있도록 한다.
+따라서 파이썬으로도 그래프에 직접 데이터를 피딩할 수 있다.
+>>>>>>> a05f0f6... Translate feeding part
 
 계산을 개시하는 run()이나 eval()을 호출할 때, 피드 데이터를 제공하기 위해 `feed_dict` 전달인자를 사용하면 된다.
 
@@ -23,6 +34,7 @@ with tf.Session():
   print(classifier.eval(feed_dict={input: my_python_preprocessing_fn()}))
 ```
 
+<<<<<<< HEAD
 변수와 상수를 포함하여 모든 텐서를 피드 데이터로 바꿀 수 있지만, 가장 좋은 방법은 [`placeholder` op](../../api_docs/python/io_ops.md#placeholder) 노드를 사용하는 것이다. `placeholder`는 오로지 피드를 받아들이기 위해 존재하는데, 초기화되지 않으며 데이터를 포함하지도 않는다. `placeholder`는 피드 없이 실행되는 경우 오류를 발생시켜 사용자가 피드하는 것을 잊지 않도록 한다.
 
 `placeholder`를 사용하는 예제와 MNIST 데이터 학습을 위한 피딩은 [`tensorflow/examples/tutorials/mnist/fully_connected_feed.py`](https://www.tensorflow.org/code/tensorflow/examples/tutorials/mnist/fully_connected_feed.py)에서 찾아볼 수 있으며, [MNIST tutorial](../../tutorials/mnist/tf/index.md) 에 설명이 있다.
@@ -44,6 +56,16 @@ with tf.Session():
 6.	리더기로 읽어들인 레코드에 대한 해독기 (A decoder for a record read by the reader)
 7.	*선택적* 전처리 (*Optional* preprocessing)
 8.	예시 큐 (Example queue)
+=======
+변수와 상수를 포함하여 모든 텐서를 피드 데이터로 바꿀 수 있지만, 
+가장 좋은 방법은 [`placeholder` op](../../api_docs/python/io_ops.md#placeholder) 노드를 사용하는 것이다.
+`placeholder`는 오로지 피드를 받아들이기 위해 존재하는데, 초기화되지 않으며 데이터를 포함하지도 않는다.
+`placeholder`는 피드 없이 실행되는 경우 오류를 발생시켜 사용자가 피드하는 것을 잊지 않도록 한다.
+
+`placeholder`를 사용하는 예제와 MNIST 데이터 학습을 위한 피딩은 다음에서 찾아볼 수 있다: [`tensorflow/examples/tutorials/mnist/fully_connected_feed.py`](https://www.tensorflow.org/code/tensorflow/examples/tutorials/mnist/fully_connected_feed.py),
+and is described in the [MNIST tutorial](../../tutorials/mnist/tf/index.md).
+
+>>>>>>> a05f0f6... Translate feeding part
 
 ### 파일명, 셔플링, 에폭 제한
 

@@ -1,12 +1,9 @@
-# TensorBoard: Visualizing Learning
+# 텐서보드(TensorBoard): 학습을 시각화하기
 
-The computations you'll use TensorFlow for - like training a massive
-deep neural network - can be complex and confusing. To make it easier to
-understand, debug, and optimize TensorFlow programs, we've included a suite of
-visualization tools called TensorBoard. You can use TensorBoard to visualize
-your TensorFlow graph, plot quantitative metrics about the execution of your
-graph, and show additional data like images that pass through it. When
-TensorBoard is fully configured, it looks like this:
+#### notice: *N)을 통해서 잘 알지 못하는 부분을 표시하였습니다. 제가 배우면서 번역하는 관계로 이러한 문제가 발생한데 대해 진심으로 사과드립니다.  
+
+
+만약 방대한 딥뉴럴네트워크를 훈련 하고자 한다면, 당신은 텐서플로우를 사용할 것입니다. 이러한 연산(computation)은 복잡할 수도 있고 이 과정에서 우리를 혼란스럽게 할 수 있습니다. 텐서플로우 프로그램에 대한 이해와 더불어 디버깅, 최적화를 더 쉽게 하기위해서 우리는 텐서보드라고 불리는 멋진 시각화 도구를 텐서플로우 라이브러리 내에 포함시켰습니다. 텐서보드는 사용자의 텐서플로우 그래프를 시각화 하는데 사용 할 수 있을 뿐만아니라 사용자의 텐서플로우 그래프에 대한 *1)다양한 정보(quantitative metrics)를 플롯을 통해 표현 할 수 있습니다. 더 나아가 텐서보드는 텐서플로우에 입력한 이미지와 같은 추가적인 데이터를 표현하는데 사용 할 수 있습니다. *2)텐서보드를 한번에 표현한다면 아래 그림과 같습니다.
 
 [![MNIST TensorBoard](../../images/mnist_tensorboard.png "MNIST TensorBoard")](http://tensorflow.org/tensorboard)
 [*Click try a TensorBoard with data from this tutorial!*](http://tensorflow.org/tensorboard)

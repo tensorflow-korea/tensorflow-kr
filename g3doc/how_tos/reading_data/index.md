@@ -35,7 +35,11 @@ with tf.Session():
 1.	파일명 리스트 (The list of filenames)
 2.	*선택적* 파일명 셔플링 (*Optional* filename shuffling)
 3.	*선택적* 에폭 제한 (*Optional* epoch limit)
+<<<<<<< HEAD
 4.	파일명 큐
+=======
+4.	파일명 큐 (Filename queue)
+>>>>>>> 7f3381401a76f8649fe3fdd2cef79c474b7e980f
 5.	파일 형식에 대한 리더기 (A reader for the file format)
 6.	리더기로 읽어들인 레코드에 대한 해독기 (A decoder for a record read by the reader)
 7.	*선택적* 전처리 (*Optional* preprocessing)
@@ -43,6 +47,7 @@ with tf.Session():
 
 ### 파일명, 셔플링, 에폭 제한
 
+<<<<<<< HEAD
 For the list of filenames, use either a constant string Tensor (like`["file0", "file1"]` or `[("file%d" % i) for i in range(2)]`) or the[`tf.train.match_filenames_once` function](../../api_docs/python/io_ops.md#match_filenames_once).
 
 Pass the list of filenames to the [`tf.train.string_input_producer` function](../../api_docs/python/io_ops.md#string_input_producer).`string_input_producer` creates a FIFO queue for holding the filenames until the reader needs them.
@@ -50,6 +55,15 @@ Pass the list of filenames to the [`tf.train.string_input_producer` function](..
 `string_input_producer` has options for shuffling and setting a maximum number of epochs. A queue runner adds the whole list of filenames to the queue once for each epoch, shuffling the filenames within an epoch if `shuffle=True`. This procedure provides a uniform sampling of files, so that examples are not under- or over- sampled relative to each other.
 
 The queue runner works in a thread separate from the reader that pulls filenames from the queue, so the shuffling and enqueuing process does not block the reader.
+=======
+파일명 리스트의 경우 문자열 상수 텐서를 사용한다. 예를 들어, `["file0", "file1"]` 또는 `[("file%d" % i) for i in range(2)]`) 또는 [`tf.train.match_filenames_once` 함수](../../api_docs/python/io_ops.md#match_filenames_once)를 생각해 볼 수 있다.
+
+파일명 리스트를 [`tf.train.string_input_producer` 함수](../../api_docs/python/io_ops.md#string_input_producer)에 넘겨준다. `string_input_producer`는 리더기가 필요로 할 때까지 파일명을 유지하는 FIFO 큐를 만든다.
+
+`string_input_producer`는 셔플링 및 최대 에폭 수 설정에 대한 옵션을 가지고 있다. 큐 실행기(queue runner)가 매 에폭마다 파일명 리스트를 큐에 한번 추가하면, `shuffle=True`로 설정된 경우 단일 에폭 내에서 파일명들이 뒤섞이게 된다. 이 절차는 파일이 균일하게 샘플링되도록 함으로써, 주어진 예시(example)가 다른 것에 비해 상대적으로 덜 추출되거나(under-sampling) 과하게 추출되지(over-sampling) 않도록 한다.
+
+큐 실행기는, 파일명을 큐로부터 가져오는 리더기와 분리되어 있는 쓰레드에서 작동하기 때문에, 셔플링과 인큐잉(enqueuing, 큐에 집어넣기) 프로세스가 리더기를 블록(block)하지 않는다.
+>>>>>>> 7f3381401a76f8649fe3fdd2cef79c474b7e980f
 
 ### File formats
 

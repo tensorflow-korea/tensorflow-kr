@@ -95,7 +95,7 @@ training_set = tf.contrib.learn.datasets.base.load_csv(filename=IRIS_TRAINING, t
 test_set = tf.contrib.learn.datasets.base.load_csv(filename=IRIS_TEST, target_dtype=np.int)
 ```
 
-그 다음, 길이 및 너비 등의 특성 데이터와 목표 값에 변수를 할당합니다. 훈련 데이터셋의 특성 데이터는 `x_train`, 테스트 데이터셋의 특성 데이터는 `x_test`, 훈련 데이터셋의 목표 값은 `y_train`, 테스트 데이터셋의 목표 값은 `y_test`입니다. tf.contrib.learn의 `Dataset`은 [named tuples](https://docs.python.org/3/library/collections.md#collections.namedtuple)이며, 순차적으로 데이터와 목표 필드*(역주 : namedtuple의 field_name을 말합니다)*를 통해 특성 데이터와 목표 값에 접근할 수 있습니다.
+그 다음, 길이 및 너비 등의 특성 데이터와 목표 값에 변수를 할당합니다. 훈련 데이터셋의 특성 데이터는 `x_train`, 테스트 데이터셋의 특성 데이터는 `x_test`, 훈련 데이터셋의 목표 값은 `y_train`, 테스트 데이터셋의 목표 값은 `y_test`입니다. tf.contrib.learn의 `Dataset`은 [named tuples](https://docs.python.org/2/library/collections.html#collections.namedtuple)이며, 순차적으로 데이터와 목표 필드*(역주 : namedtuple의 field_name을 말합니다)*를 통해 특성 데이터와 목표 값에 접근할 수 있습니다.
 
 ```python
 x_train, x_test, y_train, y_test = training_set.data, test_set.data, \

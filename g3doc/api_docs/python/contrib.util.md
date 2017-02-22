@@ -26,7 +26,7 @@
 
 ##### 반환값:
 
-  numpy ndarray는 'tensor'의 상수 값이거나 계산하지 않았다면 None을 포함합니다.
+  numpy ndarray는 `tensor`의 상수 값이거나 계산하지 않았다면 None을 포함합니다.
 
 ##### 예외:
 

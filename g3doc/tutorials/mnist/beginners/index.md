@@ -1,6 +1,6 @@
 # MNIST 초급
 
-*이 튜토리얼은 머신러닝과 텐서플로우을 처음 접해본 독자들을 위해서 구성되어 있습니다. 만약 MNIST가 무엇인지 알고 소프트맥스(다변량 로지스틱) 회귀가 무엇인지 이미 알고 계신다면, [더 깊이 있는 튜토리얼](../pros/index.md)을 선호하실 것이라고 생각합니다. 튜토리얼을 진행하시기 전에, 자신의 머신에 [텐서플로우가 설치](../../../get_started/os_setup.md)되어 있는지 확인해주세요.*
+*이 튜토리얼은 머신러닝과 텐서플로우를 처음 접해본 독자들을 위해서 구성되어 있습니다. 만약 MNIST가 무엇인지 알고 소프트맥스(다변량 로지스틱) 회귀가 무엇인지 이미 알고 계신다면, [더 깊이 있는 튜토리얼](../pros/index.md)을 선호하실 것이라고 생각합니다. 튜토리얼을 진행하시기 전에, 자신의 머신에 [텐서플로우가 설치](../../../get_started/os_setup.md)되어 있는지 확인해주세요.*
 
 프로그래밍을 어떻게 하는지 배울 때, 언제나 "Hello World."를 가장 먼저 출력해본다는 전통이 있습니다. 그것처럼, 머신러닝에선 MNIST를 가장 먼저 다룹니다.
 
@@ -53,264 +53,153 @@ MNIST에서 각각에 대응하는 라벨은 0과 9사이의 숫자이며, 각 �
 
 그럼 이제 실제로 우리의 모델을 만들 준비가 되었습니다.
 
-## Softmax Regressions
+## 소프트맥스 회귀 (softmax regression)
 
-We know that every image in MNIST is a digit, whether it's a zero or a nine. We
-want to be able to look at an image and give probabilities for it being each
-digit. For example, our model might look at a picture of a nine and be 80% sure
-it's a nine, but give a 5% chance to it being an eight (because of the top loop)
-and a bit of probability to all the others because it isn't sure.
+우리는 MNIST의 각 이미지가 0부터 9 사이의 손으로 쓴 숫자라는 것을 알고 있습니다. 따라서 각 이미지는 10가지의 경우의 수 중 하나에 해당하겠지요. 우리는 이제 이미지를 보고 그 이미지가 각 숫자일 확률을 계산할 것입니다. 예를 들면, 우리가 만드는 모델은 9가 쓰여져 있는 이미지를 보고 이 이미지가 80%의 확률로 9라고 추측하지만, (윗쪽의 동그란 부분 때문에) 8일 확률도 5% 있다고 계산할 수도 있습니다. 또한 그 외의 다른 숫자일 확률도 조금씩 있을 수 있습니다. 확실하지 않으니까요.
 
-This is a classic case where a softmax regression is a natural, simple model.
-If you want to assign probabilities to an object being one of several different
-things, softmax is the thing to do. Even later on, when we train more
-sophisticated models, the final step will be a layer of softmax.
+이 상황은 소프트맥스 회귀를 사용하기에 아주 적절한 예입니다. 만약 당신이 어떤 것이 서로 다른 여러 항목 중 하나일 확률을 계산하고자 한다면, 소프트맥스가 딱 맞습니다. 소프트맥스는 각 값이 0과 1 사이의 값으로 이루어지고, 각 값을 모두 합하면 1이 되는 목록을 제공하기 때문입니다. 게다가 나중에 더 복잡한 모델을 트레이닝 할 때에도, 마지막 단계는 소프트맥스 레이어가 될 것입니다.
 
-A softmax regression has two steps: first we add up the evidence of our input
-being in certain classes, and then we convert that evidence into probabilities.
+소프트맥스 회귀는 두 단계로 이루어집니다. 우선 입력한 데이터가 각 클래스에 속한다는 증거(evidence)를 수치적으로 계산하고, 그 뒤엔 계산한 값을 확률로 변환하는 것입니다.
 
-To tally up the evidence that a given image is in a particular class, we do a
-weighted sum of the pixel intensities. The weight is negative if that pixel
-having a high intensity is evidence against the image being in that class,
-and positive if it is evidence in favor.
+한 이미지가 특정 클래스에 속하는지 계산하기 위해서는 각 픽셀의 어두운 정도(intensity)를 가중치합(서로 다른 계수를 곱해 합하는 계산, weighted sum)을 합니다. 여기서 가중치는 해당 픽셀이 진하다는 것이 특정 클래스에 속한다는 것에 반하는 내용이라면 음(-)의 값을, 특정 클래스에 속한다는 것을 의미한다면 양(+)의 값을 가지게 됩니다.
 
-The following diagram shows the weights one model learned for each of these
-classes. Red represents negative weights, while blue represents positive
-weights.
+아래 그림은 모델이 각 클래스에 대해 학습한 가중치를 나타내고 있습니다. 빨간 부분은 음의 가중치를, 파란 부분은 양의 가중치를 나타냅니다.
 
 <div style="width:40%; margin:auto; margin-bottom:10px; margin-top:20px;">
 <img style="width:100%" src="../../../images/softmax-weights.png">
 </div>
 
-We also add some extra evidence called a bias. Basically, we want to be able
-to say that some things are more likely independent of the input. The result is
-that the evidence for a class \\(i\\) given an input \\(x\\) is:
+또한 여기서 바이어스(bias)라는 추가적인 항을 더하게 됩니다. 결과값의 일부는 입력된 데이터와는 독립적일 수 있다는 것을 고려하기 위함입니다. 이를 수식으로 표현하면, 입력값 \\(x\\) 가 주어졌을 때 클래스 \\(i\\) 에 대한 증거값은 다음과 같습니다:
 
 $$\text{evidence}_i = \sum_j W_{i,~ j} x_j + b_i$$
 
-where \\(W_i\\) is the weights and \\(b_i\\) is the bias for class \\(i\\),
-and \\(j\\) is an index for summing over the pixels in our input image \\(x\\).
-We then convert the evidence tallies into our predicted probabilities
-\\(y\\) using the "softmax" function:
+여기서 \\(W_i\\) 는 가중치이며 \\(b_i\\) 는 클래스 \\(i\\)에 대한 바이어스이고, \\(j\\) 는 입력 데이터로 사용한 이미지 \\(x\\)의 픽셀 값을 합하기 위한 인덱스입니다. 이제 각 클래스에 대해 계산한 증거값들을 "소프트맥스" 함수를 활용해 예측 확률 \\(y\\)로 변환합니다:
 
 $$y = \text{softmax}(\text{evidence})$$
 
-Here softmax is serving as an "activation" or "link" function, shaping
-the output of our linear function into the form we want -- in this case, a
-probability distribution over 10 cases.
-You can think of it as converting tallies
-of evidence into probabilities of our input being in each class.
-It's defined as:
+여기서 소프트맥스는 우리가 계산한 선형 함수를 우리가 원하는 형태 - 이 경우에서는 10가지 경우에 대한 확률 분포 - 로 변환하는데 사용하는 "활성화" 또는 "링크" 함수의 역할을 합니다. 이번 예에서는 계산한 증거값들을 입력된 데이터 값이 각 클래스에 속할 확률로 변환하는 것이라고 생각하셔도 됩니다. 이 과정은 다음과 같이 정의됩니다:
 
 $$\text{softmax}(x) = \text{normalize}(\exp(x))$$
 
-If you expand that equation out, you get:
+이 식을 전개하면 다음의 식을 얻습니다:
 
 $$\text{softmax}(x)_i = \frac{\exp(x_i)}{\sum_j \exp(x_j)}$$
 
-But it's often more helpful to think of softmax the first way:
-exponentiating its inputs and then normalizing them.
-The exponentiation means that one more unit of evidence increases the weight
-given to any hypothesis multiplicatively.
-And conversely, having one less unit of evidence means that a
-hypothesis gets a fraction of its earlier weight. No hypothesis ever has zero
-or negative weight. Softmax then normalizes these weights, so that they add up
-to one, forming a valid probability distribution. (To get more intuition about
-the softmax function, check out the
-[section](http://neuralnetworksanddeeplearning.com/chap3.html#softmax)
-on it in Michael Nielsen's book, complete with an interactive visualization.)
+많은 경우, 일단 소프트맥스를 입력값을 지수화한 뒤 정규화 하는 과정이라고 생각하는게 편합니다. 지수화란 증거값을 하나 더 추가하면 어떤 가설에 대해 주어진 가중치를 곱으로 증가시키는 것을 의미합니다. 또한 반대로, 증거값의 갯수가 하나 줄어든다는 것은 가설의 가중치가 기존 가중치의 분수비로 줄어들게 된다는 뜻입니다. 어떤 가설도 0 또는 음의 가중치를 가질 수 없습니다. 그런 뒤 소프트맥스는 가중치를 정규화한 후, 모두 합하면 1이 되는 확률 분포로 만듭니다. (소프트맥스 함수에 대해 더 알고싶다면, 상호작용이 가능한 시각화가 잘 되어 있는 마이클 닐슨의 책의 이 [챕터](http://neuralnetworksanddeeplearning.com/chap3.html#softmax) 를 참조하세요.)
 
-
-You can picture our softmax regression as looking something like the following,
-although with a lot more \\(x\\)s. For each output, we compute a weighted sum of
-the \\(x\\)s, add a bias, and then apply softmax.
+소프트맥스 회귀는 다음 그림 같은 형태를 갖게 됩니다 (실제론 훨씬 \\(x\\)가 훨씬 많지만요). 각각의 출력값에 대해, 가중치합을 계산하고 바이어스를 더한 뒤 소프트맥스를 적용하는 것입니다.
 
 <div style="width:55%; margin:auto; margin-bottom:10px; margin-top:20px;">
 <img style="width:100%" src="../../../images/softmax-regression-scalargraph.png">
 </div>
 
-If we write that out as equations, we get:
+이를 수식으로 표현하면 다음과 같습니다:
 
 <div style="width:52%; margin-left:25%; margin-bottom:10px; margin-top:20px;">
 <img style="width:100%" src="../../../images/softmax-regression-scalarequation.png">
 </div>
 
-We can "vectorize" this procedure, turning it into a matrix multiplication
-and vector addition. This is helpful for computational efficiency. (It's also
-a useful way to think.)
+우리는 이 과정을 행렬곱과 벡터합으로 변경하여 "벡터화"할 수 있습니다. 벡터화는 계산의 효율화에 도움이 됩니다 (또한 머리로 생각하기에도 좋은 방법입니다).
 
 <div style="width:50%; margin:auto; margin-bottom:10px; margin-top:20px;">
 <img style="width:100%" src="../../../images/softmax-regression-vectorequation.png">
 </div>
 
-More compactly, we can just write:
+더 간략하게는 다음과 같이 표현할 수 있습니다:
 
 $$y = \text{softmax}(Wx + b)$$
 
+## 회귀 구현하기
 
-## Implementing the Regression
+파이썬에서 효율적인 수치 연산을 하기 위해, 우리는 다른 언어로 구현된 보다 효율이 높은 코드를 사용하여 행렬곱 같은 무거운 연산을 수행하는 NumPy등의 라이브러리를 자주 사용합니다. 그러나 아쉽게도, 매 연산마다 파이썬으로 다시 돌아오는 과정에서 여전히 많은 오버헤드가 발생할 수 있습니다. 이러한 오버헤드는 GPU에서 연산을 하거나 분산 처리 환경같은, 데이터 전송에 큰 비용이 발생할 수 있는 상황에서 특히 문제가 될 수 있습니다.
 
+텐서플로우 역시 파이썬 외부에서 무거운 작업들을 수행하지만, 텐서플로우는 이런 오버헤드를 피하기 위해 한 단계 더 나아간 방식을 활용합니다. 파이썬에서 하나의 무거운 작업을 독립적으로 실행하는 대신, 텐서플로우는 서로 상호작용하는 연산간의 그래프를 유저가 기술하도록 하고, 그 연산 모두가 파이썬 밖에서 동작합니다 (이러한 접근 방법은 다른 몇몇 머신러닝 라이브러리에서 볼 수 있습니다).
 
-To do efficient numerical computing in Python, we typically use libraries like
-NumPy that do expensive operations such as matrix multiplication outside Python,
-using highly efficient code implemented in another language.
-Unfortunately, there can still be a lot of overhead from switching back to
-Python every operation. This overhead is especially bad if you want to run
-computations on GPUs or in a distributed manner, where there can be a high cost
-to transferring data.
-
-TensorFlow also does its heavy lifting outside python,
-but it takes things a step further to avoid this overhead.
-Instead of running a single expensive operation independently
-from Python, TensorFlow lets us describe a graph of interacting operations that
-run entirely outside Python. (Approaches like this can be seen in a few
-machine learning libraries.)
-
-To use TensorFlow, we need to import it.
+텐서플로우를 사용하기 위해서는 이를 임포트해야 합니다.
 
 ```python
 import tensorflow as tf
 ```
 
-We describe these interacting operations by manipulating symbolic variables.
-Let's create one:
+우리는 이 상호작용하는 연산들을 심볼릭 변수를 활용해 기술하게 됩니다. 하나 만들어 보죠:
 
 ```python
 x = tf.placeholder(tf.float32, [None, 784])
 ```
 
-`x` isn't a specific value. It's a `placeholder`, a value that we'll input when
-we ask TensorFlow to run a computation. We want to be able to input any number
-of MNIST images, each flattened into a 784-dimensional vector. We represent
-this as a 2-D tensor of floating-point numbers, with a shape `[None, 784]`.
-(Here `None` means that a dimension can be of any length.)
+`x`에 특정한 값이 주어진 것은 아닙니다. 이는 'placeholder'로, 우리가 텐서플로우에서 연산을 실행할 때 값을 입력할 자리입니다. 여기서는 784차원의 벡터로 변형된 MNIST 이미지의 데이터를 넣으려고 합니다. 우린 이걸 `[None, 784]`의 형태를 갖고 부동소수점으로 이루어진 2차원 텐서로 표현합니다. (여기서 `None`은 해당 차원의 길이가 어떤 길이든지 될 수 있음을 의미합니다)
 
-We also need the weights and biases for our model. We could imagine treating
-these like additional inputs, but TensorFlow has an even better way to handle
-it: `Variable`.
-A `Variable` is a modifiable tensor that lives in TensorFlow's graph of
-interacting
-operations. It can be used and even modified by the computation. For machine
-learning applications, one generally has the model parameters be `Variable`s.
+또한 우리의 모델에는 가중치와 바이어스 역시 필요합니다. 우리는 이를 부가적인 입력처럼 다루는 방법을 생각할 수도 있지만, 텐서플로우는 `Variable`이라고 불리는 보다 나은 방법을 갖고 있습니다. `Variable`은 서로 상호작용하는 연산으로 이루어진 텐서플로우 그래프 안에 존재하는, 수정 가능한 텐서입니다. `Variable`은 연산에 사용되기도 하고, 연산을 통해 수정되기도 합니다. 머신러닝에 이를 사용할 때에는 주로 모델의 변수를 `Variable`들로 사용하게 됩니다.
 
 ```python
 W = tf.Variable(tf.zeros([784, 10]))
 b = tf.Variable(tf.zeros([10]))
 ```
 
-We create these `Variable`s by giving `tf.Variable` the initial value of the
-`Variable`: in this case, we initialize both `W` and `b` as tensors full of
-zeros. Since we are going to learn `W` and `b`, it doesn't matter very much
-what they initially are.
+우리는 `tf.Variable`에 `Variable`의 초기값을 넘겨줌으로써 이 `Variable`들을 생성합니다: 여기서는 `W`와 `b` 둘 다 0으로 이루어진 텐서로 초기화를 합니다. 이제부터 `W`와 `b`를 학습해 나갈 것이므로, 각각의 초기값은 크게 중요하지 않습니다.
 
-Notice that `W` has a shape of [784, 10] because we want to multiply the
-784-dimensional image vectors by it to produce 10-dimensional vectors of
-evidence for the difference classes. `b` has a shape of [10] so we can add it
-to the output.
+`W`가 [784, 10]의 형태를 갖는 것에 주목해주시기 바랍니다. 이러한 형태로 만든 이유는 `W`에 784차원의 이미지 벡터를 곱해서 각 클래스에 대한 증거값을 나타내는 10차원 벡터를 얻고자 하기 때문입니다. `b`는 그 10차원 벡터에 더하기 위해 [10]의 형태를 갖는 것입니다.
 
-We can now implement our model. It only takes one line!
+이제 우리는 모델을 구현할 수 있습니다. 단 한줄로요!
 
 ```python
 y = tf.nn.softmax(tf.matmul(x, W) + b)
 ```
 
-First, we multiply `x` by `W` with the expression `tf.matmul(x, W)`. This is
-flipped from when we multiplied them in our equation, where we had \\(Wx\\), as a
-small trick
-to deal with `x` being a 2D tensor with multiple inputs. We then add `b`, and
-finally apply `tf.nn.softmax`.
+우선, `tf.matmul(x, W)`로 `x`와 `W`를 곱합니다. 이 표현은 위에서 본 수식에서 곱했던 순서인 \\(Wx\\)와 반대인데 (행렬이므로 순서가 중요하죠), `x`가 여러 입력값을 갖는 2차원 텐서인 경우에도 대응하기 위한 작은 트릭입니다. 그 다음엔 `b`를 더하고, 마지막으로 `tf.nn.softmax`을 적용합니다.
 
-That's it. It only took us one line to define our model, after a couple short
-lines of setup. That isn't because TensorFlow is designed to make a softmax
-regression particularly easy: it's just a very flexible way to describe many
-kinds of numerical computations, from machine learning models to physics
-simulations. And once defined, our model can be run on different devices:
-your computer's CPU, GPUs, and even phones!
+됐습니다. 우리 모델을 세팅하기 위해 단 한줄의 코드만을 사용했습니다. 간단한 몇 줄 짜리 준비 작업을 한 뒤에요. 이렇게 간단하게 할 수 있는 건 텐서플로우에서 소프트맥스 회귀가 특히 구현하기 쉽기 때문이 아닙니다. 텐서플로우는 머신러닝 모델에서부터 물리학 시뮬레이션까지 다양한 종류의 수치 연산을 표현할 수 있는 매우 유연한 방법이기 때문입니다. 게다가 한 번 작성한 모델은 여러 기기에서 실행할 수 있습니다: 당신의 컴퓨터에 있는 CPU, GPU, 심지어 휴대폰에서까지요!
 
+## 학습
 
-## Training
+우리의 모델을 학습시키기 위해서는 우선 모델이 좋다는 것은 어떤 것인지를 정의해야 합니다. 사실 머신러닝에서는 모델이 안좋다는 것이 어떤 의미인지를 주로 정의합니다. 우리는 이를 주로 비용(cost) 또는 손실(loss)이라고 부르며, 이것들은 우리의 모델이 우리가 원하는 결과에서 얼마나 떨어져있는지를 보여주는 값입니다. 우리는 그 격차를 줄이기 위해 노력하며, 그 격차가 적으면 적을수록 우리의 모델은 좋다고 말합니다.
 
-In order to train our model, we need to define what it means for the  model to
-be good. Well, actually, in machine learning we typically define what it means
-for a model to be bad, called the cost or loss, and then try to minimize how bad
-it is. But the two are equivalent.
-
-One very common, very nice cost function is "cross-entropy." Surprisingly,
-cross-entropy arises from thinking about information compressing codes in
-information theory but it winds up being an important idea in lots of areas,
-from gambling to machine learning. It's defined:
+모델의 손실을 정의하기 위해 자주 사용되는 좋은 함수 중 하나로 "크로스 엔트로피"가 있습니다. 원래 크로스 엔트로피는 정보 이론 분야에서 정보를 압축하는 방법으로써 고안된 것이지만, 현재는 도박에서 머신러닝에 이르기까지 여러 분야에서 중요한 아이디어로 사용되고 있습니다. 크로스 엔트로피는 다음과 같이 정의됩니다:
 
 $$H_{y'}(y) = -\sum_i y'_i \log(y_i)$$
 
-Where \\(y\\) is our predicted probability distribution, and \\(y'\\) is the true
-distribution (the one-hot vector we'll input).  In some rough sense, the
-cross-entropy is measuring how inefficient our predictions are for describing
-the truth. Going into more detail about cross-entropy is beyond the scope of
-this tutorial, but it's well worth
-[understanding](http://colah.github.io/posts/2015-09-Visual-Information/).
+\\(y\\)는 우리가 예측한 확률 분포이며, \\(y'\\)는 실제 분포(우리가 입력하는 원-핫 벡터) 입니다. 대략적으로 설명하자면, 크로스 엔트로피는 우리의 예측이 실제 값을 설명하기에 얼마나 비효율적인지를 측정하는 것입니다. 크로스 엔트로피에 대해서 더 자세하게 다루는 것은 이 튜토리얼의 범위를 벗어나는 내용입니다만, [알아둘](http://colah.github.io/posts/2015-09-Visual-Information/) 가치는 있습니다.
 
-To implement cross-entropy we need to first add a new placeholder to input
-the correct answers:
+크로스 엔트로피를 구현하기 위해서는 올바른 답을 넣기 위한 새로운 placeholder를 추가하는 것 부터 시작해야 합니다.
 
 ```python
 y_ = tf.placeholder(tf.float32, [None, 10])
 ```
 
-Then we can implement the cross-entropy, \\(-\sum y'\log(y)\\):
+이제 우리는 크로스 엔트로피 \\(-\sum y'\log(y)\\) 를 구현할 수 있습니다:
 
 ```python
 cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
 ```
 
-First, `tf.log` computes the logarithm of each element of `y`. Next, we multiply
-each element of `y_` with the corresponding element of `tf.log(y)`. Then 
-`tf.reduce_sum` adds the elements in the second dimension of y, due to the 
-`reduction_indices=[1]` parameter. Finally,  `tf.reduce_mean` computes the mean
-over all the examples in the batch.
+우선, `tf.log`는 `y`의 각 원소의 로그 값을 계산합니다. 그 다음, `y_`의 각 원소를 `tf.log(y)`의 해당하는 원소들과 곱합니다. 그리고 `tf.reduce_sum`으로 y의 2번째 차원(`reduction_indices=[1]`이라는 파라미터가 주어졌으므로)의 원소들을 합합니다. 마지막으로, `tf.reduce_mean`으로 배치(batch)의 모든 예시에 대한 평균을 계산합니다.
 
-Now that we know what we want our model to do, it's very easy to have TensorFlow
-train it to do so.
-Because TensorFlow knows the entire graph of your computations, it
-can automatically use the [backpropagation
-algorithm](http://colah.github.io/posts/2015-08-Backprop/)
-to efficiently determine how your variables affect the cost you ask it to
-minimize. Then it can apply your choice of optimization algorithm to modify the
-variables and reduce the cost.
+(수학적으로 불안정한 계산이기 때문에, 소스 코드에서는 이 연산을 사용하지 않고 있는 것에 주의하시기 바랍니다. 대신, 정규화 되지 않은 로짓(logit)에 대해 `tf.nn.softmax_cross_entropy_with_logits`을 적용합니다(즉, `tf.matmul(x, W) + b)`에 `softmax_cross_entropy_with_logits`을 사용합니다). 이렇게 하는 이유는 이 수학적으로 보다 안정적인 함수가 내부적으로 소프트맥스 활성을 계산하기 때문입니다. 당신의 코드에서도 tf.nn.(sparse_)softmax_cross_entropy_with_logits를 사용하는 것을 고려해보시기 바랍니다.)
+
+우리의 모델이 할 일을 우리가 알고있다면, 이를 텐서플로우를 통해 학습시키는 것은 매우 간단합니다. 텐서플로우는 당신이 하고자 하는 연산의 전체 그래프를 알고 있으므로, 손실(당신이 최소화 하고 싶어하는 것이죠)에 당신이 설정한 변수들이 어떻게 영향을 주는지를 [역전파(backpropagation) 알고리즘](http://colah.github.io/posts/2015-08-Backprop/)을 자동으로 사용하여 매우 효율적으로 정의할 수 있기 때문입니다. 그리고나서 텐서플로우는 당신이 선택한 최적화 알고리즘을 적용하여 변수를 수정하고 손실을 줄일 수 있습니다.
 
 ```python
 train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 ```
 
-In this case, we ask TensorFlow to minimize `cross_entropy` using the gradient
-descent algorithm with a learning rate of 0.5. Gradient descent is a simple
-procedure, where TensorFlow simply shifts each variable a little bit in the
-direction that reduces the cost. But TensorFlow also provides
-[many other optimization algorithms]
-(../../../api_docs/python/train.md#optimizers): using one is as simple as
-tweaking one line.
+여기서는 텐서플로우에게 학습 비율 0.5로 경사 하강법(gradient descent algorithm)을 적용하여 크로스 엔트로피를 최소화하도록 지시합니다. 경사하강법이란 텐서플로우가 각각의 변수를 비용을 줄이는 방향으로 조금씩 이동시키는 매우 단순한 방법입니다. 그러나 텐서플로우는 [다른 여러 최적화 알고리즘](../../../api_docs/python/train.md#optimizers)을 제공합니다: 그 중 하나를 적용하는 것은 코드 한 줄만 수정하면 될 정도로 간단합니다.
 
-What TensorFlow actually does here, behind the scenes, is it adds new operations
-to your graph which
-implement backpropagation and gradient descent. Then it gives you back a
-single operation which, when run, will do a step of gradient descent training,
-slightly tweaking your variables to reduce the cost.
+여기서 텐서플로우가 실제로 뒤에서 하는 일은, 역전파와 경사하강이라는 새로운 작업을 당신의 그래프에 추가하는 것입니다. 이제 텐서플로우가 실행되면 비용을 감소시키기 위해 변수들을 살짝 수정하는 경사 하강 학습 작업 한 번을 돌려줄 것입니다.
 
-Now we have our model set up to train. One last thing before we launch it,
-we have to add an operation to initialize the variables we created:
+이제 우리 모델은 학습할 준비가 되었습니다. 학습을 실행시키기 전에 마지막으로, 우리가 작성한 변수들을 초기화하는 작업을 추가해야 합니다:
 
 ```python
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 ```
 
-We can now launch the model in a `Session`, and run the operation that
-initializes the variables:
+이제 `Session`에서 모델을 실행시키고, 변수들을 초기화 하는 작업을 실행시킬 수 있습니다:
 
 ```python
 sess = tf.Session()
 sess.run(init)
 ```
 
-Let's train -- we'll run the training step 1000 times!
+학습을 시킵시다 -- 여기선 학습을 1000번 시킬 겁니다!
 
 ```python
 for i in range(1000):
@@ -318,56 +207,34 @@ for i in range(1000):
   sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 ```
 
-Each step of the loop, we get a "batch" of one hundred random data points from
-our training set. We run `train_step` feeding in the batches data to replace
-the `placeholder`s.
+반복되는 루프의 각 단계마다, 우리는 학습 데이터셋에서 무작위로 선택된 100개의 데이터로 구성된 "배치(batch)"를 가져옵니다. 그 다음엔 `placeholder`의 자리에 데이터를 넣을 수 있도록 `train_step`을 실행하여 배치 데이터를 넘깁니다.
 
-Using small batches of random data is called stochastic training -- in
-this case, stochastic gradient descent. Ideally, we'd like to use all our data
-for every step of training because that would give us a better sense of what
-we should be doing, but that's expensive. So, instead, we use a different subset
-every time. Doing this is cheap and has much of the same benefit.
+무작위 데이터의 작은 배치를 사용하는 방법을 확률적 학습(stochastic training)이라고 부릅니다 -- 여기서는 확률적 경사 하강법입니다. 이상적으로는 학습의 매 단계마다 전체 데이터를 사용하고 싶지만(그렇게 하는게 우리가 지금 어떻게 하는게 좋을지에 대해 더 잘 알려줄 것이므로), 그렇게 하면 작업이 무거워집니다. 따라서 그 대신에 매번 서로 다른 부분집합을 사용하는 것입니다. 이렇게 하면 작업 내용은 가벼워지지만 전체 데이터를 쓸 때의 이점은 거의 다 얻을 수 있기 때문입니다.
 
+## 모델 평가하기
 
+우리가 작성한 모델은 성능이 어느 정도일까요?
 
-## Evaluating Our Model
-
-How well does our model do?
-
-Well, first let's figure out where we predicted the correct label. `tf.argmax`
-is an extremely useful function which gives you the index of the highest entry
-in a tensor along some axis. For example, `tf.argmax(y,1)` is the label our
-model thinks is most likely for each input, while `tf.argmax(y_,1)` is the
-correct label. We can use `tf.equal` to check if our prediction matches the
-truth.
+흐음, 우선 모델이 라벨을 올바르게 예측했는지 확인해봅시다. `tf.argmax`는 텐서 안에서 특정 축을 따라 가장 큰 값의 인덱스를 찾기에 매우 유용한 함수입니다. 예를 들면, `tf.argmax(y,1)`는 우리의 모델이 생각하기에 각 데이터에 가장 적합하다고 판단한(가장 증거값이 큰) 라벨이며, `tf.argmax(y_,1)`는 실제 라벨입니다. 우리는 `tf.equal`을 사용하여 우리의 예측이 맞았는지 확인할 수 있습니다.
 
 ```python
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
 ```
 
-That gives us a list of booleans. To determine what fraction are correct, we
-cast to floating point numbers and then take the mean. For example,
-`[True, False, True, True]` would become `[1,0,1,1]` which would become `0.75`.
+이렇게 하면 부울 값으로 이루어진 리스트를 얻게 됩니다. 얼마나 많이 맞았는지 판단하려면, 이 값을 부동소수점 값으로 변환한 후 평균을 계산하면 됩니다. 예를 들면, `[True, False, True, True]`는 `[1,0,1,1]`로 환산할 수 있고, 이 값의 평균을 계산하면 `0.75`가 됩니다.
 
 ```python
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 ```
 
-Finally, we ask for our accuracy on our test data.
+마지막으로, 우리의 테스트 데이터를 대상으로 정확도를 계산해 봅시다.
 
 ```python
 print(sess.run(accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels}))
 ```
 
-This should be about 92%.
+결과는 약 92% 정도가 나올 것입니다.
 
-Is that good? Well, not really. In fact, it's pretty bad. This is because we're
-using a very simple model. With some small changes, we can get to
-97%. The best models can get to over 99.7% accuracy! (For more information, have
-a look at this
-[list of results](http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html).)
+좋은 결과일까요? 글쎄요, 딱히 그렇진 않습니다. 사실, 매우 안좋은 결과입니다. 왜냐하면 우리가 매우 단순한 모델을 사용했기 때문입니다. 약간만 바꾸면, 97%의 정확도를 얻을 수 있습니다. 가장 좋은 모델은 정확도가 99.7%도 넘을 수 있지요! (더 알고 싶으시다면 다음의 [결과 목록](http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html)을 확인해보세요)
 
-What matters is that we learned from this model. Still, if you're feeling a bit
-down about these results, check out [the next tutorial](../../../tutorials/mnist/pros/index.md) where we
-do a lot better, and learn how to build more sophisticated models using
-TensorFlow!
+여기서 중요한 것은 우리가 이 모델을 통해 배운 것입니다. 혹시 아직도 이 결과가 조금 실망스러우시면 [다음 튜토리얼](../../../tutorials/mnist/pros/index.md)을 읽어보시기 바랍니다. 거기선 우리가 훨씬 더 좋은 결과값도 얻고, 텐서플로우로 더 복잡한 모델을 작성하는 방법도 배우게 된답니다!

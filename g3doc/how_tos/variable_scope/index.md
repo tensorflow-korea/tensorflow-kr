@@ -1,19 +1,15 @@
-# Sharing Variables
+# 변수 공유
 
-You can create, initialize, save and load single variables
-in the way described in the [Variables HowTo](../../how_tos/variables/index.md).
-But when building complex models you often need to share large sets of
-variables and you might want to initialize all of them in one place.
-This tutorial shows how this can be done using `tf.variable_scope()` and
-the `tf.get_variable()`.
+[Variables HowTo](../../how_tos/variables/index.md)에 
+설명된 방법으로 단일 변수를 생성, 초기화, 저장 및 불러오기를 할 수 있습니다.
+하지만 복잡한 모델을 구축할 때는 가끔 큰 변수 세트를 공유할 필요가 있고 한 곳에서 모든 변수의 초기화를 해야 할 수도 있습니다. 
+이번 튜토리얼은 `tf.variable_scope()`와 `tf.get_variable()`를 사용해서 이것을 어떻게 할 수 있는지 보여줍니다. 
 
-## The Problem
+## 문제점
 
-Imagine you create a simple model for image filters, similar to our
-[Convolutional Neural Networks Tutorial](../../tutorials/deep_cnn/index.md)
-model but with only 2 convolutions (for simplicity of this example). If you use
-just `tf.Variable`, as explained in [Variables HowTo](../../how_tos/variables/index.md),
-your model might look like this.
+우리의 [Convolutional Neural Networks Tutorial](../../tutorials/deep_cnn/index.md) 모델과 유사하지만
+2개의 콘볼루션(예제의 간단함을 위해)만 사용하는 이미지 필터에 대한 간단한 모델을 만든다고 가정하십시오.
+[Variables HowTo](../../how_tos/variables/index.md)의 설명대로 `tf.Variable`을 바르게 사용했다면 여러분의 모델은 아래와 같을 겁니다.
 
 ```python
 def my_image_filter(input_images):
@@ -32,15 +28,13 @@ def my_image_filter(input_images):
     return tf.nn.relu(conv2 + conv2_biases)
 ```
 
-As you can easily imagine, models quickly get much more complicated than
-this one, and even here we already have 4 different variables: `conv1_weights`,
-`conv1_biases`, `conv2_weights`, and `conv2_biases`.
+여러분이 쉽게 상상할 수 있듯이, 모델은 이것보다 훨씬 더 복잡하며, 여기에도 이미 4개의 다른 변수가 있습니다:
+`conv1_weights`, `conv1_biases`, `conv2_weights`, 그리고 `conv2_biases`.
 
-The problem arises when you want to reuse this model. Assume you want to
-apply your image filter to 2 different images, `image1` and `image2`.
-You want both images processed by the same filter with the same parameters.
-You can call `my_image_filter()` twice, but this will create two sets
-of variables:
+문제는 이 모델을 다시 사용하고자 할 때 발생합니다. 
+2개의 다른 이미지, `image1`과 `image2`를 여러분의 이미지 필터에 적용하기를 원한다고 가정하십시오.
+여러분은 같은 파라미터로 같은 필터에서 처리된 이미지가 필요합니다.
+`my_image_filter()`를 두 번 호출할 수 있지만, 이것은 두 세트의 변수를 생성합니다 :
 
 ```python
 # First call creates one set of variables.
@@ -49,8 +43,7 @@ result1 = my_image_filter(image1)
 result2 = my_image_filter(image2)
 ```
 
-A common way to share variables is to create them in a separate piece of code
-and pass them to functions that use them.   For example by using a dictionary:
+변수를 공유하는 일반적인 방법은 별도의 코드로 작성하여 이를 사용하는 함수에 전달하는 것입니다. dictionary를 사용하는 예를 들어 봅시다:
 
 ```python
 variables_dict = {
@@ -74,43 +67,33 @@ result1 = my_image_filter(image1, variables_dict)
 result2 = my_image_filter(image2, variables_dict)
 ```
 
-While convenient, creating variables like above,
-outside of the code, breaks encapsulation:
+위와 같은 변수 생성은 편리하지만, 코드 밖에서 캡슐화가 중단됩니다.
 
-*  The code that builds the graph must document the names, types,
-   and shapes of variables to create.
-*  When the code changes, the callers may have to create more, or less,
-   or different variables.
+*  그래프를 빌드하는 코드는 생성할 변수의 이름, 타입, 그리고 모양(shape)을 반드시 기록해야 합니다.
+*  코드가 변경되면 호출자(callers)는 어느 정도 다른 변수를 생성해야 할지도 모릅니다.
 
-One way to address the problem is to use classes to create a model,
-where the classes take care of managing the variables they need.
-For a lighter solution, not involving classes, TensorFlow provides
-a *Variable Scope* mechanism that allows to easily share named variables
-while constructing a graph.
+문제를 해결하는 한 가지 방법은 모델을 생성할 때 필요한 변수를 관리하는 클래스(classes)를 사용하는 것입니다.
+TensorFlow는 클래스를 포함하지 않는 더 가벼운 솔루션을 위해 그래프를 구성하는 동안 명명된 변수를 쉽게 공유할 수 있는 *Variable Scope* 메커니즘을 제공합니다.
 
-## Variable Scope Example
+## 변수 범위(Variable scope) 예제
 
-Variable Scope mechanism in TensorFlow consists of 2 main functions:
+TensorFlow의 Variable Scope 메커니즘은 두 개의 메인 함수로 되어 있습니다.
 
 * `tf.get_variable(<name>, <shape>, <initializer>)`:
-  Creates or returns a variable with a given name.
+  입력된 이름의 변수를 생성하거나 반환합니다.
 * `tf.variable_scope(<scope_name>)`:
   Manages namespaces for names passed to `tf.get_variable()`.
+  `tf.get_variable()`에 전달 된 이름의 네임스페이스를 관리합니다.
 
-The function `tf.get_variable()` is used to get or create a variable instead
-of a direct call to `tf.Variable`. It uses an *initializer* instead of passing
-the value directly, as in `tf.Variable`. An initializer is a function that
-takes the shape and provides a tensor with that shape. Here are some
-initializers available in TensorFlow:
+`tf.get_variable()`함수는 `tf.Variable`을 직접호출 대신 변수를 가져오거나 생성하는 데 사용합니다.
+`tf.Variable`처럼 직접 값을 전달하는 대신 *initializer*를 사용합니다. initializer는 모양(shape)을 가져와서 텐서를 제공하는 함수입니다. 
+여기 TensorFlow에서 사용 가능한 몇 개의 initializer가 있습니다.
 
-* `tf.constant_initializer(value)` initializes everything to the provided value,
-* `tf.random_uniform_initializer(a, b)` initializes uniformly from [a, b],
-* `tf.random_normal_initializer(mean, stddev)` initializes from the normal
-  distribution with the given mean and standard deviation.
+* `tf.constant_initializer(value)` 제공된 값으로 모든 것을 초기화합니다,
+* `tf.random_uniform_initializer(a, b)` [a, b]를 균일하게 초기화 합니다,
+* `tf.random_normal_initializer(mean, stddev)` 주어진 평균 및 표준 편차로 정규 분포에서 초기화합니다.
 
-To see how `tf.get_variable()` solves the problem discussed
-before, let's refactor the code that created one convolution into
-a separate function, named `conv_relu`:
+`tf.get_variable()`이 앞에서 논의한 문제를 어떻게 해결하는지 보시려면, 하나의 convolution을 생성한 코드를 `conv_relu`라는 별개의 함수로 리펙토링합시다:
 
 ```python
 def conv_relu(input, kernel_shape, bias_shape):
@@ -125,11 +108,10 @@ def conv_relu(input, kernel_shape, bias_shape):
     return tf.nn.relu(conv + biases)
 ```
 
-This function uses short names `"weights"` and `"biases"`.
-We'd like to use it for both `conv1` and `conv2`, but
-the variables need to have different names.
-This is where `tf.variable_scope()` comes into play:
-it pushes a namespace for variables.
+이 함수는 짧은 이름 `"weights"`와 `"biases"`를 사용합니다.
+우리는 그것을 `conv1`과`conv2` 둘 다에서 사용하기를 원하지만, 변수들은 다른 이름을 가질 필요가 있습니다.
+이곳은`tf.variable_scope()`가 동작하는 곳입니다 :
+변수에 대한 네임 스페이스를 푸시(pushes)합니다.
 
 ```python
 def my_image_filter(input_images):
@@ -141,7 +123,7 @@ def my_image_filter(input_images):
         return conv_relu(relu1, [5, 5, 32, 32], [32])
 ```
 
-Now, let's see what happens when we call `my_image_filter()` twice.
+이제, 우리가 `my_image_filter()`를 두 번 호출할 때 벌어지는 일을 봅시다.
 
 ```
 result1 = my_image_filter(image1)
@@ -149,9 +131,8 @@ result2 = my_image_filter(image2)
 # Raises ValueError(... conv1/weights already exists ...)
 ```
 
-As you can see, `tf.get_variable()` checks that already existing variables
-are not shared by accident. If you want to share them, you need to specify
-it by setting `reuse_variables()` as follows.
+보다시피, `tf.get_variable()`은 이미 존재하는 변수가 우연히 공유된 것이 아닌지 확인합니다.
+만약 공유하기를 원하면, 여러분은 다음과 같이 `reuse_variables()`를 설정해야 합니다.
 
 ```
 with tf.variable_scope("image_filters") as scope:
@@ -160,33 +141,28 @@ with tf.variable_scope("image_filters") as scope:
     result2 = my_image_filter(image2)
 ```
 
-This is a good way to share variables, lightweight and safe.
+이것은 가볍고 안전하게 변수를 공유하는 좋은 방법입니다.
 
-## How Does Variable Scope Work?
+## 변수 범위는 어떻게 동작합니까?
 
-### Understanding `tf.get_variable()`
+### `tf.get_variable()` 이해하기
 
-To understand variable scope it is necessary to first
-fully understand how `tf.get_variable()` works.
-Here is how `tf.get_variable` is usually called.
+변수 범위를 이해하기 위해서는 첫 번째로 `tf.get_variable()`이 어떻게 동작하는지 완전히 이해하는 것이 필요합니다.
+다음은`tf.get_variable()`가 일반적으로 호출되는 방법입니다.
 
 ```python
 v = tf.get_variable(name, shape, dtype, initializer)
 ```
 
-This call does one of two things depending on the scope it is called in.
-Here are the two options.
+호출되는 범위에 따라 두 가지 중 하나를 호출합니다.
+다음은 두 가지 옵션입니다.
 
-* Case 1: the scope is set for creating new variables, as evidenced by
-`tf.get_variable_scope().reuse == False`.
+* Case 1: 범위는 `tf.get_variable_scope().reuse == False`에서 증명된 것처럼 새로운 변수를 생성하기 위해 설정됩니다.
 
-In this case, `v` will be a newly created `tf.Variable` with the provided
-shape and data type. The full name of the created variable will be set to
-the current variable scope name + the provided `name` and a check will be
-performed to ensure that no variable with this full name exists yet.
-If a variable with this full name already exists, the function will
-raise a `ValueError`. If a new variable is created, it will be
-initialized to the value `initializer(shape)`. For example:
+이 경우, `v`는 제공된 모양(shape)과 데이터 타입을 가지는 새롭게 만들어진`tf.Variable`이 됩니다.
+생성된 변수의 전체 이름은 현재 변수 범위 이름 + 제공된`name`으로 설정되고, 이 전체 이름을 가진 변수가 아직 존재하지 않는지 보장하기 위한 검사를 하게 됩니다.
+이 전체 이름이 변수로 사용 중이라면, 함수는 `ValueError`를 발생시킵니다.
+만약 새로운 변수를 생성하면, 변수는 `initializer(shape)` 값으로 초기화될 것입니다. 예를 들어:
 
 ```python
 with tf.variable_scope("foo"):
@@ -194,13 +170,10 @@ with tf.variable_scope("foo"):
 assert v.name == "foo/v:0"
 ```
 
-* Case 2: the scope is set for reusing variables, as evidenced by
-`tf.get_variable_scope().reuse == True`.
+* Case 2: `tf.get_variable_scope().reuse == True`에서 증명된 것처럼 변수를 재사용하기 위한 범위가 설정됩니다.
 
-In this case, the call will search for an already existing variable with
-name equal to the current variable scope name + the provided `name`.
-If no such variable exists, a `ValueError` will be raised. If the variable
-is found, it will be returned. For example:
+이 경우, 호출은 현재 변수 범위 이름 + 제공된`name`과 같은 이름으로 이미 존재하는 변수를 검색합니다.
+만약 변수가 없으면 `ValueError`가 발생할 겁니다. 변수가 발견된다면 반환됩니다. 예를 들어:
 
 ```python
 with tf.variable_scope("foo"):
@@ -210,13 +183,11 @@ with tf.variable_scope("foo", reuse=True):
 assert v1 == v
 ```
 
-### Basics of `tf.variable_scope()`
+### `tf.variable_scope()`의 기본
 
-Knowing how `tf.get_variable()` works makes it easy to understand variable
-scope. The primary function of variable scope is to carry a name that will
-be used as prefix for variable names and a reuse-flag to distinguish the two
-cases described above. Nesting variable scopes appends their names in a way
-analogous to how directories work:
+`tf.get_variable()`가 어떻게 동작하는지 알면 변수 범위를 쉽게 이해하고 만들 수 있습니다.
+변수 범위의 주요 기능은 변수 이름에 대한 접두사로 사용되는 이름을 들고 있는 것이고, 위에서 설명한 두 가지 경우를 구별하기 위한 재사용-플래그입니다.
+중첩 변수 범위는 디렉터리가 동작하는 방식과 유사한 방법으로 그것들의 이름을 추가합니다.
 
 ```python
 with tf.variable_scope("foo"):
@@ -225,9 +196,8 @@ with tf.variable_scope("foo"):
 assert v.name == "foo/bar/v:0"
 ```
 
-The current variable scope can be retrieved using `tf.get_variable_scope()`
-and the `reuse` flag of the current variable scope can be set to `True` by
-calling `tf.get_variable_scope().reuse_variables()`:
+현재 변수 범위는 `tf.get_variable_scope()`를 사용해서 회수할 수 있으며, 
+현재 변수 범위의 `reuse` 플래그는 `tf.get_variable_scope().reuse_variables()`를 호출해서 `True`로 설정할 수 있습니다.
 
 ```python
 with tf.variable_scope("foo"):
@@ -237,19 +207,15 @@ with tf.variable_scope("foo"):
 assert v1 == v
 ```
 
-Note that you *cannot* set the `reuse` flag to `False`. The reason behind
-this is to allow to compose functions that create models. Imagine you write
-a function `my_image_filter(inputs)` as before. Someone calling the function
-in a variable scope with `reuse=True` would expect all inner variables to be
-reused as well. Allowing to force `reuse=False` inside the function would break
-this contract and make it hard to share parameters in this way.
+여러분은 `reuse` 플래그를 `False`로 설정할 수는 없습니다. 
+이유는 모델을 생성하는 함수를 구성하는 것을 허용하기 위해서입니다.
+이전처럼`my_image_filter(inputs)` 함수를 작성한다고 상상해보십시오. 
+변수 범위에서 `reuse=True`와 함께 함수를 호출하는 누군가는 모든 내부 변수가 재사용 될 것으로 예상합니다.
+함수 내부에서 `reuse=False`를 강제로 허용하면 이 계약이 깨지게 되고, 이런 방법으로 파라미터를 공유하는 것을 어렵게 만듭니다.
 
-Even though you cannot set `reuse` to `False` explicitly, you can enter
-a reusing variable scope and then exit it, going back to a non-reusing one.
-This can be done using a `reuse=True` parameter when opening a variable scope.
-Note also that, for the same reason as above, the `reuse` parameter is
-inherited. So when you open a reusing variable scope, all sub-scopes will
-be reusing too.
+`reuse`를 명시적으로 `False`로 설정할 수는 없지만, 재사용 가능한 변수 범위를 입력한 다음 종료하고 재사용하지 않는 변수 범위로 돌아갈 수 있습니다.
+변수 범위를 열 때`reuse = True` 파라미터를 사용하여 이 작업을 수행할 수 있습니다.
+또한, 위와 같은 이유로`reuse` 파라미터가 상속된다는 점에 유의하십시오. 따라서 재사용 가능한 변수 범위를 열면 모든 하위 범위(sub-scopes)도 재사용됩니다.
 
 ```python
 with tf.variable_scope("root"):
@@ -268,14 +234,13 @@ with tf.variable_scope("root"):
     assert tf.get_variable_scope().reuse == False
 ```
 
-### Capturing variable scope
+### 변수 범위 캡처(Capturing)
 
-In all examples presented above, we shared parameters only because their
-names agreed, that is, because we opened a reusing variable scope with
-exactly the same string. In more complex cases, it might be useful to pass
-a VariableScope object rather than rely on getting the names right.
-To this end, variable scopes can be captured and used instead of names
-when opening a new variable scope.
+위에 제시된 모든 예제에서, 우리는 변수들의 이름이 일치했기 때문에 파라미터를 공유할 수 있었는데, 
+그건, 정확히 같은 문자열로 재사용 변수 범위를 열었기 때문입니다.
+더 복잡한 경우에는 이름을 올바르게 가져와서 전달하는 것보다 VariableScope 객체를 통과시키는 것이 유용할 수도 있습니다.
+이를 위해, 변수 범위는 새로운 변수 범위를 열 때 이름 대신 캡처해서 사용할 수 있습니다.
+
 
 ```python
 with tf.variable_scope("foo") as foo_scope:
@@ -289,9 +254,8 @@ assert v1 == v
 assert w1 == w
 ```
 
-When opening a variable scope using a previously existing scope
-we jump out of the current variable scope prefix to an entirely
-different one. This is fully independent of where we do it.
+변수 범위를 열 때 이전에 존재하는 범위를 사용하면 현재 변수 범위 접두사에서 완전히 다른 곳으로 넘어갑니다.
+이것은 우리가 하는 곳과 완전히 독립적입니다.
 
 ```python
 with tf.variable_scope("foo") as foo_scope:
@@ -303,17 +267,15 @@ with tf.variable_scope("bar")
             assert foo_scope2.name == "foo"  # Not changed.
 ```
 
-### Initializers in variable scope
+### 변수 범위의 Initializers
 
-Using `tf.get_variable()` allows to write functions that create or reuse
-variables and can be transparently called from outside. But what if we wanted
-to change the initializer of the created variables? Do we need to pass an extra
-argument to every function that creates variables? What about the most common
-case, when we want to set the default initializer for all variables in one
-place, on top of all functions? To help with these cases, variable scope
-can carry a default initializer. It is inherited by sub-scopes and passed
-to each `tf.get_variable()` call. But it will be overridden if another
-initializer is specified explicitly.
+`tf.get_variable()`을 사용하면 변수를 생성하거나 재사용하는 함수를 작성하는 것이 허용되며 외부에서 투명하게 호출할 수 있습니다.
+하지만 생성된 변수의 initializer를 변경하려면 어떻게 해야 할까요?
+변수를 만드는 모든 함수에 추가인수를 전달하는 것이 필요할까요?
+모든 변수의 기본 initializer를 모든 함수의 위의 한 곳에서 설정하기를 원할 때 일반적인 때는 어떻습니까?
+이런 경우를 돕기 위해, 변수 범위는 기본 initializer를 들고 있을 수 있습니다.
+하위 범위(sub-scopes)에 의해 상속받고 각각 `tf.get_variable()`호출에 전달됩니다.
+그러나 다른 initializer를 명시적으로 지정하면 오버라이드(overridden) 될 겁니다.
 
 ```python
 with tf.variable_scope("foo", initializer=tf.constant_initializer(0.4)):
@@ -329,13 +291,13 @@ with tf.variable_scope("foo", initializer=tf.constant_initializer(0.4)):
         assert v.eval() == 0.2  # Changed default initializer.
 ```
 
-### Names of ops in `tf.variable_scope()`
+### `tf.variable_scope()` 오퍼레이션(ops)의 이름
 
-We discussed how `tf.variable_scope` governs the names of variables.
-But how does it influence the names of other ops in the scope?
-It is natural that ops created inside a variable scope should also
-share that name. For this reason, when we do `with tf.variable_scope("name")`,
-this implicitly opens a `tf.name_scope("name")`. For example:
+우리는 어떻게 `tf.variable_scope`가 변수들의 이름을 관리하는지 논의했습니다.
+하지만 그것이 범위 내에서 다른 오퍼레이션(ops)의 이름에 영향을 미치나요?
+변수 범위 내에서 생성된 오퍼레이션(ops)은 이름이 공유되는 것이 정상적입니다.
+이런 이유로, 우리가 `with tf.variable_scope("name")`를 사용할 때 이것은 무조건 `tf.name_scope("name")`를 엽니다.
+예를 들어:
 
 ```python
 with tf.variable_scope("foo"):
@@ -343,8 +305,7 @@ with tf.variable_scope("foo"):
 assert x.op.name == "foo/add"
 ```
 
-Name scopes can be opened in addition to a variable scope, and then
-they will only affect the names of the ops, but not of variables.
+이름 변수는 변수 범위를 추가로 열 수 있으며, 그것들은 변수가 아닌 오직 오퍼레이션(ops)의 이름에만 영향을 미칩니다. 
 
 ```python
 with tf.variable_scope("foo"):
@@ -355,18 +316,17 @@ assert v.name == "foo/v:0"
 assert x.op.name == "foo/bar/add"
 ```
 
-When opening a variable scope using a captured object instead of a string,
-we do not alter the current name scope for ops.
+문자열 대신 캡처된 객체를 사용해서 변수 범위를 열 때,
+우리는 오퍼레이션(ops)의 현재 이름 범위를 바꾸지 않습니다. 
 
 
-## Examples of Use
+## 사용 예시
 
-Here are pointers to a few files that make use of variable scope.
-In particular, it is heavily used for recurrent neural networks
-and sequence-to-sequence models.
+다음은 변수 범위를 사용하는 몇 가지 파일에 대한 포인터(pointers)입니다.
+특히, RNN(recurrent neural networks)과 seq2seq(sequence-to-sequence) 모델에서 많이 사용됩니다.
 
-File | What's in it?
+파일 | 내용 
 --- | ---
-`models/image/cifar10.py` | Model for detecting objects in images.
-`models/rnn/rnn_cell.py` | Cell functions for recurrent neural networks.
-`models/rnn/seq2seq.py` | Functions for building sequence-to-sequence models.
+`models/image/cifar10.py` | 이미지 내에서 객체를 찾는 모델.
+`models/rnn/rnn_cell.py` | RNN을 위한 Cell 함수.
+`models/rnn/seq2seq.py` | seq2seq 모델을 구축하기 위한 함수.

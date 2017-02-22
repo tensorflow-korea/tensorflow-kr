@@ -1,35 +1,32 @@
-# Exporting and Importing a MetaGraph
+# 메타 그래프를 내보내고 가져오기
 
-A [`MetaGraph`](https://www.tensorflow.org/code/tensorflow/core/protobuf/meta_graph.proto) contains both a TensorFlow GraphDef
-as well as associated metadata necessary for running computation in a
-graph when crossing a process boundary.  It can also be used for long
-term storage of graphs.  The MetaGraph contains the information required
-to continue training, perform evaluation, or run inference on a previously trained graph.
+[`MetaGraph`](https://www.tensorflow.org/code/tensorflow/core/protobuf/meta_graph.proto)는 텐서플로우 GraphDef 뿐만 아니라
+프로세스 경계를 교차할 때 그래프에서 연산을 실행하는 데 필요한 관련된 metadata도 포함합니다.
+그것은 또한 그래프의 장기간 보관에도 사용될 수 있습니다.
+MetaGraph는 훈련을 계속하는 데 필요한 정보를 포함하고 있으며, 이전에 훈련된 그래프에 대한 평가를 수행하거나 실행하는 데 필요한 정보를 수록하고 있습니다.
 
-The APIs for exporting and importing the complete model are in
-the [`tf.train.Saver`](../../api_docs/python/state_ops.md#Saver) class:
-[`export_meta_graph`](../../api_docs/python/train.md#export_meta_graph)
-and
-[`import_meta_graph`](../../api_docs/python/train.md#import_meta_graph).
+전체 모델을 내보내고 가져오는 API는 
+[`tf.train.Saver`](../../api_docs/python/state_ops.md#Saver) class에
+[`export_meta_graph`](../../api_docs/python/train.md#export_meta_graph)와
+[`import_meta_graph`](../../api_docs/python/train.md#import_meta_graph)입니다.
 
-## What's in a MetaGraph
 
-The information contained in a MetaGraph is expressed as a
+## MetaGraph에 있는 것
+
+MetaGraph에 수록된 정보는
 [`MetaGraphDef`](https://www.tensorflow.org/code/tensorflow/core/protobuf/meta_graph.proto)
-protocol buffer. It contains the following fields:
+프로토콜 버퍼를 나타냅니다. 다음 필드가 포함됩니다.
 
-* [`MetaInfoDef`](https://www.tensorflow.org/code/tensorflow/core/protobuf/meta_graph.proto) for meta information, such as version and other user information.
-* [`GraphDef`](https://www.tensorflow.org/code/tensorflow/core/framework/graph.proto) for describing the graph.
-* [`SaverDef`](https://www.tensorflow.org/code/tensorflow/core/protobuf/saver.proto) for the saver.
+* 버전과 기타 사용자 정보 같은 메타 정보에 대한 [`MetaInfoDef`](https://www.tensorflow.org/code/tensorflow/core/protobuf/meta_graph.proto).
+* 그래프를 묘사하기 위한 [`GraphDef`](https://www.tensorflow.org/code/tensorflow/core/framework/graph.proto).
+* 세이버(saver)에 대한 [`SaverDef`](https://www.tensorflow.org/code/tensorflow/core/protobuf/saver.proto).
 * [`CollectionDef`](https://www.tensorflow.org/code/tensorflow/core/protobuf/meta_graph.proto)
-map that further describes additional components of the model, such as
-[`Variables`](https://tensorflow.org/api_docs/python/state_ops.html),
-[`QueueRunners`](https://tensorflow.org/api_docs/python/train.html#QueueRunner), etc.  In order for a Python object to be serialized
-to and from `MetaGraphDef`, the Python class must implement `to_proto()` and
-`from_proto()` methods, and register them with the system using
-`register_proto_function`.
+map은 모델의 [`Variables`](https://tensorflow.org/api_docs/python/state_ops.html),
+[`QueueRunners`](https://tensorflow.org/api_docs/python/train.html#QueueRunner), etc와 같은 추가적인 요소를 더 자세히 설명합니다.
+Python 오브젝트를 `MetaGraphDef`로부터 직렬화하기 위해서, Python 클래스는 `to_proto()`와 `from_proto()`메소드를 실행하고,
+`register_proto_function`를 사용해서 시스템에 등록합니다.
 
-  For example,
+  예를 들어,
 
   ```Python
   def to_proto(self):
@@ -57,9 +54,9 @@ to and from `MetaGraphDef`, the Python class must implement `to_proto()` and
                               from_proto=Variable.from_proto)
   ```
 
-## Exporting a Complete Model to MetaGraph
+## 전체 모델을 MetaGraph로 내보내기
 
-The API for exporting a running model as a MetaGraph is `export_meta_graph()`.
+실행 중인 모델을 MetaGraph로 내보내는 API는 `export_meta_graph()`입니다.
 
   ```Python
   def export_meta_graph(filename=None, collection_list=None, as_text=False):
@@ -75,19 +72,16 @@ The API for exporting a running model as a MetaGraph is `export_meta_graph()`.
     """
   ```
 
-  A `collection` can contain any Python objects that users would like to
-  be able to uniquely identify and easily retrieve. These objects can be
-  special operations in the graph, such as `train_op`, or hyper parameters,
-  such as "learning rate".  Users can specify the list of collections
-  they would like to export.  If no `collection_list` is specified,
-  all collections in the model will be exported.
+  `collection`은 사용자가 고유하게 식별하고 쉽게 검색할 수 있는 Python 객체를 포함할 수 있습니다.
+  이 객체들은 그래프 안에서 `train_op`나 하이퍼 파라미터(hyper parameters), "learning rate"처럼 특별한 연산을 할 수 있습니다.
+  사용자는 내보내려는 컬렉션 목록을 지정할 수 있습니다. 만약 `collection_list`가 지정되지 않으면,
+  모델 안에 모든 컬렉션이 내 보내어질 겁니다.
 
-  The API returns a serialized protocol buffer. If `filename` is
-  specified, the protocol buffer will also be written to a file.
+  API는 직렬화된 프로토콜 버퍼를 반환합니다. 만약 `filename`이 지정됐다면, 프로토콜 버퍼는 파일에 쓰여질 겁니다.
 
-  Here are some of the typical usage models:
+  다음은 일반적인 사용 모델의 일부입니다.
 
-  * Export the default running graph:
+  * 기본 실행 그래프 내보내기:
 
   ```Python
   # Build the model
@@ -99,7 +93,7 @@ The API for exporting a running model as a MetaGraph is `export_meta_graph()`.
   meta_graph_def = tf.train.export_meta_graph(filename='/tmp/my-model.meta')
   ```
 
-  * Export the default running graph and only a subset of the collections.
+  * 기본 실행 그래프와 컬렉션의 일부분만 내보냅니다.
 
   ```Python
   meta_graph_def = tf.train.export_meta_graph(
@@ -107,18 +101,17 @@ The API for exporting a running model as a MetaGraph is `export_meta_graph()`.
       collection_list=["input_tensor", "output_tensor"])
   ```
 
+MetaGraph는 또한 
+[`tf.train.Saver`](../../api_docs/python/state_ops.md#Saver)에 `save()` API를 통해 자동으로 내보내기 됩니다.
 
-The MetaGraph is also automatically exported via the `save()` API in
-[`tf.train.Saver`](../../api_docs/python/state_ops.md#Saver).
 
+## MetaGraph 가져오기
 
-## Import a MetaGraph
+MetaGraph 파일을 그래프로 가져오기위한 API는 `import_meta_graph()`입니다.
 
-The API for importing a MetaGraph file into a graph is `import_meta_graph()`.
+다음은 일반적인 사용 모델의 일부입니다:
 
-Here are some of the typical usage models:
-
-* Import and continue training without building the model from scratch.
+* 처음부터 모델을 구축하지 않고 가져와서 계속 훈련합니다.
 
   ```Python
   ...
@@ -135,8 +128,7 @@ Here are some of the typical usage models:
           saver.save(sess, 'my-model', global_step=step)
   ```
 
-  Later we can continue training from this saved `meta_graph` without building
-  the model from scratch.
+  나중에 우리는 처음부터 모델을 구축하지 않고 저장된 meta_graph로부터 계속 훈련할 수 있습니다.
 
   ```Python
   with tf.Session() as sess:
@@ -149,9 +141,9 @@ Here are some of the typical usage models:
       sess.run(train_op)
   ```
 
-* Import and extend the graph.
+* 그래프를 가져오고 확장하십시오.
 
-  For example, we can first build an inference graph, export it as a meta graph:
+  예를 들어, 먼저 추론 그래프를 작성하여 메타 그래프로 내보낼 수 있습니다.
 
   ```Python
   # Creates an inference graph.
@@ -199,7 +191,7 @@ Here are some of the typical usage models:
     saver0.export_meta_graph('my-save-dir/my-model-10000.meta')
   ```
 
-  Then later import it and extend it to a training graph.
+  그런 다음 나중에 가져와서 훈련 그래프로 확장합니다.
 
   ```Python
   with tf.Session() as sess:
@@ -228,7 +220,7 @@ Here are some of the typical usage models:
     sess.run(train_op)
   ```
 
-* Retrieve Hyper Parameters
+* 하이퍼 파라미터(Hyper Parameters) 검색
 
   ```Python
   filename = ".".join([tf.latest_checkpoint(train_dir), "meta"])

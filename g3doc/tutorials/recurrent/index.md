@@ -170,7 +170,7 @@ python ptb_word_lm --data_path=/tmp/simple-examples/data/ --model small
 ```
 
 이 튜토리얼에 포함된 코드에는 세가지의 모델 환경을 제공합니다: "small", "medium", "large" 입니다.
-이들간의 차이는 LSTM 레이어의 크기와 학습에 사용될 하이퍼파라메타(hyperparameter) 설정입니다.
+이들간의 차이는 LSTM 레이어의 크기와 학습에 사용될 하이퍼파라미터(hyperparameter) 설정입니다.
 
 큰 모델일수록 더 좋은 결과가 나와야 합니다. 'small' 모델은 테스트 셋에 대한 복잡도가 120 아래에 도달하며
 'large' 모델은 80 이하가 나오지만 학습에 여러시간이 소요될 수 있습니다.

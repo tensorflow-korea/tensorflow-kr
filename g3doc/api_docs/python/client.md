@@ -64,7 +64,7 @@ sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True,
 
 *  <b>`target`</b>: (선택) 접속을 위한 실행 엔진. 기본값으로 프로세스 내부 엔진을 사용합니다. 지금은, 빈 문자열 이외의 값은 지원되지 않습니다.
 *  <b>`graph`</b>: (선택) 시작되는 `Graph` (위에서 설명됨).
-*  <b>`config`</b>: (선택) 세션을 위한 설정 옵션을 가진 [`ConfigProto`](https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto) 프로토콜 퍼버.
+*  <b>`config`</b>: (선택) 세션을 위한 설정 옵션을 가진 [`ConfigProto`](https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto) 프로토콜 버퍼.
 
 
 - - -
@@ -84,7 +84,7 @@ sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True,
 
 선택적인 `feed_dict` 인자는 그래프의 텐서의 값들을 덮어씌울 수 있도록 해줍니다. `feed_dict`의 각 키들은 다음 타입중 하나가 될 수 있습니다.
 
-* 키가 [`Tensor`](../../api_docs/python/framework.md#Tensor)]라면, 값은 텐서와 같은 `dtype`으로 변환될 수 있는 Python 스칼라, 문자열, 리스트 또는 numpy ndarray가 될 것입니다. 추가적으로, 키가 [placeholder](../../api_docs/python/io_ops.md#placeholder)라면, 값의 구조(shape)가 플레이스홀더(placeholder)와 호환되는지 확인될 것입니다.
+* 키가 [`Tensor`](../../api_docs/python/framework.md#Tensor)라면, 값은 텐서와 같은 `dtype`으로 변환될 수 있는 Python 스칼라, 문자열, 리스트 또는 numpy ndarray가 될 것입니다. 추가적으로, 키가 [placeholder](../../api_docs/python/io_ops.md#placeholder)라면, 값의 구조(shape)가 플레이스홀더(placeholder)와 호환되는지 확인될 것입니다.
 * 키가 [`SparseTensor`](../../api_docs/python/sparse_ops.md#SparseTensor)라면, 값은 [`SparseTensorValue`](../../api_docs/python/sparse_ops.md#SparseTensorValue)이어야합니다.
 
 `feed_dict`의 각 값들은 해당하는 키의 dtype의 numpy 배열로 변환이 가능해야합니다.
@@ -168,7 +168,7 @@ sess.close()
 
 대안으로는, 잡을 수 없는 예외가 발생하는 경우를 포함해서, 컨텍스트를 빠져나갈 때 자동으로 닫히는 세션을 생성하기 위해서는 `with tf.Session()`을 사용할 수 있습니다.
 
-*주의* 기본 그래프는 현재 스레드의 프로퍼티입니다. 새로운 스레드를 생셩하고, 스레드 안에서 기본 스레드를 사용하고 싶을 경우엔 반드시 그 스레드의 함수에 `with sess.as_default()`를 명시적으로 추가해 주어야합니다.
+*주의* 기본 그래프는 현재 스레드의 프로퍼티입니다. 새로운 스레드를 생성하고, 스레드 안에서 기본 스레드를 사용하고 싶을 경우엔 반드시 그 스레드의 함수에 `with sess.as_default()`를 명시적으로 추가해 주어야합니다.
 
 ##### 반환값:
 
@@ -221,7 +221,7 @@ with tf.Session():
 
 *  <b>`target`</b>: (선택) 접속을 위한 실행 엔진. 기본값으로 프로세스 내부 엔진을 사용합니다. 지금은, 빈 문자열 이외의 값은 지원되지 않습니다.
 *  <b>`graph`</b>: (선택) 시작되는 `Graph`. (위에서 설명됨.)
-*  <b>`config`</b>: (선택) 세션을 위한 설정 옵션을 가진 [`ConfigProto`](https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto) 프로토콜 퍼버.
+*  <b>`config`</b>: (선택) 세션을 위한 설정 옵션을 가진 [`ConfigProto`](https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto) 프로토콜 버퍼.
 
 
 - - -
@@ -240,7 +240,7 @@ with tf.Session():
 
 반환된 `Session`은 입력된 `Session` 또는 `Session.as_default()` 컨텍스트에서 가장 안 쪽의 세션이 될 것입니다.
 
-*참고* 기본 그래프는 현재 스레드의 프로퍼티입니다. 새로운 스레드를 생셩하고, 스레드 안에서 기본 스레드를 사용하고 싶을 경우엔 반드시 그 스레드의 함수에 `with sess.as_default()`를 명시적으로 추가해 주어야합니다.
+참고 : 기본 그래프는 현재 스레드의 프로퍼티입니다. 새로운 스레드를 생성하고, 스레드 안에서 기본 스레드를 사용하고 싶을 경우엔 반드시 그 스레드의 함수에 `with sess.as_default():`를 명시적으로 추가해 주어야합니다.
 
 ##### 반환값:
 
@@ -388,7 +388,7 @@ TensorFlow 실행이 실패할 때 발생하는 일반적인 에러.
 
 이미 존재하는 엔티티를 생성하려고 할 경우 발생합니다.
 
-예를 들면, 파일을 저장하는 연산 (예로, [`tf.train.Saver.save()`](../../api_docs/python/train.md#Saver.save))을 실행할 때  존재하는 파일의 파일명을 명시적으로 전달할 경우 잠재적으로 이 애러를 발생시킬 수 있습니다.
+예를 들면, 파일을 저장하는 연산 (예로, [`tf.train.Saver.save()`](../../api_docs/python/train.md#Saver.save))을 실행할 때  존재하는 파일의 파일명을 명시적으로 전달할 경우 잠재적으로 이 에러를 발생시킬 수 있습니다.
 
 - - -
 

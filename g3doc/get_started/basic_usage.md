@@ -1,108 +1,101 @@
-# Basic Usage
+# 기본 사용법(Basic Usage)
+(v0.12rc1)
 
-TensorFlow 를 사용하기 위해서는 TensorFlow 가 어떻게 동작하는지 이해할 필요가 있다.
+TensorFlow를 사용하기 위해 먼저 TensorFlow가 어떻게 동작하는지를 이해해 봅시다.
 
-* `Graphs`는 컴퓨터 연산을 나타냅니다.
-* `Sessions`이라는 컨텍스트 안에서 그래프는 실행 됩니다.
-* `Tensors`는 데이터를 나타냅니다.
-* `Variables`은 상태를 유지합니다.
-* `Feeds & Fetches`은 임의의 작업의 데이터 입출력에 사용 됩니다.
+* 연산은 graph로 표현합니다.(역자 주: graph는 점과 선, 업계 용어로는 노드와 엣지로 이뤄진 수학적인 구조를 의미합니다.)
+* graph는 `Session`내에서 실행됩니다.
+* 데이터는 tensor로 표현합니다.
+* `변수(Variable)`는 (역자 주: 여러 graph들이 작동할 때도) 그 상태를 유지합니다.
+* 작업(operation 혹은 op)에서 데이터를 입출력 할 때 feed와 fetch를 사용할 수 있습니다.
 
-## Overview
+## 개요(Overview)
 
-TensorFlow 의 프로그램 시스템은 `Graphs`를 통해서 컴퓨터 연산을 나타낸다.  `Graph` 안에서 노드는
-*ops* (작은 단위의 동작) 불리우며, 한개의 OP는 제로 또는 하나 이상의 `Tensors` 가지게 된다.
-OP는 몇 가지의 연산을 하기 되고, 제로 또는 하나 이상의 `Tensors` 만들어 냅니다.
-`Tensor` 는 다차원 배열을 타입으로 가지게 된다.
-예를 들어, 이미지를 다음과 같이 `[batch, height, width, channels]`4차원 배열로 나타낼 수 있다.
+TensorFlow는  graph로 연산(역자 주: 앞으로도 'computation'을 연산으로 번역합니다)을 나타내는 프로그래밍 시스템입니다. graph에 있는 노드는 *작업(op)*(작업(operation)의 약자)라고 부릅니다. 작업(op)은 0개 혹은 그 이상의 `Tensor`를 가질 수 있고 연산도 수행하며 0개 혹은 그 이상의 `Tensor`를 만들어 내기도 합니다. Tensorflow에서 `Tensor`는 정형화된 다차원 배열(a typed multi-dimensional array)입니다. 예를 들어, 이미지는 부동소수점 수(floating point number)를 이용한 4차원 배열(`[batch, height(가로), width(세로), channels(역자 주: 예를 들어 RGB)]`)로 나타낼 수 있습니다.
 
-TensorFlow의 graph는 컴퓨터 연산의 *description* 설명이다. 어떤것을 연산하든, graph는
-반드시 `Session` 안에서 실행되어야 한다. `Session`은 graph 작은 단위 연산들을 CPUs 또는 GPUs
-불리우는 `Devices`에 배치시키고, 작은 단위 연산(ops)들이 작동할수 있는 기능을 제공한다.
-이런 기능은 단위 연산(ops)에 의해서 tensors 들이 만들어진다. 파이썬에서는 [numpy](http://www.numpy.org) `ndarray` 오프젝트로
-C 와 C++ 에서는 `TensorFlow::Tensor` 오프젝트를 만들어내게 된다.
+TensorFlow에서 graph는 연산을 *표현*해놓은 것이라서 연산을 하려면 graph가 `Session` 상에 실행되어야 합니다. `Session`은 graph의 작업(op)(역자 주: operation. graph를 구성하는 노드)을 CPU나 GPU같은 `Device`에 배정하고 실행을 위한 메서드들을 제공합니다. 이런 메서드들은 작업(op)을 실행해서 tensor를 만들어 냅니다. tensor는 파이썬에서 [numpy](http://www.numpy.org) `ndarray` 형식으로 나오고 C 와 C++ 에서는 `TensorFlow::Tensor` 형식으로 나옵니다.
 
-## The computation graph
+## 연산 graph(The computation graph)
 
-TensorFlow 프로그램들은 대개 graph를 조립하는 '구성 단계'와 session을 이용해 graph 안에
-작은 단위의 연산(ops)을 실행시키는 '실행 단계'로 구성돼 있다.
+TensorFlow 프로그램은 보통 graph를 조립하는 '구성 단계(construction phase)'와 session을 이용해 graph의 op을 실행시키는 '실행 단계(execution phase)'로 구성됩니다.
 
-`TensorFlow` 프로그램은 일반적으로 construction phase 안에서 구성된다. construction phase란
-하나의 그래프에서 조립되어진다. 실행 phases 는 그래프에 있는 ops 를 실행시키기 위해서 `Session` 을
-사용하게 된다.
+예를 들어 뉴럴 네트워크를 표현하고 학습시키기 위해 구성 단계에는 graph를 만들고 실행 단계에는 graph의 훈련용 작업들(set of training ops)을 반복해서 실행합니다.
 
-예를 들어, 그래프는 construction phase 안에서 뉴럴 네트워크를 훈련시키고 나타내기 위해서
-만들어 진다. 그리고 실행 phase 안의 그래프는 훈련셋(ops)를 반복적으로 실행하게 된다.
-`TensorFlow` 는 C, C++, Python 프로그램에서 사용할수 있다. 현재 Python 라이브러리를 사용하면
-그래프를 쉽게 조립할 있다. 또한 C, C++에는 제공하지 않는 많은 헬퍼 함수들을 제공하고 있다.
+TensorFlow는 C, C++, 파이썬을 이용해서 쓸 수 있습니다. 지금은 graph를 만들기 위해 파이썬 라이브러리(역자 주: '파이썬 라이브러리'는 파이썬 라이브러리로 나온 TensorFlow를 의미합니다.)를 사용하는 것이 훨씬 쉽습니다. C, C++에서는 제공하지 않는 많은 헬퍼 함수들을 쓸 수 있기 때문이죠.
 
-`Sessions` 라이브러리는 3개의 언어를 위해서 환경 함수들을 가지고 있다.
+(역자 주: TensorFlow의) session 라이브러리들은 3개 언어에 동일한 기능을 제공합니다.
 
-### Building the graph
-graph를 만드는 것은 `Constant`와 같이 어떠한 input도 필요하지 않는 단위의 동작(ops)으로 시작한다.
-Python 라이브러리에서 단위 연산(ops) 생성자는 구성된 단위 연산(ops)의 결과(output)를 대기하는
-객체를 반환한다. 그리고 이 객체들은 다른 단위 연산(ops) 생성자의 input으로 전달할 수 있다.
+### graph 만들기(Building the graph)
+graph를 만드는 것은 `상수(constant)`같이 아무 입력값이 필요없는 작업(op)을 정의하는 것에서부터 시작합니다. 이 op을 연산이 필요한 다른 op들에게 입력값으로 제공하는 것입니다.
 
-Python 라이브러리로 사용하는 TensorFlow는 단위 연산(ops) 생성자가 노드를 추가한
-*graph* 를 가지고 된다. *graph* 는 많은 애플리케이션용으로 충분하다.
-[Graph class](../api_docs/python/framework.md#Graph) 문서에서 어떻게 많은 graph를
-명시적으로 관리할 수 있는지 알 수 있다.
+파이썬 라이브러리의 작업 생성 함수(op constructor)는 만들어진 작업(op)들의 결과값을 반환합니다. 반환된 작업들의 결과값은 다른 작업(op)을 생성할 때 함수의 입력값으로 이용할 수 있습니다.
+
+파이썬 라이브러리에는 작업 생성 함수로 노드를 추가할 수 있는 *default graph*라는 것이 있습니다. default graph는 다양하게 이용하기 좋습니다. [Graph class](../api_docs/python/framework.md#Graph) 문서에서 여러 그래프를 명시적으로 관리하는 방법을 알 수 있습니다.
 
 ```python
 import tensorflow as tf
 
-# Create a Constant op that produces a 1x2 matrix.  The op is
+# 1x2 행렬을 만드는 constant op을 만들어 봅시다.
+# 이 op는 default graph에 노드로 들어갈 것입니다.
+# Create a constant op that produces a 1x2 matrix.  The op is
 # added as a node to the default graph.
 #
+# 생성함수에서 나온 값은 constant op의 결과값입니다.
 # The value returned by the constructor represents the output
-# of the Constant op.
+# of the constant op.
 matrix1 = tf.constant([[3., 3.]])
 
+# 1x2 행렬을 만드는 constant op을 만들어봅시다.
 # Create another Constant that produces a 2x1 matrix.
 matrix2 = tf.constant([[2.],[2.]])
 
+# 'matrix1'과 'matrix2를 입력값으로 하는 Matmul op(역자 주: 행렬곱 op)을
+# 만들어 봅시다.
+# 이 op의 결과값인 'product'는 행렬곱의 결과를 의미합니다.
 # Create a Matmul op that takes 'matrix1' and 'matrix2' as inputs.
 # The returned value, 'product', represents the result of the matrix
 # multiplication.
 product = tf.matmul(matrix1, matrix2)
 ```
 
-예시 graph는 3개의 노드(두 개의 `constant()` ops 와 한 개의 `matmul()` op)를 가지고 있다.
-실제 매트릭스들을 곱하고 곱셈한 연산의 결과를 얻기 위해선, session에서 graph를 실행해야 한다.
+default graph에는 이제 3개의 노드가 있습니다. 2개는 `상수(constant)` 작업(op)이고 하나는 `행렬곱(matmul)` 작업(op)이죠. 그런데 사실 행렬을 곱해서 결과값을 얻으려면 `Session`에다 graph를 *실행*해야 합니다.
 
-### Launching the graph in a session
+### session에서 graph 실행하기(Launching the graph in a session)
 
-아래와 같은 구성으로 동작하게 된다. 'graph' 동작 시키기 위해서는 `Session` 을 만든다.
-예시 graph 에서는 변수 없이 session 이 동작하게 된다.
-
-모든 session API 는 [Session class](../api_docs/python/client.md#session-management)
-에서 볼수 있다.
+graph를 구성하고 나면 `Session` 오브젝트를 만들어서 graph를 실행할 수 있습니다. op 생성함수에서 다른 graph를 지정해줄 때까지는 default graph가 `Session`에서 실행됩니다. 관련 내용은 [Session class](../api_docs/python/client.md#session-management)에서 확인할 수 있습니다.
 
 ```python
+# default graph를 실행시켜 봅시다.
 # Launch the default graph.
 sess = tf.Session()
 
+# 행렬곱 작업(op)을 실행하기 위해 session의 'run()' 메서드를 호출해서 행렬곱 
+# 작업의 결과값인 'product' 값을 넘겨줍시다. 그 결과값을 원한다는 뜻입니다.
 # To run the matmul op we call the session 'run()' method, passing 'product'
 # which represents the output of the matmul op.  This indicates to the call
 # that we want to get the output of the matmul op back.
 #
+# 작업에 필요한 모든 입력값들은 자동적으로 session에서 실행되며 보통은 병렬로 
+# 처리됩니다.
 # All inputs needed by the op are run automatically by the session.  They
 # typically are run in parallel.
 #
+# 'run(product)'가 호출되면 op 3개가 실행됩니다. 2개는 상수고 1개는 행렬곱이죠.
 # The call 'run(product)' thus causes the execution of three ops in the
 # graph: the two constants and matmul.
 #
+# 작업의 결과물은 numpy `ndarray` 오브젝트인 result' 값으로 나옵니다.
 # The output of the op is returned in 'result' as a numpy `ndarray` object.
 result = sess.run(product)
 print(result)
 # ==> [[ 12.]]
 
+# 실행을 마치면 Session을 닫읍시다.
 # Close the Session when we're done.
 sess.close()
 ```
 
-Sessions 은 자원을 해제하기 위해서 닫아야 한다. 또한 `Session`은 "with" 블럭과 함께
-사용할 수 있다. `Session`은 `with` 블럭의 끝에서 자동으로 닫히게 된다. 
+연산에 쓰인 시스템 자원을 돌려보내려면 session을 닫아야 합니다. 시스템 자원을 더 쉽게 관리하려면 `with` 구문을 쓰면 됩니다. 각 `Session`에 컨텍스트 매니저(역자 주: 파이썬의 요소 중 하나로 주로 'with' 구문에서 쓰임)가 있어서 'with' 구문 블락의 끝에서 자동으로 'close()'가 호출됩니다.
 
 ```python
 with tf.Session() as sess:
@@ -110,13 +103,9 @@ with tf.Session() as sess:
   print(result)
 ```
 
-TensorFlow는 graph 에 정의된 단위 연산들이 컴퓨터 자원(CPU or GPU)을 분배해서 사용 할수 있게
-구현되어 있다.
-만약에 CPU or GPU 를 명시적으로 지정하지 않는다면, TensorFlow 는 당신이 가지고 있는 첫번째 GPU를
-사용하게 될것이다. 이것은 보다 많은 연산처리를 가능하게 한다.
+TensorFlow의 구현 코드(TensorFlow implementation)를 통해 graph에 정의된 내용이 실행가능한 작업들(operation)로 변환되고 CPU나 GPU같이 이용가능한 연산 자원들에 뿌려집니다. 코드로 어느 CPU 혹은 GPU를 사용할 지 명시적으로 지정할 필요는 없습니다. 작업을 가능한 한 많이 처리하기 위해 TensorFlow는 (컴퓨터가 GPU를 가지고 있다면) 첫 번째 GPU를 이용하니까요.
 
-만약에 당신의 컴퓨터에 하나 이상의 GPU가 있다면, 당신은 명시적으로 GPU를 지정해서 사용할수 있다.
-`with...Device` 라는 문법을 사용해서 연산에 사용될 CPU or GPU를 지정할 수 있다.
+만약 컴퓨터에 복수의 GPU가 있어서 이를 사용하려면, op을 어느 하드웨어에 할당할 지 명시적으로 밝혀야 합니다. 작업에 사용할 CPU 혹은 GPU를 지정하려면 `with...Device` 구문을 사용하면 됩니다.
 
 ```python
 with tf.Session() as sess:
@@ -127,49 +116,45 @@ with tf.Session() as sess:
     ...
 ```
 
-CPU or GPU 는 문자열로 지정 한다. 현재 제공하는 CPU or GPU는 아래와 같다.
+이용할 CPU 혹은 GPU는 문자열로 지정할 수 있습니다. 현재 지원되는 것은 아래와 같습니다.
 
 *  `"/cpu:0"`: 컴퓨터의 CPU.
 *  `"/gpu:0"`: 컴퓨터의 1번째 GPU.
 *  `"/gpu:1"`: 컴퓨터의 2번쨰 GPU.
 
-GPU 와 TensorFlow 보다 많은 정보는 [Using GPUs](../how_tos/using_gpu/index.md) 보면 된다.
+GPU와 TensorFlow에 대한 더 자세한 정보는 [Using GPUs](../how_tos/using_gpu/index.md)를 참조하시기 바랍니다.
 
-### Launching the graph in a distributed session
+### 분산된 session에서 graph 실행하기(Launching the graph in a distributed session)
 
-TensorFlow 클러스터를 만들려면, 클러스트 안의 각 머신에서 TensorFlow 서버를 동작시켜야 한다.
-세션을 클라이언트 안에서 인스턴스화 하려는 경우, 클러스트 안에 머신중 하나의 네트워크 경로를
-전달해야 한다:
+TensorFlow 클러스터를 만들기 위해 클러스터에 포함된 각 머신에 TensorFlow 서버를 실행시켜 봅시다. Session을 클라이언트에 인스턴스화할 때는 Session을 클러스터 머신의 네트워크 위치로 넘겨야 합니다.:
 
 ```python
 with tf.Session("grpc://example.org:2222") as sess:
+  # sess.run(...)을 호출하면 클러스터에서 실행될 것입니다.
   # Calls to sess.run(...) will be executed on the cluster.
   ...
 ```
-해당 머신은 현재 Session의 마스터가 된다. 마스터는 클러스터(workers) 안의 여러 머신들과 graph 를
-교차해서 분배하게 된다. 이런 분배는 머신의 사용 가능한 컴퓨팅 자원을 고려해서 이루어 진다.
 
-"with tf.device():" 문법을 이용해서 특정 머신에게 graph의 특정 연산을 지정해 줄 수 있다.
+세션을 받은 머신은 해당 Session의 마스터가 됩니다. 머신 내에서는 Tensorflow의 구현 코드(implementation)가 머신 내 연산 자원에게 작업을 나눠주지만, 클러스터에서는 마스터가 클러스터 내의 다른 머신들에게 graph를 분배하는 것입니다.
+
+"with tf.device():" 구문을 이용해서 특정 머신에게 직접 graph의 특정 부분을 지정해 줄 수도 있습니다.
 
 ```python
 with tf.device("/job:ps/task:0"):
   weights = tf.Variable(...)
   biases = tf.Variable(...)
 ```
-Session 과 클러스터 의 분산처리에 대한 더 많은 정보는 [Distributed TensorFlow How To](../how_tos/distributed/)
-볼 수 있다.
 
-## Interactive Usage
+Session 분산과 클러스터에 대한 더 자세한 정보는 [Distributed TensorFlow How To](../how_tos/distributed/)를 참조하시기 바랍니다.
 
-이 문서에 있는 파이썬 예제들은 [`Session`](../api_docs/python/client.md#Session) 과
-[`Session.run()`](../api_docs/python/client.md#Session.run) 함수를 사용해서 graph
-의 연산들을 동작 시킨다.
+## 인터렉티브한 이용법(Interactive Usage)
 
-인터렉티브 파이썬 환경 [IPython](http://ipython.org) 에서는 [`InteractiveSession`](../api_docs/python/client.md#InteractiveSession) 클래스,
-[`Tensor.eval()`](../api_docs/python/framework.md#Tensor.eval) 와 [`Operation.run()`](../api_docs/python/framework.md#Operation.run) 함수를 사용 할 수 있다.
-이것은 세션안에서 변수의 홀딩을 피할수 있기 한다.
+이 문서에 있는 파이썬 예제들은 [`Session`](../api_docs/python/client.md#Session)을 실행시키고 [`Session.run()`](../api_docs/python/client.md#Session.run) 메서드를 이용해서 graph의 작업들을 처리한다.
+
+[IPython](http://ipython.org)같은 인터렉티브 파이썬 환경에서의 이용편의성을 위해[`InteractiveSession`](../api_docs/python/client.md#InteractiveSession)클래스와 [`Tensor.eval()`](../api_docs/python/framework.md#Tensor.eval),[`Operation.run()`](../api_docs/python/framework.md#Operation.run) 메서드를 대신 이용할 수도 있다. session 내에서 변수를 계속 유지할 필요가 없기 때문이다.
 
 ```python
+# 인터렉티브 TensorFlow Session을 시작해봅시다.
 # Enter an interactive TensorFlow Session.
 import tensorflow as tf
 sess = tf.InteractiveSession()
@@ -177,50 +162,57 @@ sess = tf.InteractiveSession()
 x = tf.Variable([1.0, 2.0])
 a = tf.constant([3.0, 3.0])
 
+# 초기화 op의 run() 메서드를 이용해서 'x'를 초기화합시다.
 # Initialize 'x' using the run() method of its initializer op.
 x.initializer.run()
 
+# 'x'에서 'a'를 빼는 작업을 추가하고 실행시켜서 결과를 봅시다.
 # Add an op to subtract 'a' from 'x'.  Run it and print the result
 sub = tf.sub(x, a)
 print(sub.eval())
 # ==> [-2. -1.]
 
+# 실행을 마치면 Session을 닫읍시다.
 # Close the Session when we're done.
 sess.close()
 ```
 
 ## Tensors
 
-TensorFlow 프로그램은 모든 데이터를 표현할수 있는 tensor 라는 데이터 구조를 사용한다.
-tensor 만이 유일하게 연산 그래프 안의 연산자들 사이를 오가게 된다. TensorFlow 의 tensor 는
-n-차원 배열 또는 리스트라고 생각하면 된다. Tensor 는 static type, rank, shape 을 가지고 있다.
-TensorFlow 에서 이런 컨셉을 제대로 다루기 위해서 [Rank, Shape, and Type](../resources/dims_types.md) 을 참고 하자.
+TensorFlow 프로그램은 모든 데이터를 tensor 데이터 구조로 나타냅니다. 연산 graph에 있는 작업들(op) 간에는 tensor만 주고받을 수 있기 때문입니다. TensorFlow의 tensor를 n 차원의 배열이나 리스트라고 봐도 좋습니다. tensor는 정적인 타입(static type), 차원(rank 역자 주: 예를 들어 1차원, 2차원하는 차원), 형태(shape, 역자 주: 예를 들어 2차원이면 m x n) 값을 가집니다. TensorFlow가 어떻게 이 개념들을 다루는지 알고 싶으시면 [Rank, Shape, and Type](../resources/dims_types.md)을 참조하시기 바랍니다.
 
 ## Variables
 
-Variables는 graph 에서 실행된 상대를 유지하게 된다. 아래의 심플한 카운터 예제를 통해서 variables
-에 대해서 보여 준다. 더 자세한 내용은 [Variables](../how_tos/variables/index.md) 참조.
+그래프를 실행하더라도 변수(variable)의 상태는 유지됩니다. 아래에서 간단한 카운터 예제를 통해 변수에 대해서 알 수 있습니다. 더 자세한 내용은 [Variables](../how_tos/variables/index.md)를 참조하시기 바랍니다.
 
 ```python
+# 값이 0인 스칼라로 초기화된 변수를 만듭니다.
 # Create a Variable, that will be initialized to the scalar value 0.
 state = tf.Variable(0, name="counter")
 
+# 'state'에 1을 더하는 작업(op)을 만듭니다.
 # Create an Op to add one to `state`.
 
 one = tf.constant(1)
 new_value = tf.add(state, one)
 update = tf.assign(state, new_value)
 
+# 그래프를 한 번 작동시킨 후에는 'init' 작업(op)을 실행해서 변수를 초기화해야
+# 합니다. 먼저 'init' 작업(op)을 추가해 봅시다.
 # Variables must be initialized by running an `init` Op after having
 # launched the graph.  We first have to add the `init` Op to the graph.
-init_op = tf.initialize_all_variables()
+init_op = tf.global_variables_initializer()
 
+# graph와 작업(op)들을 실행시킵니다.
 # Launch the graph and run the ops.
 with tf.Session() as sess:
+  # 'init' 작업(op)을 실행합니다.
   # Run the 'init' op
   sess.run(init_op)
+  # 'state'의 시작값을 출력합니다.
   # Print the initial value of 'state'
   print(sess.run(state))
+  # 'state'값을 업데이트하고 출력하는 작업(op)을 실행합니다.
   # Run the op that updates 'state' and print 'state'.
   for _ in range(3):
     sess.run(update)
@@ -233,18 +225,14 @@ with tf.Session() as sess:
 # 2
 # 3
 ```
-코드안에서 `assign()` 연산은 graph 의 한부분으로 `add()` 처럼 동작하게 된다.
-그리고 이런 연산은 `run()`이 실행되기 전까지 실제로 실행되지 않는다.
 
-일반적으로 Variables 셋은 통계 모델의 파라메터를 나타낸다. 예를 들어, Variable 안의 tensor 에
-뉴럴 네트워크를 위한 무게를 저장 한다면, 트레이닝 하는 동안 graph 는 반복적으로 tensor를 업데이트
-하게 된다.
+이 코드에서 `assign()` 작업은 `add()` 작업처럼 graph의 한 부분입니다. 그래서 `run()`이 graph를 실행시킬 때까지 실제로 작동하지 않습니다.
+
+우리는 보통 통계 모델의 파라미터를 변수로 표현합니다. 예를 들어 뉴럴 네트워크의 비중값을 변수인 tensor로 표현할 수 있습니다. 학습을 진행할 때 훈련용 graph를 반복해서 실행시키고 이 tensor 값을 업데이트하는 것입니다.
 
 ## Fetches
 
-연산의 결과를 가져오는 것, `Session` 오브젝트 안에서 `run()` 호출은 graph 를 실행 시키고 tensors
-결과를 끌어 내게 된다.
-이전의 예제에서는 한개의 노드 `state` 만 가져왔다, 하지만 여러개의 tensors 도 가져 올 수 있다.
+작업의 결과를 가져오기 위해 `Session` 오브젝트에서 `run()`을 호출해서 graph를 실행하고 tensor로 결과값을 끌어냅니다. 앞의 예제에서는 'state' 하나의 노드만 가져왔지만 복수의 tensor를 받아올 수도 있습니다.:
 
 ```python
 input1 = tf.constant([3.0])
@@ -261,16 +249,13 @@ with tf.Session() as sess:
 # [array([ 21.], dtype=float32), array([ 7.], dtype=float32)]
 ```
 
-All the ops needed to produce the values of the requested tensors are run once
-(not once per requested tensor).
+여러 tensor들의 값을 계산해내기 위해 수행되는 작업(op)들은 각 tensor 별로 각각 수행 되는 것이 아니라 전체적으로 한 번만 수행됩니다.
 
 ## Feeds
 
-위의 예제에서 살펴본 graph에 tensor들은 `Constants` 와 `Variables` 에 저장되어 있다.
-TensorFlow는 graph의 연산에게 직접 tensor의 값을 줄 수 있는 feed 메카니즘을 제공한다.
+위의 예제에서 살펴본 graph에서 tensor들은 `상수(Constant)` 와 `변수(Variable)`로 저장되었습니다. TensorFlow에서는 graph의 연산에게 직접 tensor 값을 줄 수 있는 'feed 메커니즘'도 제공합니다.
 
-Feed 값에 따라 연산의 출력값이 대체 된다. feed 데이터의 변수는 `run()`이 제공된다. Feed 는 오직 `run()`
-에서만 사용 되어 진다. 가장 일반적인 사용방법은 tf.placeholder() 을 사용해서 "feed" 작업을 지정해 주는것이다.
+feed 값은 일시적으로 연산의 출력값을 입력한 tensor 값으로 대체합니다. feed 데이터는 `run()`으로 전달되어서 `run()`의 변수로만 사용됩니다. 가장 일반적인 사용방법은 tf.placeholder()를 사용해서 특정 작업(op)을 "feed" 작업으로 지정해 주는 것입니다.
 
 ```python
 
@@ -285,7 +270,4 @@ with tf.Session() as sess:
 # [array([ 14.], dtype=float32)]
 ```
 
-만약에 feed 를 제대로 제공하지 않는다면 `placeholder()` 연산은 에러를 만들게 된다.
-feeds 다양한 사용 예를 보고 싶다면
-[MNIST fully-connected feed tutorial](../tutorials/mnist/tf/index.md)
-([source code](https://www.tensorflow.org/code/tensorflow/g3doc/tutorials/mnist/fully_connected_feed.py)) 참고
+만약 feed 를 제대로 제공하지 않으면 `placeholder()` 연산은 에러를 출력할 것입니다. feed를 이용하는 다른 예시는 [MNIST fully-connected feed tutorial](../tutorials/mnist/tf/index.md)([source code](https://www.tensorflow.org/code/tensorflow/g3doc/tutorials/mnist/fully_connected_feed.py))를 참조하시기 바랍니다.

@@ -6,6 +6,7 @@
 
 TensorFlow는 `unittest.TestCase`를 상속하고 TensorFlow 테스트와 관련된 메서드를 추가한 편리한 클래스를 제공합니다. 아래에 예시가 하나 있습니다.
 
+```python
     import tensorflow as tf
 
 
@@ -19,7 +20,7 @@ TensorFlow는 `unittest.TestCase`를 상속하고 TensorFlow 테스트와 관련
 
     if __name__ == '__main__':
       tf.test.main()
-
+```
 
 `tf.test.TestCase`는 `unittest.TestCase`를 상속하지만 추가적인 메서드가 더 있습니다. 우리는 곧 이 메서드들에 대해 문서화를 할 것입니다.
 

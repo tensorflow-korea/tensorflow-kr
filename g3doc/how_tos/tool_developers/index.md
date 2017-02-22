@@ -62,7 +62,7 @@ for node in graph_def.node
 
 ### `input`
 
-문자열의 리스트, 문자열들은 각각 다른 노드의 명칭이며, 선택적으로 콜론(colo, ':')과 출력 포트수가 따라붙습니다. 예를 들면, 두 개의 입력을 갖는 노드는 `["some_node_name", "another_node_name"]` (이는 `["some_node_name:0", "another_node_name:0"]`와 동일합니다.) 형태의 리스트를 가질 것이며, 노드의 첫번째 입력을 `"some_node_name"`의 명칭을 갖는 노드의 첫번째 출력으로, 그리고 `"another_node_name"`의 첫번째 출력으로 두번째 입력을 정의할 것입니다.
+문자열의 리스트, 문자열들은 각각 다른 노드의 명칭이며, 선택적으로 콜론(colon, ':')과 출력 포트 번호가 따라붙습니다. 예를 들면, 두 개의 입력을 갖는 노드는 `["some_node_name", "another_node_name"]` (이는 `["some_node_name:0", "another_node_name:0"]`와 동일합니다.) 형태의 리스트를 가질 것이며, 노드의 첫번째 입력을 `"some_node_name"`의 명칭을 갖는 노드의 첫번째 출력으로, 그리고 `"another_node_name"`의 첫번째 출력으로 두번째 입력을 정의할 것입니다.
 
 ### `device`
 

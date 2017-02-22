@@ -2,7 +2,7 @@
 
 # 파이썬 함수 래핑하기
 
-참고 : `Tensor`를 인자로 받는 함수들은 [`tf.convert_to_tensor`]((framework.md#convert_to_tensor))의 인자로 들어갈 수 있는 값들 또한 받을 수 있습니다.
+참고 : `Tensor`를 인자로 받는 함수들은 [`tf.convert_to_tensor`](framework.md#convert_to_tensor)의 인자로 들어갈 수 있는 값들 또한 받을 수 있습니다.
 
 [TOC]
 

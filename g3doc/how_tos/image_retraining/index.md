@@ -1,4 +1,5 @@
 # How to Retrain Inception's Final Layer for New Categories
+# 새로운 분야에 대한 최종적인 인지는 어떻게 재훈련 되는가.
 
 Modern object recognition models have millions of parameters and can take weeks
 to fully train. Transfer learning is a technique that shortcuts a lot of this
@@ -6,6 +7,13 @@ work by taking a fully-trained model for a set of categories like ImageNet, and
 retrains from the existing weights for new classes. In this example we'll be
 retraining the final layer from scratch, while leaving all the others untouched.
 For more information on the approach you can see
+[this paper on Decaf](http://arxiv.org/pdf/1310.1531v1.pdf).
+
+현대의 개체 인식 모델은 수백만개의 매개 변수를 가지고 있으며 완전히 훈련하는 데 몇주가 걸릴 수 있다.ㄴ
+Transfer learning 은 ImageNet와 같은 일련의 카테고리를 위한 fully-trained 모델을 이용하고 새로운 클래스에 대해 기존의 가중치를 기반으로
+재훈련 함으로써 이러한 작업의 많은 부분을 숏컷하는 기법이다.
+본 예를 통해 우리는 다른 모든 것들은 손대지 않고 처음부터 끝까지 재훈련 할 수 있다.
+본 기법에 대한 추가 정보는 아래에서 확인 가능하다.
 [this paper on Decaf](http://arxiv.org/pdf/1310.1531v1.pdf).
 
 Though it's not as good as a full training run, this is surprisingly effective

@@ -1,45 +1,27 @@
-# Adding a New Op
+# 새로운 오퍼레이션(Op) 추가하는 방법
 
-PREREQUISITES:
+전제 조건:
 
-* Some familiarity with C++.
-* Must have installed the
-  [TensorFlow binary](../../get_started/os_setup.md#pip-installation), or must
-  have
-  [downloaded TensorFlow source](../../get_started/os_setup.md#installing-from-sources),
-  and be able to build it.
+* C++ 코드에 어느정도 익숙한 분
+* [텐서플로우 바이너리 설치](../../get_started/os_setup.md#pip-installation) 혹은 
+  [텐서플로우 소스코드 다운로드](../../get_started/os_setup.md#installing-from-sources) 후, 빌드가 가능한 분
 
-If you'd like to incorporate an operation that isn't covered by the existing
-library, you can create a custom Op. To incorporate your custom Op, you'll need
-to:
+기존 라이브러리가 지원하지 않는 오퍼레이션을 추가하고 싶을 경우, 맞춤형 오퍼레이션(Op)를 생성할 수 있습니다. 맞춤형 오퍼레이션을 생성하기 위해서는 아래 과정을 거쳐야 합니다.
 
-* Register the new Op in a C++ file. The Op registration is independent of the
-  implementation, and describes the semantics of how the Op is invoked. For
-  example, it defines the Op name, and specifies its inputs and outputs.
-* Implement the Op in C++. This implementation is called a "kernel", and there
-  can be multiple kernels for different architectures (e.g. CPUs, GPUs) or
-  input / output types.
-* Optionally, create a Python wrapper. This wrapper is the public API to create
-  the Op. A default wrapper is generated from the Op registration, which can be
-  used directly or added to.
-* Optionally, write a function to compute gradients for the Op.
-* Optionally, write a function that describes the input and output shapes
-  for the Op.  This allows shape inference to work with your Op.
-* Test the Op, typically in Python. If you define gradients, you can verify them with the Python [`GradientChecker`](https://www.tensorflow.org/code/tensorflow/python/kernel_tests/gradient_checker.py).
+* 새로운 오퍼레이션을 C++ 파일에 등록합니다. 오퍼레이션 등록은 오퍼레이션 실행과는 독립적인 작업이며, 오퍼레이션이 어떻게 적용되는지를 설명합니다. 예를 들어, 오퍼레이션 이름을 정의하고, 입력과 출력을 지정하는 일을 말합니다.
+* 오퍼레이션을 C++에서 구현합니다. 구현한 오퍼레이션은 "커널"이라고 부르며, 다수의 아키텍쳐(CPUs, GPUs 등) 혹은 입력 / 출력 유형에 따라 복수의 커널이 존재할 수 있습니다. 
+* 선택적으로, 파이썬 래퍼를 생성합니다. 이 래퍼는 오퍼레이션을 생성하는 공개 API 역할을 합니다. 오퍼레이션 등록 시에 디폴트 래퍼가 생성되며, 이를 직접 사용하거나 이제 추가하실 수 있습니다.
+* 선택적으로, 오퍼레이션의 기울기(gradient)를 구하는 함수를 구현합니다.
+* 선택적으로, 오퍼레이션의 입력과 출력값의 형태(shape)를 설명하는 함수를 구현합니다.
+* 파이썬에서 오퍼레이션을 테스트 합니다. 기울기를 정의한 경우에는, 파이썬의 [`GradientChecker`](https://www.tensorflow.org/code/tensorflow/python/kernel_tests/gradient_checker.py)를 통해 검증 할 수 있습니다.
 
 [TOC]
 
-## Define the Op's interface 
+## 오퍼레이션의 인터페이스 정의
 
-You define the interface of an Op by registering it with the TensorFlow system.
-In the registration, you specify the name of your Op, its inputs (types and
-names) and outputs (types and names), as well as docstrings and
-any [attrs](#attrs) the Op might require.
+오퍼레이션의 인터페이스는 텐서플로우 시스템 등록과정에서 정의됩니다. 등록 과정에서, 오퍼레이션의 이름을 지정하고, 입력(유형과 이름), 출력(유형과 이름) 그리고 설명글(docstring)과 오퍼레이션이 요구하는 [속성값](#attrs)을 지정합니다.
 
-To see how this works, suppose you'd like to create an Op that takes a tensor of
-`int32`s and outputs a copy of the tensor, with all but the first element set to
-zero. Create file [`tensorflow/core/user_ops`][user_ops]`/zero_out.cc` and
-add a call to the `REGISTER_OP` macro that defines the interface for such an Op:
+예시로, `int32` 텐서를 입력으로 받아 첫번째 항은 입력값의 복사본으로, 그 외 모든 항은 0인 텐서를 출력하는 오퍼레이션을 정의한다고 가정합니다. [`tensorflow/core/user_ops`][user_ops]`/zero_out.cc` 이라는 파일을 생성하고 오퍼레이션의 인터페이스를 정의하는 `REGISTER_OP` 매크로를 불러오는 call을 추가합니다.
 
 ```c++
 #include "tensorflow/core/framework/op.h"
@@ -49,28 +31,17 @@ REGISTER_OP("ZeroOut")
     .Output("zeroed: int32");
 ```
 
-This `ZeroOut` Op takes one tensor `to_zero` of 32-bit integers as input, and
-outputs a tensor `zeroed` of 32-bit integers.
+`ZeroOut` 오페레이션은 32비트 정수인 `to_zero` 텐서 하나를 입력값으로 받고, 32비트 정수인 `zeroed` 텐서 하나를 출력합니다.
 
-> A note on naming: The name of the Op should be unique and CamelCase.  Names
-> starting with an underscore (`_`) are reserved for internal use.
+> 이름에 대한 비고: 오퍼레이션 이름은 고유하고 CamelCase로 작성되어야 합니다. 밑줄(`_`)로 시작하는 오퍼레이션 이름은 내부 용도로 위해 예약되어 있습니다. 
 
-## Implement the kernel for the Op
+## 오퍼레이션의 커널 구현
 
-After you define the interface, provide one or more implementations of the Op.
-To create one of these kernels, create a class that extends `OpKernel` and
-overrides the `Compute` method. The `Compute` method provides one `context`
-argument of type `OpKernelContext*`, from which you can access useful things
-like the input and output tensors.
+인터페이스를 정의한 후에는, 하나 이상의 오퍼레이션 구현방법(커널)을 제공해야 합니다. 커널을 생성하기 위해서는 `OpKernel`을 확장하고, `Compute` 메소드를 재정의한 클래스를 생성합니다. `Compute` 메소드는 입력 텐서와 출력 텐서를 접근할 수 있는 `context` 변수 형태인 `OpKernelContext*`를 제공합니다. 
 
-> Important note: Instances of your OpKernel may be accessed concurrently. Your
-> `Compute` method must be thread-safe. Guard any access to class members with a
-> mutex (Or better yet, don't share state via class members! Consider using a
-> [`ResourceMgr`](https://www.tensorflow.org/code/tensorflow/core/framework/resource_mgr.h)
-> to keep track of Op state).
+> 주요 사항: OpKernel 개체는 동시다발적으로 접속될 수 있습니다. `Compute` 메소드는 이에 대비해 thread-safe하게 구현되어야 합니다. mutex를 통한 클래스 멤버간의 접근은 막아야 합니다. (더 나은 방법은, 클래스 맴버간 상태를 공유하지 않는 것입니다. 오퍼레이션 상태를 추적하기 편리하게 [`ResourceMgr`](https://www.tensorflow.org/code/tensorflow/core/framework/resource_mgr.h)를 사용하는 것을 권장합니다.) 
 
-Add your kernel to the file you created above. The kernel might look something
-like this:
+위에서 생성한 파일에 커널을 추가합니다. 아래는 예시 커널입니다:
 
 ```c++
 #include "tensorflow/core/framework/op_kernel.h"
@@ -82,48 +53,41 @@ class ZeroOutOp : public OpKernel {
   explicit ZeroOutOp(OpKernelConstruction* context) : OpKernel(context) {}
 
   void Compute(OpKernelContext* context) override {
-    // Grab the input tensor
+    // 입력 텐서를 불러옵니다
     const Tensor& input_tensor = context->input(0);
     auto input = input_tensor.flat<int32>();
 
-    // Create an output tensor
+    // 출력 텐서를 생성합니다 
     Tensor* output_tensor = NULL;
     OP_REQUIRES_OK(context, context->allocate_output(0, input_tensor.shape(),
                                                      &output_tensor));
     auto output = output_tensor->template flat<int32>();
 
-    // Set all but the first element of the output tensor to 0.
+    // 출력 텐서의 첫번째 항 외 모든 항을 0으로 지정합니다
     const int N = input.size();
     for (int i = 1; i < N; i++) {
       output(i) = 0;
     }
 
-    // Preserve the first input value if possible.
+    // 입력값의 첫번째 항을 저장합니다 
     if (N > 0) output(0) = input(0);
   }
 };
 ```
 
-After implementing your kernel, you register it with the TensorFlow system. In
-the registration, you specify different constraints under which this kernel
-will run. For example, you might have one kernel made for CPUs, and a separate
-one for GPUs.
+커널을 구현한 후에는, 텐서프로우 시스템에 등록합니다. 등록과정에서 해당 커널이 동작하기 위한 제약 사항들을 지정합니다. 예를 들어, CPUs를 위한 커널과 GPUs를 위한 커널을 별도로 구현했을 경우입니다. 
 
-To do this for the `ZeroOut` op, add the following to `zero_out.cc`:
+`ZeroOut` 오퍼레이션에 위와 같은 제약 사항을 정의하기 위해서는, 아래 코드를 `zero_out.cc`에 추가합니다:
 
 ```c++
 REGISTER_KERNEL_BUILDER(Name("ZeroOut").Device(DEVICE_CPU), ZeroOutOp);
 ```
 
-## Building the Op library
-### With TensorFlow binary installation
+## 오퍼레이션 라이브러리 빌드
+### 텐서플로우 바이너리 설치를 통한 빌드
 
-You should be able to compile `zero_out.cc` with a `C++` compiler such as `g++`
-or `clang` available on your system. The binary PIP package installs the header
-files and the library that you need to compile your Op in locations that are
-system specific. However, the TensorFlow python library provides the
-`get_include` function to get the header directory.
-Here is the output of this function on a Ubuntu machine.
+시스템에서 제공되는 `g++` 혹은 `clang`과 같은 `C++` 컴파일러를 통해 `zero_out.cc` 파일을 컴파일 할 수 있습니다. 오퍼레이션을 시스템 내부에 컴파일하기 위해 필요한 헤더 파일 및 라이브러리는 바이너리 PIP 패키지를 통해서 설치할 수 있습니다. 텐서플로우 파이썬 라이브러리가 헤더 디렉토리를 다운로드 받기 위한 `get_include` 함수를 제공합니다.
+아래는 Ubuntu 시스템에서 해당 함수를 실행한 결과 화면입니다. 
 
 ```bash
 $ python
@@ -133,8 +97,7 @@ $ python
 
 ```
 
-Assuming you have `g++` installed, here is the sequence of commands you can use
-to compile your Op into a dynamic library.
+`g++`가 설치된 경우, 오퍼레이션을 다이너믹 라이브러리(dynamic library)에 컴파일 하기 위해서는 아래와 같은 명령어를 수행합니다.
 
 ```bash
 TF_INC=$(python -c 'import tensorflow as tf; print(tf.sysconfig.get_include())')
@@ -142,20 +105,13 @@ TF_INC=$(python -c 'import tensorflow as tf; print(tf.sysconfig.get_include())')
 g++ -std=c++11 -shared zero_out.cc -o zero_out.so -fPIC -I $TF_INC
 ```
 
-On Mac OS X, the additional flag "-undefined dynamic_lookup" is required when
-building the .so file.
+Mac OS X에서 .so 파일을 빌드할 때에는 "-undefined dymanic_lookup" 플래그를 추가해야 합니다.
 
-> Note on gcc version 5: gcc5 uses the new C++
-[ABI](https://gcc.gnu.org/gcc-5/changes.html#libstdcxx). The binary pip packages
-available on the TensorFlow website are built with gcc4 that uses the older ABI.
-If you compile your op library with gcc5, add `-D_GLIBCXX_USE_CXX11_ABI=0` to
-the command line to make the library compatible with the older abi.
+> gcc version 5 사용시 비고: gcc5는 새로운 C++ [ABI](https://gcc.gnu.org/gcc-5/changes.html#libstdcxx)를 사용합니다. 텐서플로우 웹사이트에 제공되는 파이너리 pip 패키지는 gcc4와 이전 버전의 ABI로 설치되었습니다. 오퍼레이션 라이브러리를 gcc5로 컴파일 할 경우에는, `-D_GLIBXCC_USE_CXX11_ABI=0`를 명령어에 추가하면 이전 버번의 ABI와 호환됩니다. 
 
-### With TensorFlow source installation
+### 텐서플로우 소스코드 설치를 통한 빌드
 
-If you have TensorFlow sources installed, you can make use of TensorFlow's build
-system to compile your Op. Place a BUILD file with following Bazel build rule in
-the [`tensorflow/core/user_ops`][user_ops] directory.
+텐서플로우 소스코드를 설치했다면, 텐서플로우의 빌드 시스템을 통하여 오퍼레이션을 컴파일 할 수 있습니다. Bazel 빌드 규칙에 준수하여 BUILD 파일을 [`tensorflow/core/user_ops`][user_ops] 디렉토리에 추가합니다. 
 
 ```python
 load("//tensorflow:tensorflow.bzl", "tf_custom_op_library")
@@ -166,17 +122,14 @@ tf_custom_op_library(
 )
 ```
 
-Run the following command to build `zero_out.so`.
+`zero_out.so` 빌드를 위해 아래 코드를 실행합니다.
 
 ```bash
 $ bazel build -c opt //tensorflow/core/user_ops:zero_out.so
 ```
 
-> Note:
-Although you can create a shared library (a `.so` file) with the standard
-`cc_library` rule, we strongly recommend that you use the `tf_custom_op_library`
-macro. It adds some required dependencies, and performs checks to ensure that
-the shared library is compatible with TensorFlow's plugin loading mechanism.
+> 비고:
+`cc_libary` 규칙을 통하여 공유 라이브러리(`.so` 파일)을 생성할 수 있지만, `tf_custom_op_libary` 매크로를 사용하는 것을 권장합니다. 필수 의존성을 추가하고, 공유 바리어브러ㅣ가 텐서플로우 플러그인 로딩 매커니즘과 호환되는 것을 자동으로 확인하기 때문입니다. 
 
 ## Using the Op in Python
 

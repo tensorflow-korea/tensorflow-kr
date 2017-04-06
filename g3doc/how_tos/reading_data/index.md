@@ -1,12 +1,5 @@
-<<<<<<< HEAD
-데이터 읽어들이기
-=================
-=======
-# Reading data
-<<<<<<< HEAD
->>>>>>> a05f0f6... Translate feeding part
-=======
->>>>>>> a05f0f6... Translate feeding part
+데이터 읽어들이기 (Reading data)
+================================
 
 TensorFlow 프로그램으로 데이터를 가져오는 방법에는 세 가지 주요 방법이 있다:
 
@@ -16,23 +9,10 @@ TensorFlow 프로그램으로 데이터를 가져오는 방법에는 세 가지 
 
 [TOC]
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 피딩(Feeding)
 -------------
 
-TensorFlow의 피딩 기작은 계산 그래프 내 어떠한 Tensor에도 데이터를 삽입할 수 있도록 한다. 따라서 파이썬으로도 그래프에 직접 데이터를 피딩할 수 있다.
-=======
-=======
->>>>>>> a05f0f6... Translate feeding part
-## 피딩(Feeding)
-
-TensorFlow의 피딩 기작은 계산 그래프 내의 모든 텐서에 데이터를 삽입할 수 있도록 한다.
-따라서 파이썬으로도 그래프에 직접 데이터를 피딩할 수 있다.
-<<<<<<< HEAD
->>>>>>> a05f0f6... Translate feeding part
-=======
->>>>>>> a05f0f6... Translate feeding part
+TensorFlow의 피딩 기작은 계산 그래프 내의 모든 텐서에 데이터를 삽입할 수 있도록 한다. 따라서 파이썬으로도 그래프에 직접 데이터를 피딩할 수 있다.
 
 계산을 개시하는 run()이나 eval()을 호출할 때, 피드 데이터를 제공하기 위해 `feed_dict` 전달인자를 사용하면 된다.
 
@@ -43,8 +23,6 @@ with tf.Session():
   print(classifier.eval(feed_dict={input: my_python_preprocessing_fn()}))
 ```
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 변수와 상수를 포함하여 모든 텐서를 피드 데이터로 바꿀 수 있지만, 가장 좋은 방법은 [`placeholder` op](../../api_docs/python/io_ops.md#placeholder) 노드를 사용하는 것이다. `placeholder`는 오로지 피드를 받아들이기 위해 존재하는데, 초기화되지 않으며 데이터를 포함하지도 않는다. `placeholder`는 피드 없이 실행되는 경우 오류를 발생시켜 사용자가 피드하는 것을 잊지 않도록 한다.
 
 `placeholder`를 사용하는 예제와 MNIST 데이터 학습을 위한 피딩은 [`tensorflow/examples/tutorials/mnist/fully_connected_feed.py`](https://www.tensorflow.org/code/tensorflow/examples/tutorials/mnist/fully_connected_feed.py)에서 찾아볼 수 있으며, [MNIST tutorial](../../tutorials/mnist/tf/index.md) 에 설명이 있다.
@@ -57,58 +35,33 @@ with tf.Session():
 1.	파일명 리스트 (The list of filenames)
 2.	*선택적* 파일명 셔플링 (*Optional* filename shuffling)
 3.	*선택적* 에폭 제한 (*Optional* epoch limit)
-<<<<<<< HEAD
-4.	파일명 큐
-=======
 4.	파일명 큐 (Filename queue)
->>>>>>> 7f3381401a76f8649fe3fdd2cef79c474b7e980f
 5.	파일 형식에 대한 리더기 (A reader for the file format)
 6.	리더기로 읽어들인 레코드에 대한 해독기 (A decoder for a record read by the reader)
 7.	*선택적* 전처리 (*Optional* preprocessing)
 8.	예시 큐 (Example queue)
-=======
-=======
->>>>>>> a05f0f6... Translate feeding part
-변수와 상수를 포함하여 모든 텐서를 피드 데이터로 바꿀 수 있지만, 
-가장 좋은 방법은 [`placeholder` op](../../api_docs/python/io_ops.md#placeholder) 노드를 사용하는 것이다.
-`placeholder`는 오로지 피드를 받아들이기 위해 존재하는데, 초기화되지 않으며 데이터를 포함하지도 않는다.
-`placeholder`는 피드 없이 실행되는 경우 오류를 발생시켜 사용자가 피드하는 것을 잊지 않도록 한다.
 
-`placeholder`를 사용하는 예제와 MNIST 데이터 학습을 위한 피딩은 다음에서 찾아볼 수 있다: [`tensorflow/examples/tutorials/mnist/fully_connected_feed.py`](https://www.tensorflow.org/code/tensorflow/examples/tutorials/mnist/fully_connected_feed.py),
-and is described in the [MNIST tutorial](../../tutorials/mnist/tf/index.md).
+변수와 상수를 포함하여 모든 텐서를 피드 데이터로 바꿀 수 있지만, 가장 좋은 방법은 [`placeholder` op](../../api_docs/python/io_ops.md#placeholder) 노드를 사용하는 것이다.`placeholder`는 오로지 피드를 받아들이기 위해 존재하는데, 초기화되지 않으며 데이터를 포함하지도 않는다.`placeholder`는 피드 없이 실행되는 경우 오류를 발생시켜 사용자가 피드하는 것을 잊지 않도록 한다.
 
-<<<<<<< HEAD
->>>>>>> a05f0f6... Translate feeding part
+`placeholder`를 사용하는 예제와 MNIST 데이터 학습을 위한 피딩은 다음에서 찾아볼 수 있다: [`tensorflow/examples/tutorials/mnist/fully_connected_feed.py`](https://www.tensorflow.org/code/tensorflow/examples/tutorials/mnist/fully_connected_feed.py), and is described in the [MNIST tutorial](../../tutorials/mnist/tf/index.md).
 
 ### 파일명, 셔플링, 에폭 제한
 
-<<<<<<< HEAD
-For the list of filenames, use either a constant string Tensor (like`["file0", "file1"]` or `[("file%d" % i) for i in range(2)]`) or the[`tf.train.match_filenames_once` function](../../api_docs/python/io_ops.md#match_filenames_once).
-
-Pass the list of filenames to the [`tf.train.string_input_producer` function](../../api_docs/python/io_ops.md#string_input_producer).`string_input_producer` creates a FIFO queue for holding the filenames until the reader needs them.
-
-`string_input_producer` has options for shuffling and setting a maximum number of epochs. A queue runner adds the whole list of filenames to the queue once for each epoch, shuffling the filenames within an epoch if `shuffle=True`. This procedure provides a uniform sampling of files, so that examples are not under- or over- sampled relative to each other.
-=======
->>>>>>> a05f0f6... Translate feeding part
-
-The queue runner works in a thread separate from the reader that pulls filenames from the queue, so the shuffling and enqueuing process does not block the reader.
-=======
-파일명 리스트의 경우 문자열 상수 텐서를 사용한다. 예를 들어, `["file0", "file1"]` 또는 `[("file%d" % i) for i in range(2)]`) 또는 [`tf.train.match_filenames_once` 함수](../../api_docs/python/io_ops.md#match_filenames_once)를 생각해 볼 수 있다.
+파일명 리스트의 경우 `["file0", "file1"]` 또는 `[("file%d" % i) for i in range(2)]`와 같이 문자열 상수 텐서를 사용하거나, [`tf.train.match_filenames_once` 함수](../../api_docs/python/io_ops.md#match_filenames_once)를 사용한다.
 
 파일명 리스트를 [`tf.train.string_input_producer` 함수](../../api_docs/python/io_ops.md#string_input_producer)에 넘겨준다. `string_input_producer`는 리더기가 필요로 할 때까지 파일명을 유지하는 FIFO 큐를 만든다.
 
 `string_input_producer`는 셔플링 및 최대 에폭 수 설정에 대한 옵션을 가지고 있다. 큐 실행기(queue runner)가 매 에폭마다 파일명 리스트를 큐에 한번 추가하면, `shuffle=True`로 설정된 경우 단일 에폭 내에서 파일명들이 뒤섞이게 된다. 이 절차는 파일이 균일하게 샘플링되도록 함으로써, 주어진 예시(example)가 다른 것에 비해 상대적으로 덜 추출되거나(under-sampling) 과하게 추출되지(over-sampling) 않도록 한다.
 
 큐 실행기는, 파일명을 큐로부터 가져오는 리더기와 분리되어 있는 쓰레드에서 작동하기 때문에, 셔플링과 인큐잉(enqueuing, 큐에 집어넣기) 프로세스가 리더기를 블록(block)하지 않는다.
->>>>>>> 7f3381401a76f8649fe3fdd2cef79c474b7e980f
 
-### File formats
+### 파일 형식(File formats)
 
-Select the reader that matches your input file format and pass the filename queue to the reader's read method. The read method outputs a key identifying the file and record (useful for debugging if you have some weird records), and a scalar string value. Use one (or more) of the decoder and conversion ops to decode this string into the tensors that make up an example.
+입력 파일 형식에 적합한 리더기를 선택하고, 파일명 큐를 리더기의 read 메써드에 넘겨준다. read 메써드는 파일과 레코드를 식별하는 키(이상한 레코드를 얻은 경우 디버깅할 때 유용)와, 텐서가 아닌 스칼라 문자열 값을 출력한다. 이 문자열을, 어떤 예시를 구성하는 텐서로 해독하기 위해서는 하나 또는 여러 개의 해독기와 변환(conversion) 연산을 사용한다.
 
-#### CSV files
+#### CSV 파일 (CSV files)
 
-To read text files in [comma-separated value (CSV) format](https://tools.ietf.org/html/rfc4180), use a[`TextLineReader`](../../api_docs/python/io_ops.md#TextLineReader) with the[`decode_csv`](../../api_docs/python/io_ops.md#decode_csv) operation. For example:
+[CSV(comma-separated value, 쉼표로 구분된 값) 형식](https://tools.ietf.org/html/rfc4180)의 텍스트 파일을 읽기 위해서는, [`decode_csv`](../../api_docs/python/io_ops.md#decode_csv)연산과 함께 [`TextLineReader`](../../api_docs/python/io_ops.md#TextLineReader)를 사용한다. 예를 들어:
 
 ```python
 filename_queue = tf.train.string_input_producer(["file0.csv", "file1.csv"])
@@ -136,9 +89,9 @@ with tf.Session() as sess:
   coord.join(threads)
 ```
 
-Each execution of `read` reads a single line from the file. The`decode_csv` op then parses the result into a list of tensors. The`record_defaults` argument determines the type of the resulting tensors and sets the default value to use if a value is missing in the input string.
+`read`는 파일에서 한 줄을 읽어들인다. 이후 `decode_csv` 연산은 읽어들인 결과를 텐서 리스트로 파싱한다. `record_defaults` 인수는 결과로 반환된 텐서들의 타입을 결정하고 입력 문자열에 값이 없는 경우 기본값을 설정한다.
 
-You must call `tf.train.start_queue_runners` to populate the queue before you call `run` or `eval` to execute the `read`. Otherwise `read` will block while it waits for filenames from the queue.
+`run` 또는 `eval`을 호출하여 `read`를 실행하기 전에 큐를 채우려면 반드시 `tf.train.start_queue_runners`를 호출해야 한다. 그렇지 않으면 `read`는 큐에서 파일 이름을 기다리는 상태로 블록된다.
 
 #### Fixed length records
 
